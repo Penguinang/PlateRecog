@@ -1,0 +1,12 @@
+*.out
+*.o
+*.cs
+*.yaml
+
+.vscode
+.vs
+
+src/*/.vscode
+src/*/.vs
+
+bin/*
