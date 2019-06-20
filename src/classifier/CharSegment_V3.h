@@ -1,4 +1,7 @@
-﻿#include <opencv2/core.hpp>
+﻿#ifndef CharSegment_V3_H
+#define CharSegment_V3_H
+
+#include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/ml.hpp>
@@ -8,7 +11,7 @@
 #include "PlateChar_SVM.h"
 #include "cmath"
 #include "CharInfo.h"
-#include "utilities.h"
+#include "Utilities.h"
 
 using namespace std;
 namespace Doit{
@@ -549,7 +552,7 @@ private:
 }
 }
 }
-
+#endif
 
 
 
