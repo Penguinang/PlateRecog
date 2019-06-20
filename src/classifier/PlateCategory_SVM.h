@@ -191,6 +191,7 @@ class PlateCategory_SVM {
             result = (PlateCategory_t)((int)predict);
             return result;
         } catch (exception &ex) {
+            std::cerr << ex.what() << std::endl;
             throw ex;
         }
     }

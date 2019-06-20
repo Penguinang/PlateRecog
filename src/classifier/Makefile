@@ -19,11 +19,14 @@ STANARD=-std=c++17
 # test: test.cpp PlateChar_SVM.o PlateCategory_SVM.o *.h
 # 	g++ *.o test.cpp -g -o test.out $(INCPATH) $(LIBS) $(STANARD)
 
-test: test.cpp *.h
-	g++ test.cpp -g -o test.out $(INCPATH) $(LIBS) $(STANARD)
+test_svm: test_SVM.cpp *.h
+	g++ test_SVM.cpp -g -o test_SVM.out $(INCPATH) $(LIBS) $(STANARD)
 
-optimal:
-	g++ test.cpp -O3 -o test.out $(INCPATH) $(LIBS) $(STANARD)
+test_recognition: test_PlateRecognition.cpp *.h
+	g++ test_PlateRecognition.cpp -g -o test_PlateRecognition.out $(INCPATH) $(LIBS) $(STANARD)
+
+test_charsegment: test_CharSegment_V3.cpp *.h
+	g++ test_CharSegment_V3.cpp -g -o test_CharSegment_V3.out $(INCPATH) $(LIBS) $(STANARD)
 
 clean:
 	rm *.o
