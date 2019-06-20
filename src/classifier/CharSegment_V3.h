@@ -7,7 +7,7 @@
 #include "PlateCategory_SVM.h"
 #include "PlateChar_SVM.h"
 #include "cmath"
-#include "charinfo.h"
+#include "CharInfo.h"
 #include "utilities.h"
 
 using namespace std;
@@ -15,7 +15,7 @@ namespace Doit{
 namespace CV{
 namespace PlateRecogn{
 
-class ChatSegment_V3{
+class CharSegment_V3{
 public:
     static cv::Mat ClearMaoding(cv::Mat &threshold){
         vector<float> jumps;
