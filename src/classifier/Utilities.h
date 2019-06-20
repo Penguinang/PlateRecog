@@ -31,7 +31,7 @@ public:
                     plateMat.at<uchar>(i,j) = (unsigned char)(255.0*expf(originalMat.at<uchar>(i, j)));
                 }
             }
-            cv::normalize(plateMat,plateMat,0,255,NOMINMAX);
+            cv::normalize(plateMat,plateMat,0,255, cv::NORM_MINMAX);
 
         }
         else if(plateMat.channels()==3)
@@ -45,7 +45,7 @@ public:
                     plateMat.at<cv::Vec3b>(i,j)[2]=(unsigned char)(expf(originalMat.at<cv::Vec3b>(i, j)[2]));
                 }
             }
-            cv::normalize(plateMat,plateMat,0,255,NOMINMAX);
+            cv::normalize(plateMat,plateMat,0,255,cv::NORM_MINMAX);
         }
         return plateMat;
     }
@@ -62,7 +62,7 @@ public:
                     plateMat.at<uchar>(i,j) = (unsigned char)(logf(plateMat.at<uchar>(i, j)));
                 }
             }
-            cv::normalize(plateMat,plateMat,0,255,NOMINMAX);
+            cv::normalize(plateMat,plateMat,0,255,cv::NORM_MINMAX);
 
         }
         else if(plateMat.channels()==3)
@@ -76,7 +76,7 @@ public:
                     plateMat.at<cv::Vec3b>(i,j)[2]=(unsigned char)(logf(originalMat.at<cv::Vec3b>(i, j)[2]));
                 }
             }
-            cv::normalize(plateMat,plateMat,0,255,NOMINMAX);
+            cv::normalize(plateMat,plateMat,0,255,cv::NORM_MINMAX);
         }
         return plateMat;
     }
@@ -93,7 +93,7 @@ public:
                     plateMat.at<uchar>(i,j) = (unsigned char)(pow(plateMat.at<uchar>(i, j),gammaFactor));
                 }
             }
-            cv::normalize(plateMat,plateMat,0,255,NOMINMAX);
+            cv::normalize(plateMat,plateMat,0,255,cv::NORM_MINMAX);
 
         }
         else if(plateMat.channels()==3)
@@ -107,7 +107,7 @@ public:
                     plateMat.at<cv::Vec3b>(i,j)[2]=(unsigned char)(pow(plateMat.at<cv::Vec3b>(i, j)[2],gammaFactor));
                 }
             }
-            cv::normalize(plateMat,plateMat,0,255,NOMINMAX);
+            cv::normalize(plateMat,plateMat,0,255,cv::NORM_MINMAX);
         }
         return plateMat;
     }

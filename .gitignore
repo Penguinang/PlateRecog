@@ -8,5 +8,7 @@
 
 src/*/.vscode
 src/*/.vs
+src/*/build
 
+build
 bin/*
