@@ -319,6 +319,7 @@ class PlateInfo {
     PlateColor_t PlateColor = PlateColor_t::UnknownPlate;
     RotatedRect_t RotatedRect;
     Rect OriginalRect;
+    // 对于空引用使用empty
     Mat OriginalMat;
     PlateLocateMethod_t PlateLocateMethod;
     vector<CharInfo> CharInfos;
