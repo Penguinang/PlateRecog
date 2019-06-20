@@ -61,14 +61,23 @@ void InitSvm() {
 }
 
 void test_Recoginition() {
+    // Mat image =
+    //     imread("../../bin/licenses/12867_2019-03-28-08-09-51-086918.jpg");
+    // string license = "粤A CH383";
+
     Mat image =
-        imread("../../bin/licenses/12867_2019-03-28-08-09-51-086918.jpg");
-    string license = "粤A CH383";
+        imread("../../bin/licenses/AM5222_2019-03-23-11-23-57-072708.jpg");
+    string license = "粤A M5222";    
+
     auto plateInfos = PlateRecognition_V3::Recognite(image);
     for (auto &plateInfo : plateInfos) {
-        cout << "Label: " << license << endl;
+        cout << "Real: " << license << endl;
         cout << "Recognized Plate: " << endl << plateInfo.ToString() << endl;
     }
+}
+
+void test_CharSplit(){
+    
 }
 
 int main(int argc, char const *argv[]) {

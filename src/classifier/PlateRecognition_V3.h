@@ -129,7 +129,7 @@ namespace PlateRecogn {
                     break;
             }
             for (int index = charInfos.size() - 1; index >= 0; index--) {
-                CharInfo charInfo = charInfos[index];
+                CharInfo &charInfo = charInfos[index];
                 PlateChar_t plateChar = PlateChar_SVM::Test (charInfo.OriginalMat);
                 if (plateChar == PlateChar_t::NonChar) {
                     charInfos.erase (index + charInfos.begin());
@@ -150,7 +150,7 @@ namespace PlateRecogn {
 
             //两头的先除开，去掉中间的汉字
             for (int index = charCount - 1 - 1; index > 0 + 1; index--) {
-                CharInfo charInfo = plateInfo.CharInfos[index];
+                const CharInfo &charInfo = plateInfo.CharInfos[index];
                 int charInfoValue = (int) charInfo.PlateChar;
 
                 if (charInfoValue >= (int) PlateChar_t::BeiJing && charInfoValue <= (int) PlateChar_t::JingChe) {
@@ -159,10 +159,10 @@ namespace PlateRecogn {
             }
             charCount = plateInfo.CharInfos.size();
 
-            CharInfo second = plateInfo.CharInfos[1];
+            const CharInfo &second = plateInfo.CharInfos[1];
             int secondValue = (int) second.PlateChar;
 
-            CharInfo lastSecond = plateInfo.CharInfos[charCount - 2];
+            const CharInfo &lastSecond = plateInfo.CharInfos[charCount - 2];
 
             int lastSecondValue = (int) lastSecond.PlateChar;
             switch (plateInfo.PlateCategory) {
@@ -195,11 +195,11 @@ namespace PlateRecogn {
             }
             charCount = plateInfo.CharInfos.size();
             if (charCount < 7) return;
-            CharInfo first = plateInfo.CharInfos[0];
+            const CharInfo &first = plateInfo.CharInfos[0];
             int firstValue = (int) first.PlateChar;
-            second = plateInfo.CharInfos[1];
-            secondValue = (int) second.PlateChar;
-            CharInfo lastFirst = plateInfo.CharInfos[charCount - 1];
+            const CharInfo &second2 = plateInfo.CharInfos[1];
+            secondValue = (int) second2.PlateChar;
+            const CharInfo &lastFirst = plateInfo.CharInfos[charCount - 1];
             int lastFirstValue = (int) lastFirst.PlateChar;
             switch (plateInfo.PlateCategory) {
                 case PlateCategory_t::NormalPlate:

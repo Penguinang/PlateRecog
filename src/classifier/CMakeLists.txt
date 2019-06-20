@@ -21,6 +21,7 @@ elseif(WIN)
 set(EXTENSION_NAME )
 endif(UNIX)
 
+add_compile_definitions(VISUALIZE_DEBUG)
 
 #########################################################################
 ## Opencv
@@ -38,7 +39,8 @@ link_libraries(
 # opencv_phase_unwrapping opencv_superres opencv_optflow opencv_surface_matching opencv_tracking opencv_datasets
 # opencv_text opencv_dnn opencv_plot opencv_videostab opencv_video opencv_viz opencv_xfeatures2d
 # opencv_shape opencv_ximgproc opencv_xobjdetect opencv_calib3d opencv_features2d
-# opencv_highgui opencv_videoio opencv_flann opencv_xphoto opencv_photo 
+# opencv_videoio opencv_flann opencv_xphoto opencv_photo 
+opencv_highgui
 opencv_objdetect
 opencv_ml
 opencv_imgcodecs 

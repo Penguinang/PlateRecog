@@ -13,6 +13,8 @@
 #include "CharInfo.h"
 #include "Utilities.h"
 
+#include "debug.h"
+
 using namespace std;
 namespace Doit{
 namespace CV{
@@ -281,19 +283,40 @@ public:
         cv::cvtColor(plateMat,gray,cv::COLOR_BGR2GRAY);
         cv::Mat matOfClearMaodingAndBorder = ClearMaodingAndBorder(gray,plateColor);
 
+        // DEBUG
+        matOfClearMaodingAndBorder = 255 - matOfClearMaodingAndBorder;
+        // DebugVisualize("matOfClearMaodingAndBorder", matOfClearMaodingAndBorder);
+
         std::vector<std::vector<cv::Point>> contours;
         std::vector<cv::Vec4i>hierarchy;
         cv::findContours(matOfClearMaodingAndBorder,contours,hierarchy,cv::RETR_EXTERNAL,cv::CHAIN_APPROX_NONE);
+        
+        // DEBUG
+        Mat contimage = matOfClearMaodingAndBorder.clone();
+        cv::cvtColor(contimage, contimage, cv::COLOR_GRAY2BGR);
+        cv::drawContours(contimage, contours, -1, Scalar(0, 0, 255), 1);
+        DebugVisualize("contimage", contimage);
+
+        for(auto &contour : contours){
+            Rect rect = cv::boundingRect(contour);
+            Mat rectedMat = matOfClearMaodingAndBorder.clone();
+            cv::cvtColor(rectedMat, rectedMat, cv::COLOR_GRAY2BGR);            
+            cv::rectangle(rectedMat, rect, {0, 0, 255});
+            DebugVisualize("contRect", rectedMat);
+        }
+
 
         vector<Rect> rects;
         for(int index = 0;index<contours.size();index++)
         {
             Rect rect = cv::boundingRect(contours[index]);
+            DebugVisualize("rects", matOfClearMaodingAndBorder(rect));
 
             if(NotOnBorder(rect,cv::Size(plateMat.cols,plateMat.rows),leftLimit,rightLimit, topLimit, bottomLimit)&&
                     VerifyRect(rect, minWidth, maxWidth, minHeight, maxHeight, minRatio, maxRatio))
             {
                 rects.push_back(rect);
+                // DebugVisualize("rects", matOfClearMaodingAndBorder(rect));
             }
         }
 
