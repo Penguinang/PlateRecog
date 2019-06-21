@@ -1,9 +1,14 @@
 #include <opencv2/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
-using namespace cv;
+// using namespace cv;
+using cv::Mat;
+using cv::imread;
+using cv::Rect;
 
 #include <iostream>
-using namespace std;
+// using namespace std;
+using std::cout;
+using std::endl;
 
 #include "CharSegment_V3.h"
 #include "CharInfo.h"

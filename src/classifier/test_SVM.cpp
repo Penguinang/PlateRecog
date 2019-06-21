@@ -1,9 +1,21 @@
 #include "PlateChar_SVM.h"
 #include "PlateCategory_SVM.h"
+// using namespace cv;
+using cv::Mat;
+using cv::Rect;
+using cv::Scalar;
 
 #include <iostream>
-using namespace std;
-using namespace cv;
+// using namespace std;
+using std::cout;
+using std::endl;
+using std::vector;
+using std::string;
+using std::iota;
+using std::random_shuffle;
+using std::setprecision;
+using std::setw;
+
 
 #include <cassert>
 

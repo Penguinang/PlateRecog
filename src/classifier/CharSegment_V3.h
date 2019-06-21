@@ -6,16 +6,18 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/ml.hpp>
 #include <opencv2/objdetect.hpp>
-#include "vector"
+using cv::Scalar;
+
+#include <vector>
+#include <cmath>
+
 #include "PlateCategory_SVM.h"
 #include "PlateChar_SVM.h"
-#include "cmath"
 #include "CharInfo.h"
 #include "Utilities.h"
 
 #include "debug.h"
 
-using namespace std;
 namespace Doit{
 namespace CV{
 namespace PlateRecogn{

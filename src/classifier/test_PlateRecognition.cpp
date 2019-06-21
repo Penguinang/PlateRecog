@@ -45,10 +45,14 @@
 using namespace Doit::CV::PlateRecogn;
 
 #include <opencv2/core.hpp>
-using namespace cv;
+// using namespace cv;
+using cv::imread;
+using cv::Mat;
 
 #include <iostream>
-using namespace std;
+// using namespace std;
+using std::cout;
+using std::endl;
 
 void InitSvm() {
     try {
