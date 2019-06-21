@@ -13,11 +13,15 @@ set(WORKSPACE ${CMAKE_CURRENT_LIST_DIR})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
+
+# set(VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
+# set_property(GLOBAL PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/..")
+
 cmake_policy(SET CMP0076 NEW)
 
 if(UNIX)
 set(EXTENSION_NAME .out)
-elseif(WIN)
+elseif(WIN32)
 set(EXTENSION_NAME )
 endif(UNIX)
 
@@ -27,11 +31,6 @@ add_compile_definitions(VISUALIZE_DEBUG)
 ## Opencv
 if(UNIX)
 include_directories(/usr/include/opencv4)
-elseif(WIN)
-message("！！！！ 设置头文件目录")
-include_directories(.)
-endif(UNIX)
-
 link_libraries(
 # opencv_gapi opencv_stitching opencv_aruco opencv_bgsegm opencv_bioinspired opencv_ccalib opencv_dnn_objdetect
 # opencv_dpm opencv_face opencv_freetype opencv_fuzzy opencv_hdf opencv_hfs opencv_img_hash
@@ -48,6 +47,20 @@ opencv_imgproc
 opencv_core
 stdc++fs)
 
+elseif(WIN32)
+message("！！！！ 设置头文件目录")
+include_directories(D:\\Program\ Files\\opencv\\build\\include)
+link_directories(D:\\Program\ Files\\opencv\\build\\x64\\vc15\\lib)
+if(${CMAKE_BUILD_TYPE} MATCHES  DEBUG)
+link_libraries(opencv_world410d.lib)
+else(${CMAKE_BUILD_TYPE} MATCHES  DEBUG)
+link_libraries(opencv_world410.lib)
+endif(${CMAKE_BUILD_TYPE} MATCHES  DEBUG)
+endif(UNIX)
+
+
+#########################################################################
+## Sources
 set(Headers
     CharInfo.h  
     CharSegment_V3.h  
@@ -59,7 +72,15 @@ set(Headers
     Utilities.h
 )
 
+
+if(MSVC)
+add_definitions(/source-charset:utf-8)
+add_definitions(/std:c++17)
+add_definitions(/Zc:__cplusplus)
+else(MSVC)
 add_definitions(-std=c++17)
+endif(MSVC)
+
 
 
 #########################################################################
@@ -86,3 +107,6 @@ foreach(file ${Headers})
 endforeach(file)
 target_sources(test_CharSegment_V3${EXTENSION_NAME} PUBLIC test_CharSegment_V3.cpp)
 
+if(MSVC)
+set_property(TARGET test_SVM test_PlateRecognition test_CharSegment_V3 PROPERTY VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
+endif(MSVC)

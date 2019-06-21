@@ -7,7 +7,9 @@ using cv::Rect;
 
 
 #include <iostream>
-using namespace std;
+// using namespace std;
+using std::cout;
+using std::endl;
 
 #include "CharSegment_V3.h"
 #include "CharInfo.h"
