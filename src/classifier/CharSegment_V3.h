@@ -10,6 +10,8 @@ using cv::Scalar;
 
 #include <vector>
 #include <cmath>
+#include <string>
+using std::string;
 
 #include "PlateCategory_SVM.h"
 #include "PlateChar_SVM.h"
@@ -283,10 +285,10 @@ public:
 
         cv::Mat gray;
         cv::cvtColor(plateMat,gray,cv::COLOR_BGR2GRAY);
+        gray = 255 - gray;
         cv::Mat matOfClearMaodingAndBorder = ClearMaodingAndBorder(gray,plateColor);
 
         // DEBUG
-        matOfClearMaodingAndBorder = 255 - matOfClearMaodingAndBorder;
         // DebugVisualize("matOfClearMaodingAndBorder", matOfClearMaodingAndBorder);
 
         std::vector<std::vector<cv::Point>> contours;
@@ -297,22 +299,21 @@ public:
         Mat contimage = matOfClearMaodingAndBorder.clone();
         cv::cvtColor(contimage, contimage, cv::COLOR_GRAY2BGR);
         cv::drawContours(contimage, contours, -1, Scalar(0, 0, 255), 1);
-        DebugVisualize("contimage", contimage);
-
+        Mat rectedMat = matOfClearMaodingAndBorder.clone();
+        cv::cvtColor(rectedMat, rectedMat, cv::COLOR_GRAY2BGR);            
         for(auto &contour : contours){
             Rect rect = cv::boundingRect(contour);
-            Mat rectedMat = matOfClearMaodingAndBorder.clone();
-            cv::cvtColor(rectedMat, rectedMat, cv::COLOR_GRAY2BGR);            
             cv::rectangle(rectedMat, rect, {0, 0, 255});
-            DebugVisualize("contRect", rectedMat);
+            DebugVisualizeNotWait((string("contRect ")+ CharSplitMethod_tToString[static_cast<size_t>(charSplitMethod)]).c_str(), rectedMat);
         }
+        DebugVisualize((string("contimage ")+ CharSplitMethod_tToString[static_cast<size_t>(charSplitMethod)]).c_str(), contimage);
 
 
         vector<Rect> rects;
         for(int index = 0;index<contours.size();index++)
         {
             Rect rect = cv::boundingRect(contours[index]);
-            DebugVisualize("rects", matOfClearMaodingAndBorder(rect));
+            // DebugVisualize("rects", matOfClearMaodingAndBorder(rect));
 
             if(NotOnBorder(rect,cv::Size(plateMat.cols,plateMat.rows),leftLimit,rightLimit, topLimit, bottomLimit)&&
                     VerifyRect(rect, minWidth, maxWidth, minHeight, maxHeight, minRatio, maxRatio))
@@ -329,10 +330,10 @@ public:
 
         for(int index = 0;index<rects.size();index++)
         {
-            CharInfo plateCharInfo;
             // !!! lack of Utilities class
-            // rect = Utilities.GetSafeRect(rects[index],originalMat);
-            Rect rectROI = rects[index];
+            Rect &rectROI = rects[index];
+            rectROI = Utilities::GetSafeRect(rects[index],originalMat);
+            CharInfo plateCharInfo;
             cv::Mat matROI = originalMat(rectROI);
             plateCharInfo.OriginalMat = matROI;
             plateCharInfo.OriginalRect = rectROI;

@@ -131,6 +131,7 @@ namespace PlateRecogn {
             for (int index = charInfos.size() - 1; index >= 0; index--) {
                 CharInfo &charInfo = charInfos[index];
                 PlateChar_t plateChar = PlateChar_SVM::Test (charInfo.OriginalMat);
+                // DebugVisualize("charinfo", charInfo.OriginalMat);
                 if (plateChar == PlateChar_t::NonChar) {
                     charInfos.erase (index + charInfos.begin());
                 }

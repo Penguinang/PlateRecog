@@ -6,10 +6,14 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/ml.hpp>
 #include <opencv2/objdetect.hpp>
-#include "vector"
+using cv::Rect;
+using cv::Mat;
+
+#include <vector>
+#include <cmath>
+
 #include "PlateCategory_SVM.h"
 #include "PlateChar_SVM.h"
-#include "cmath"
 #include "CharInfo.h"
 
 using namespace std;
@@ -110,6 +114,37 @@ public:
             cv::normalize(plateMat,plateMat,0,255,cv::NORM_MINMAX);
         }
         return plateMat;
+    }
+
+    static Rect GetSafeRect(const Rect &rect, const Mat &mat){
+        int x = rect.x, y = rect.y, width = rect.width, height = rect.height;
+        if(x < 0){
+            x = 0;
+        }
+        else if(x > mat.cols-1){
+            x = mat.cols-1;
+        }
+
+        if(y < 0){
+            y = 0;
+        }
+        else if(y > mat.rows-1){
+            y = mat.rows-1;
+        }
+
+        if(width < 0){
+            width = 0;
+        } else if(x + width > mat.cols-1){
+            width = mat.cols-1 - x;
+        }
+
+        if(height < 0){
+            height = 0;
+        } else if(y + height > mat.rows-1){
+            height = mat.rows-1 - y;
+        }
+                
+        return {x, y, width, height};
     }
 };
 }

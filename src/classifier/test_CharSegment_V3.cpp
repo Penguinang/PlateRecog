@@ -4,6 +4,7 @@
 using cv::Mat;
 using cv::imread;
 using cv::Rect;
+using cv::Point2i;
 
 #include <iostream>
 // using namespace std;
@@ -47,6 +48,10 @@ void test_SplitePlateByGammaTransform(){
     // string license = "粤K WA305";    
     // Rect rectRoi = Rect(Point2i{0, 0}, Point2i{77, 23});
 
+    // Mat image =
+    //     imread("../../bin/licenses/CG948_2019-03-23-10-43-23-076807.jpg");
+    // string license = "粤A CG948";
+    // Rect rectRoi = Rect(Point2i{772, 144}, Point2i{841, 193});
     
 
     image = image(rectRoi);

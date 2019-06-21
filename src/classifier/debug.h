@@ -12,4 +12,10 @@ inline void DebugVisualize(const char *WindowName, const Mat &mat){
 #endif // VISUALIZE_DEBUG
 }
 
+inline void DebugVisualizeNotWait(const char *WindowName, const Mat &mat){
+#ifdef VISUALIZE_DEBUG
+    cv::imshow(WindowName, mat);
+#endif // VISUALIZE_DEBUG
+}
+
 #endif // !DEBUG_H

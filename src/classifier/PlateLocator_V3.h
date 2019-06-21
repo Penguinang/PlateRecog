@@ -301,8 +301,9 @@ class PlateLocator_V3 {
         Mat threshold_Close;
         cv::morphologyEx(threshold, threshold_Close, cv::MorphTypes::MORPH_CLOSE, element);
 
+        // TODO 腐蚀核大小
         Mat element_Erode = cv::getStructuringElement(
-            cv::MorphShapes::MORPH_RECT, cv::Size(3, 3));
+            cv::MorphShapes::MORPH_RECT, cv::Size(10, 10));
         // Mat threshold_Erode = threshold_Close.Erode(element_Erode);
         Mat threshold_Erode;
         cv::erode(threshold_Close, threshold_Erode, element_Erode);
