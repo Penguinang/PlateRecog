@@ -30,14 +30,6 @@ using std::end;
 using std::exception;
 using std::logic_error;
 
-#if __cplusplus >= 201703L
-#include <filesystem>
-using std::filesystem::exists;
-using std::filesystem::create_directory;
-using std::filesystem::filesystem_error;
-#else
-#error("至少c++17")
-#endif
 
 #include "csharpImplementations.h"
 #include "CharInfo.h"

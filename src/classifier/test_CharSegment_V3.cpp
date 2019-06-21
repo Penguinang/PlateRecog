@@ -1,6 +1,10 @@
-#include <opencv2/core.hpp>
+﻿#include <opencv2/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
-using namespace cv;
+//using namespace cv;
+using cv::imread;
+using cv::Mat;
+using cv::Rect;
+
 
 #include <iostream>
 using namespace std;

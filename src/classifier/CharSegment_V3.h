@@ -6,6 +6,8 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/ml.hpp>
 #include <opencv2/objdetect.hpp>
+using cv::Scalar;
+
 #include "vector"
 #include "PlateCategory_SVM.h"
 #include "PlateChar_SVM.h"
