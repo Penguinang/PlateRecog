@@ -70,7 +70,7 @@ void test_Char_SVM(){
     random_shuffle(randomIndices.begin(), randomIndices.end());
 
     int hogSize = Hogs[0].size();
-    int sizes[] = {trainingCount, hogSize};
+    // int sizes[] = {trainingCount, hogSize};
     Mat training_data(trainingCount, hogSize, CV_32FC1, Scalar::all(0));
     Mat training_tag(trainingCount, 1, CV_32S);
     for(int i = 0; i < trainingCount; ++ i){
@@ -139,7 +139,7 @@ void test_Category_SVM(){
     random_shuffle(randomIndices.begin(), randomIndices.end());
 
     int hogSize = Hogs[0].size();
-    int sizes[] = {trainingCount, hogSize};
+    // int sizes[] = {trainingCount, hogSize};
     Mat training_data(trainingCount, hogSize, CV_32FC1, Scalar::all(0));
     Mat training_tag(trainingCount, 1, CV_32S);
     for(int i = 0; i < trainingCount; ++ i){

@@ -88,7 +88,7 @@ class PlateCategory_SVM {
     }
     static void SavePlateSample(Mat &matPlate, PlateCategory_t plateCategory,
                                 string libPath, string shortFileNameNoExt) {
-        DateTime now = DateTime::Now();
+        // DateTime now = DateTime::Now();
         // string fileName = string.Format(@"{0}\plates\{1}\{2}.jpg", libPath,
         //                                 plateCategory, shortFileNameNoExt);
         ostringstream buffer;
@@ -131,7 +131,7 @@ class PlateCategory_SVM {
             // svm = SVM.Load(fileName);
             svm = SVM::load(fileName);
             IsReady = true;
-        } catch (exception) {
+        } catch (exception&) {
             // throw new Exception("字符识别库加载异常，请检查存放路径");
             throw logic_error("字符识别库加载异常，请检查存放路径");
         }
@@ -141,7 +141,7 @@ class PlateCategory_SVM {
         // string[] plateCategoryNames = Enum.GetNames(typeof(PlateCategory));
         vector<const char*> plateCategoryNames(begin(PlateCategory_tToString), end(PlateCategory_tToString));
 
-        for (int index = 0; index < plateCategoryNames.size(); index++) {
+        for (size_t index = 0; index < plateCategoryNames.size(); index++) {
             string plateCategoryName = plateCategoryNames[index];
             // string platePath =
             //     string.Format(@"{0}\{1}", path, plateCategoryName);
@@ -174,7 +174,7 @@ class PlateCategory_SVM {
             vector<float> descriptor = ComputeHogDescriptors(matTest);
             Mat testDescriptor =
                 Mat::zeros(1, descriptor.size(), CV_32FC1);
-            for (int index = 0; index < descriptor.size(); index++) {
+            for (size_t index = 0; index < descriptor.size(); index++) {
                 // testDescriptor.Set<float>(0, index, descriptor[index]);
                 // TODO 不确定是不是对应的
                 testDescriptor.at<float>(0, index) = descriptor[index];                                
@@ -202,7 +202,7 @@ class PlateCategory_SVM {
                 Directory::CreateDirectory(platesDirectory);
             // string[] plateCategoryNames = Enum.GetNames(typeof(PlateCategory));
             vector<const char*> plateCategoryNames(begin(PlateCategory_tToString), end(PlateCategory_tToString));
-            for (int index_PlateCategory = 0;
+            for (size_t index_PlateCategory = 0;
                  index_PlateCategory < plateCategoryNames.size();
                  index_PlateCategory++) {
                 // string plateCategoryDirectory =
@@ -215,7 +215,7 @@ class PlateCategory_SVM {
                 if (Directory::Exists(plateCategoryDirectory) == false)
                     Directory::CreateDirectory(plateCategoryDirectory);
             }
-        } catch (exception) {
+        } catch (exception&) {
             success = false;
         }
         return success;

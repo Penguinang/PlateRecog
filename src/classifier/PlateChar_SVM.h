@@ -81,7 +81,7 @@ public:
             // svm = SVM.Load(fileName);
             svm = SVM::load(fileName);
             IsReady = true;
-        } catch (exception) {
+        } catch (exception&) {
             // throw new Exception("字符识别库加载异常，请检查存放路径");
             throw logic_error("字符识别库加载异常，请检查存放路径");
         }
@@ -91,7 +91,7 @@ public:
         // string[] plateCharNames = Enum.GetNames(typeof(PlateChar));
         vector<const char*> plateCharNames(begin(PlateChar_tToString), end(PlateChar_tToString));
 
-        for (int index = 0; index < plateCharNames.size(); index++) {
+        for (size_t index = 0; index < plateCharNames.size(); index++) {
             // string plateChar = plateCharNames[index];
             string plateChar = plateCharNames[index];
 
@@ -121,7 +121,7 @@ public:
         vector<float> descriptor = ComputeHogDescriptors(matTest);
         Mat testDescriptor =
             Mat::zeros(1, descriptor.size(), CV_32FC1);
-        for (int index = 0; index < descriptor.size(); index++) {
+        for (size_t index = 0; index < descriptor.size(); index++) {
             // testDescriptor.Set<float>(0, index, descriptor[index]);
             // TODO 不确定是不是对应的
             testDescriptor.at<float>(0, index) = descriptor[index];                                
@@ -197,7 +197,7 @@ public:
                 Directory::CreateDirectory(charsDirectory);
             // string[] plateCharNames = Enum.GetNames(typeof(PlateChar));
             vector<const char*> plateCharNames(begin(PlateChar_tToString), end(PlateChar_tToString));
-            for (int index_PlateChar = 0;
+            for (size_t index_PlateChar = 0;
                  index_PlateChar < plateCharNames.size(); index_PlateChar++) {
                 string plateChar = plateCharNames[index_PlateChar];
                 // string plateCharDirectory = charsDirectory + @"" DIRECTORY_DELIMITER"" + plateChar;
@@ -208,7 +208,7 @@ public:
                 if (Directory::Exists(plateCharDirectory) == false)
                     Directory::CreateDirectory(plateCharDirectory);
             }
-        } catch (exception) {
+        } catch (exception&) {
             success = false;
         }
         return success;

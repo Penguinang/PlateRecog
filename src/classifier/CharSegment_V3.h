@@ -148,7 +148,7 @@ public:
         }
 
         vector<CharInfo> result;
-        for(int index=0;index<rects.size();index++)
+        for(size_t index=0;index<rects.size();index++)
         {
             Rect rect = rects[index];
             // rect = Utilities.GetSafeRect(rect,plateMat);
@@ -181,7 +181,7 @@ public:
         charInfos_Blue.insert(charInfos_Blue.end(),charInfos_LogTransform_Blue.begin(),charInfos_LogTransform_Blue.end());
 
         int isCharCount = 0;
-        for(int index = 0;index<charInfos_Blue.size();index++)
+        for(size_t index = 0;index<charInfos_Blue.size();index++)
         {
             CharInfo charInfo = charInfos_Blue[index];
             charInfo.PlateChar = PlateChar_SVM::Test(charInfo.OriginalMat);
@@ -205,7 +205,7 @@ public:
         charInfos_Yellow.insert(charInfos_Yellow.end(),charInfos_LogTransform_Yellow.begin(),charInfos_LogTransform_Yellow.end());
 
         isCharCount = 0;
-        for (int index = 0; index < charInfos_Yellow.size(); index++)
+        for (size_t index = 0; index < charInfos_Yellow.size(); index++)
         {
             CharInfo charInfo = charInfos_Yellow[index];
             charInfo.PlateChar = PlateChar_SVM::Test(charInfo.OriginalMat);
@@ -285,9 +285,11 @@ public:
 
         cv::Mat gray;
         cv::cvtColor(plateMat,gray,cv::COLOR_BGR2GRAY);
-        gray = 255 - gray;
+        
+        if(plateColor == PlateColor_t::WhitePlate || plateColor == PlateColor_t::YellowPlate || plateColor == PlateColor_t::GreenPlate)
+            gray = 255 - gray;
         cv::Mat matOfClearMaodingAndBorder = ClearMaodingAndBorder(gray,plateColor);
-
+        
         // DEBUG
         // DebugVisualize("matOfClearMaodingAndBorder", matOfClearMaodingAndBorder);
 
@@ -304,16 +306,21 @@ public:
         for(auto &contour : contours){
             Rect rect = cv::boundingRect(contour);
             cv::rectangle(rectedMat, rect, {0, 0, 255});
-            DebugVisualizeNotWait((string("contRect ")+ CharSplitMethod_tToString[static_cast<size_t>(charSplitMethod)]).c_str(), rectedMat);
+            // DebugVisualizeNotWait((string("contRect ")+ CharSplitMethod_tToString[static_cast<size_t>(charSplitMethod)]).c_str(), rectedMat);
         }
-        DebugVisualize((string("contimage ")+ CharSplitMethod_tToString[static_cast<size_t>(charSplitMethod)]).c_str(), contimage);
+        // DebugVisualize((string("contimage ")+ CharSplitMethod_tToString[static_cast<size_t>(charSplitMethod)]).c_str(), contimage);
 
 
         vector<Rect> rects;
-        for(int index = 0;index<contours.size();index++)
+        for(size_t index = 0;index<contours.size();index++)
         {
             Rect rect = cv::boundingRect(contours[index]);
-            // DebugVisualize("rects", matOfClearMaodingAndBorder(rect));
+
+            //DEBUG
+            // Mat pos = matOfClearMaodingAndBorder.clone();
+            // cv::cvtColor(pos, pos, cv::COLOR_GRAY2BGR);
+            // cv::rectangle(pos, rect, {0, 0, 255});
+            // DebugVisualize("rects", pos);
 
             if(NotOnBorder(rect,cv::Size(plateMat.cols,plateMat.rows),leftLimit,rightLimit, topLimit, bottomLimit)&&
                     VerifyRect(rect, minWidth, maxWidth, minHeight, maxHeight, minRatio, maxRatio))
@@ -323,12 +330,20 @@ public:
             }
         }
 
-        rects = RejectInnerRectFromRects(rects);
-        rects = AdjustRects(rects);
 
+        rects = RejectInnerRectFromRects(rects);
+
+        rects = AdjustRects(rects);
+        // DEBUG
+        // Mat rejectedRect = matOfClearMaodingAndBorder.clone();
+        // cv::cvtColor(rejectedRect, rejectedRect, cv::COLOR_GRAY2BGR);
+        // for(auto &rect : rects){
+        //     cv::rectangle(rejectedRect, rect, {0, 0, 255});
+        // }
+        // DebugVisualize("combined Rects ", rejectedRect);
         if(rects.size()==0) return result;
 
-        for(int index = 0;index<rects.size();index++)
+        for(size_t index = 0;index<rects.size();index++)
         {
             // !!! lack of Utilities class
             Rect &rectROI = rects[index];
@@ -356,7 +371,7 @@ public:
         if(width == 0 || height == 0) return false;
 
         float ratio = (float)width / height;
-        float area = width * height;
+        // float area = width * height;
 
         return ((width > minWidth && width < maxWidth) &&
         (height > minHeight && height < maxHeight) &&
@@ -423,7 +438,7 @@ public:
         float heightLimit = averageHeight * 0.5f;
         int medianTop = GetMedianRectsTop(rects);
         int medianBottom = GetMedianRectsBottom(rects);
-        for (int index = rects.size() - 1; index >= 0; index--)
+        for (size_t index = rects.size() - 1; index < rects.size(); index--)
         {
             Rect rect = rects[index];
             if (rect.height >= heightLimit && rect.height < averageHeight)
@@ -445,11 +460,13 @@ public:
     {
         vector<int> indexesOfMerge;
         vector<int> indexesBeMerged;
-        int maxHeight = GetRectsMaxHeight(rects);
+        // int maxHeight = GetRectsMaxHeight(rects);
         float averageHeight = GetRectsAverageHeight(rects);
         float hightLimit = averageHeight * 0.5f;
         vector<int>::iterator iter;
-        for (int index = rects.size() - 1; index >= 0; index--)
+
+        // TODO size()-1可能是0-1,size_t_max
+        for (size_t index = rects.size() - 1; index < rects.size(); index--)
         {
             if (find(indexesBeMerged.begin(),indexesBeMerged.end(),index)!=indexesBeMerged.end())
                 continue;
@@ -457,7 +474,7 @@ public:
                 continue;
             Rect A = rects[index];
             if (A.height < hightLimit) continue;
-            for (int i = rects.size() - 1; i >= 0; i--)
+            for (size_t i = rects.size() - 1; i < rects.size(); i--)
             {
                 if (i == index) continue;
                 Rect B = rects[i];
@@ -475,7 +492,7 @@ public:
             }
         }
         vector<Rect> result;
-        for (int index = 0; index < rects.size(); index++)
+        for (size_t index = 0; index < rects.size(); index++)
         {
             if (find(indexesBeMerged.begin(),indexesBeMerged.end(),index)==indexesBeMerged.end())
             {
@@ -489,12 +506,12 @@ public:
 
     static vector<Rect> RejectInnerRectFromRects(vector<Rect> &rects)
     {
-        for(int index = rects.size()-1;index>=0;index--)
+        for(size_t index = rects.size()-1;index < rects.size();index--)
         {
-            Rect rect = rects[index];
-            for(int i=0;i<rects.size();i++)
+            const Rect &rect = rects[index];
+            for(size_t i=0;i<rects.size();i++)
             {
-                Rect rectTemp = rects[i];
+                const Rect &rectTemp = rects[i];
                 if((rect.x+rect.width<=rectTemp.x+rectTemp.width &&
                         rect.y+rect.height<=rectTemp.y+rectTemp.height&&
                         rect.x>=rectTemp.x && rect.y>=rectTemp.y) &&

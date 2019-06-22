@@ -316,13 +316,13 @@ class CharInfo {
 class PlateInfo {
   public:
     PlateCategory_t PlateCategory;
-    PlateColor_t PlateColor = PlateColor_t::UnknownPlate;
-    RotatedRect_t RotatedRect;
     Rect OriginalRect;
     // 对于空引用使用empty
     Mat OriginalMat;
-    PlateLocateMethod_t PlateLocateMethod;
     vector<CharInfo> CharInfos;
+    PlateLocateMethod_t PlateLocateMethod;
+    PlateColor_t PlateColor = PlateColor_t::UnknownPlate;
+    RotatedRect_t RotatedRect;
     string Info() {
         ostringstream buffer;
         buffer << "类型:" << PlateCategory << " \r\n颜色:" << PlateColor
@@ -342,8 +342,8 @@ class PlateInfo {
     PlateInfo(PlateCategory_t plateCategory, const Rect &originalRect,
               const Mat &originalMat, const vector<CharInfo> &charInfos,
               PlateLocateMethod_t plateLocateMethod)
-        : PlateCategory(plateCategory), OriginalMat(originalMat),
-          OriginalRect(originalRect), CharInfos(charInfos),
+        : PlateCategory(plateCategory), OriginalRect(originalRect),
+          OriginalMat(originalMat), CharInfos(charInfos),
           PlateLocateMethod(plateLocateMethod) {}
     string ToString() {
         if (CharInfos.empty()) {

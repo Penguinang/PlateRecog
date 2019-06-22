@@ -53,7 +53,7 @@ class PlateLocator_V3 {
             matSource, matProcess, blur_Size, sobel_Scale, sobel_Delta,
             sobel_X_Weight, sobel_Y_Weight, morph_Size_Width, morph_Size_Height,
             minWidth, maxWidth, minHeight, maxHeight, minRatio, maxRatio);
-        for (int index = plateInfos.size() - 1; index >= 0; index--) {
+        for (size_t index = plateInfos.size() - 1; index < plateInfos.size(); index--) {
             if (plateInfos[index].PlateCategory == PlateCategory_t::NonPlate)
                 plateInfos.erase(plateInfos.begin() + index);
         }
@@ -142,7 +142,7 @@ class PlateLocator_V3 {
                          cv::RetrievalModes::RETR_EXTERNAL,
                          cv::ContourApproximationModes::CHAIN_APPROX_NONE);
         int isPlateCount = 0;
-        for (int index = 0; index < contours.size(); index++) {
+        for (size_t index = 0; index < contours.size(); index++) {
             // RotatedRect rotatedRect = cv::minAreaRect(contours[index]);
             RotatedRect rotatedRect = cv::minAreaRect(contours[index]);
             Rect rectROI = cv::boundingRect(contours[index]);
@@ -216,7 +216,7 @@ class PlateLocator_V3 {
                          cv::RetrievalModes::RETR_EXTERNAL,
                          cv::ContourApproximationModes::CHAIN_APPROX_NONE);
         // 筛选。对轮廓求最⼩外接矩形，然后验证，不满⾜条件的淘汰。
-        for (int index = 0; index < contours.size(); index++) {
+        for (size_t index = 0; index < contours.size(); index++) {
             Rect rectROI = cv::boundingRect(contours[index]);
             if (VerifyPlateSize(rectROI.size(), minWidth, maxWidth, minHeight,
                                 maxHeight, minRatio, maxRatio)) {
@@ -303,7 +303,9 @@ class PlateLocator_V3 {
 
         // TODO 腐蚀核大小
         Mat element_Erode = cv::getStructuringElement(
-            cv::MorphShapes::MORPH_RECT, cv::Size(10, 10));
+            cv::MorphShapes::MORPH_RECT, cv::Size(3, 3));
+        // Mat element_Erode = cv::getStructuringElement(
+        //     cv::MorphShapes::MORPH_RECT, cv::Size(10, 10));
         // Mat threshold_Erode = threshold_Close.Erode(element_Erode);
         Mat threshold_Erode;
         cv::erode(threshold_Close, threshold_Erode, element_Erode);
@@ -313,7 +315,7 @@ class PlateLocator_V3 {
         cv::findContours(threshold_Erode, contours, hierarchys,
                          cv::RetrievalModes::RETR_EXTERNAL,
                          cv::ContourApproximationModes::CHAIN_APPROX_NONE);
-        for (int index = 0; index < contours.size(); index++) {
+        for (size_t index = 0; index < contours.size(); index++) {
             Rect rectROI = cv::boundingRect(contours[index]);
             if (VerifyPlateSize(rectROI.size(), minWidth, maxWidth, minHeight,
                                 maxHeight, minRatio, maxRatio)) {
@@ -399,7 +401,7 @@ class PlateLocator_V3 {
                          cv::RetrievalModes::RETR_EXTERNAL,
                          cv::ContourApproximationModes::CHAIN_APPROX_NONE);
         // 筛选。对轮廓求最⼩外接矩形，然后验证，不满⾜条件的淘汰。
-        for (int index = 0; index < contours.size(); index++) {
+        for (size_t index = 0; index < contours.size(); index++) {
             Rect rectROI = cv::boundingRect(contours[index]);
             if (VerifyPlateSize(rectROI.size(), minWidth, maxWidth, minHeight,
                                 maxHeight, minRatio, maxRatio)) {

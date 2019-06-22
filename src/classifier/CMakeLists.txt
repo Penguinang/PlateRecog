@@ -79,6 +79,7 @@ add_definitions(/std:c++17)
 add_definitions(/Zc:__cplusplus)
 else(MSVC)
 add_definitions(-std=c++17)
+add_definitions(-Wextra -Wno-unused-parameter -Wall)
 endif(MSVC)
 
 

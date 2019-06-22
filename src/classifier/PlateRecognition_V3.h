@@ -6,6 +6,8 @@
 using std::shared_ptr;
 #include <algorithm>
 using std::sort;
+using std::min;
+using std::max;
 #include <string>
 using std::string;
 
@@ -13,6 +15,8 @@ using std::string;
 #include "csharpImplementations.h"
 
 #include "PlateChar_SVM.h"
+
+using cv::Range;
 
 // class PlateLocator_V3{
 // public:
@@ -36,7 +40,7 @@ namespace PlateRecogn {
         static vector<PlateInfo> Recognite (Mat &matSource) {
             vector<PlateInfo> result = vector<PlateInfo> ();
             vector<PlateInfo> plateInfosLocate = PlateLocator_V3::LocatePlates (matSource);
-            for (int index = 0; index < plateInfosLocate.size(); index++) {
+            for (size_t index = 0; index < plateInfosLocate.size(); index++) {
                 PlateInfo plateInfo = plateInfosLocate[index];
                 shared_ptr<PlateInfo> plateInfoOfHandled = GetPlateInfoByMutilMethodAndMutilColor (plateInfo);
                 if (plateInfoOfHandled != null) {
@@ -111,6 +115,7 @@ namespace PlateRecogn {
             result.PlateLocateMethod = plateInfo.PlateLocateMethod;
             result.PlateColor = plateColor;
             vector<CharInfo> charInfos = vector<CharInfo> ();
+
             switch (splitMethod) {
                 case CharSplitMethod_t::Gamma:
                     charInfos = CharSegment_V3::SplitePlateByGammaTransform (plateInfo.OriginalMat,
@@ -128,16 +133,49 @@ namespace PlateRecogn {
                         plateInfo.OriginalMat, plateColor);
                     break;
             }
-            for (int index = charInfos.size() - 1; index >= 0; index--) {
+
+            auto combineVerticalOrigin = [](vector<CharInfo> &charInfos, PlateInfo &plateInfo){
+                for(size_t index = 1; index < min(charInfos.size(), 3ul); ++ index){
+                    CharInfo &lastCharInfo = charInfos[index-1];
+                    Rect &lastRect = charInfos[index-1].OriginalRect;
+                    Rect &rect = charInfos[index].OriginalRect;
+                    int l1 = rect.x, l2 = lastRect.x, r1 = rect.x+rect.width, r2 = lastRect.x + lastRect.width;
+                    int intersectionLength = -1;
+                    if((intersectionLength = min(r1, r2) - max(l1, l2)) > 0){
+                        float p1 = float(intersectionLength) / (r1-l1);
+                        float p2 = float(intersectionLength) / (r2-l2);
+                        if(p1 > 0.5 || p2 > 0.5){
+                            int t1 = rect.y, b1 = rect.y+rect.height, t2 = lastRect.y, b2 = lastRect.y+lastRect.height;
+                            lastRect = {min(l1, l2), min(t1, t2), max(r1, r2) - min(l1, l2), max(b1, b2) - min(t1, t2)};
+                            lastCharInfo.OriginalMat = plateInfo.OriginalMat(lastRect);
+
+                            charInfos.erase(charInfos.begin() + index);
+                            --index;
+                        }
+                    }
+                }
+            };
+            if(plateInfo.PlateCategory != PlateCategory_t::HongkomgPlate2Row && plateInfo.PlateCategory != PlateCategory_t::MacaoPlate2Row
+                && plateInfo.PlateCategory != PlateCategory_t::MilitrayPlate2Row && plateInfo.PlateCategory != PlateCategory_t::NormalPlate2Row)            
+                combineVerticalOrigin(charInfos, plateInfo);
+
+            // Mat combinedMat = plateInfo.OriginalMat.clone();
+            // for(auto &charInfo : charInfos){
+            //     cv::rectangle(combinedMat, charInfo.OriginalRect, {0, 0, 255});
+            // }
+            // DebugVisualize("combined Rects ", combinedMat);
+            
+            for (size_t index = charInfos.size() - 1; index < charInfos.size(); index--) {
                 CharInfo &charInfo = charInfos[index];
                 PlateChar_t plateChar = PlateChar_SVM::Test (charInfo.OriginalMat);
-                // DebugVisualize("charinfo", charInfo.OriginalMat);
                 if (plateChar == PlateChar_t::NonChar) {
                     charInfos.erase (index + charInfos.begin());
                 }
-                charInfo.PlateChar = plateChar;
+                else
+                    charInfo.PlateChar = plateChar;
             }
             result.CharInfos = charInfos;
+
             CheckLeftAndRightToRemove (result);
             CheckPlateColor (result);
             return result;
@@ -163,9 +201,9 @@ namespace PlateRecogn {
             const CharInfo &second = plateInfo.CharInfos[1];
             int secondValue = (int) second.PlateChar;
 
-            const CharInfo &lastSecond = plateInfo.CharInfos[charCount - 2];
+            // const CharInfo &lastSecond = plateInfo.CharInfos[charCount - 2];
+            // int lastSecondValue = (int) lastSecond.PlateChar;
 
-            int lastSecondValue = (int) lastSecond.PlateChar;
             switch (plateInfo.PlateCategory) {
                 case PlateCategory_t::NormalPlate:
                 case PlateCategory_t::NormalPlate2Row:
@@ -193,13 +231,15 @@ namespace PlateRecogn {
                     break;
                 case PlateCategory_t::AlternativeEnergyPlate:
                     break;
+                
+                default: break;
             }
             charCount = plateInfo.CharInfos.size();
             if (charCount < 7) return;
             const CharInfo &first = plateInfo.CharInfos[0];
             int firstValue = (int) first.PlateChar;
             const CharInfo &second2 = plateInfo.CharInfos[1];
-            secondValue = (int) second2.PlateChar;
+            int secondValue2 = (int) second2.PlateChar;
             const CharInfo &lastFirst = plateInfo.CharInfos[charCount - 1];
             int lastFirstValue = (int) lastFirst.PlateChar;
             switch (plateInfo.PlateCategory) {
@@ -210,10 +250,11 @@ namespace PlateRecogn {
                     if (firstValue <= (int) PlateChar_t::Point) {
                         plateInfo.CharInfos.erase (plateInfo.CharInfos.begin()); //如果第⼀位为⾮汉字，删除
                     }
-                    if (secondValue >= (int) PlateChar_t::_0 && secondValue <= (int) PlateChar_t::_9) {
+                    if (secondValue2 >= (int) PlateChar_t::_0 && secondValue2 <= (int) PlateChar_t::_9) {
                         plateInfo.CharInfos.erase (plateInfo.CharInfos.begin()+1); //如果第⼆位为数字，删除
                     }
                     break;
+                default: break;
             }
         }
         private:
@@ -245,6 +286,7 @@ namespace PlateRecogn {
                 case PlateCategory_t::AlternativeEnergyPlate:
                     plateInfo.PlateColor = PlateColor_t::GreenPlate;
                     break;
+                default: break;
             }
         }
 
