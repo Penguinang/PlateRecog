@@ -2,6 +2,10 @@
 *.o
 *.cs
 *.yaml
+*.exe
+*.dll
+*.ilk
+*.pdb
 
 .vscode
 .vs

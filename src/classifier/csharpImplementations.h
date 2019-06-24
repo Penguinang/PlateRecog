@@ -82,7 +82,7 @@ public:
 		HANDLE hFind;
 		WIN32_FIND_DATAA findData;
 		vector<string> ret;
-		hFind = FindFirstFileA(path.c_str(), &findData);
+		hFind = FindFirstFileA((path+"\\*").c_str(), &findData);
 		if (hFind == INVALID_HANDLE_VALUE)
 		{
 			return {};
@@ -91,7 +91,7 @@ public:
 		{
 			if (strcmp(findData.cFileName, ".") == 0 || strcmp(findData.cFileName, "..") == 0)
 				continue;
-			ret.push_back(findData.cFileName);
+			ret.push_back(path + "\\" + findData.cFileName);
 		} while (FindNextFileA(hFind, &findData));
 		return ret;
 	}
