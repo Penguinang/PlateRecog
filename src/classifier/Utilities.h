@@ -93,7 +93,7 @@ public:
 			cv::normalize(plateMat, plateMat, 0, 1, cv::NORM_MINMAX);
 			cv::pow(plateMat,gammaFactor,plateMat);
             cv::normalize(plateMat,plateMat,0,255,cv::NORM_MINMAX);
-			plateMat.convertTo(plateMat, CV_8UC3);
+            plateMat.convertTo(plateMat, CV_8UC1);
         }
         else if(plateMat.channels()==3)
         {
