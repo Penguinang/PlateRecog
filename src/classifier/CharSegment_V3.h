@@ -289,9 +289,9 @@ public:
         if(plateColor == PlateColor_t::WhitePlate || plateColor == PlateColor_t::YellowPlate || plateColor == PlateColor_t::GreenPlate)
             gray = 255 - gray;
         cv::Mat matOfClearMaodingAndBorder = ClearMaodingAndBorder(gray,plateColor);
-        
+		DebugVisualize("gray", gray);
         // DEBUG
-        // DebugVisualize("matOfClearMaodingAndBorder", matOfClearMaodingAndBorder);
+        DebugVisualize("matOfClearMaodingAndBorder", matOfClearMaodingAndBorder);
 
         std::vector<std::vector<cv::Point>> contours;
         std::vector<cv::Vec4i>hierarchy;
@@ -306,9 +306,9 @@ public:
         for(auto &contour : contours){
             Rect rect = cv::boundingRect(contour);
             cv::rectangle(rectedMat, rect, {0, 0, 255});
-            // DebugVisualizeNotWait((string("contRect ")+ CharSplitMethod_tToString[static_cast<size_t>(charSplitMethod)]).c_str(), rectedMat);
+            DebugVisualizeNotWait((string("contRect ")+ CharSplitMethod_tToString[static_cast<size_t>(charSplitMethod)]).c_str(), rectedMat);
         }
-        // DebugVisualize((string("contimage ")+ CharSplitMethod_tToString[static_cast<size_t>(charSplitMethod)]).c_str(), contimage);
+        DebugVisualize((string("contimage ")+ CharSplitMethod_tToString[static_cast<size_t>(charSplitMethod)]).c_str(), contimage);
 
 
         vector<Rect> rects;
@@ -317,16 +317,16 @@ public:
             Rect rect = cv::boundingRect(contours[index]);
 
             //DEBUG
-            // Mat pos = matOfClearMaodingAndBorder.clone();
-            // cv::cvtColor(pos, pos, cv::COLOR_GRAY2BGR);
-            // cv::rectangle(pos, rect, {0, 0, 255});
-            // DebugVisualize("rects", pos);
+            /* Mat pos = matOfClearMaodingAndBorder.clone();
+             cv::cvtColor(pos, pos, cv::COLOR_GRAY2BGR);
+             cv::rectangle(pos, rect, {0, 0, 255});
+             DebugVisualize("rects", pos);*/
 
             if(NotOnBorder(rect,cv::Size(plateMat.cols,plateMat.rows),leftLimit,rightLimit, topLimit, bottomLimit)&&
                     VerifyRect(rect, minWidth, maxWidth, minHeight, maxHeight, minRatio, maxRatio))
             {
                 rects.push_back(rect);
-                // DebugVisualize("rects", matOfClearMaodingAndBorder(rect));
+                //DebugVisualize("rects", matOfClearMaodingAndBorder(rect));
             }
         }
 
@@ -335,17 +335,16 @@ public:
 
         rects = AdjustRects(rects);
         // DEBUG
-        // Mat rejectedRect = matOfClearMaodingAndBorder.clone();
-        // cv::cvtColor(rejectedRect, rejectedRect, cv::COLOR_GRAY2BGR);
-        // for(auto &rect : rects){
-        //     cv::rectangle(rejectedRect, rect, {0, 0, 255});
-        // }
-        // DebugVisualize("combined Rects ", rejectedRect);
+         Mat rejectedRect = matOfClearMaodingAndBorder.clone();
+         cv::cvtColor(rejectedRect, rejectedRect, cv::COLOR_GRAY2BGR);
+         for(auto &rect : rects){
+             cv::rectangle(rejectedRect, rect, {0, 0, 255});
+         }
+         DebugVisualize("combined Rects ", rejectedRect);
         if(rects.size()==0) return result;
 
         for(size_t index = 0;index<rects.size();index++)
         {
-            // !!! lack of Utilities class
             Rect &rectROI = rects[index];
             rectROI = Utilities::GetSafeRect(rects[index],originalMat);
             CharInfo plateCharInfo;

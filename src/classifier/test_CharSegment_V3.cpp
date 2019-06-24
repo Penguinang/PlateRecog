@@ -66,7 +66,9 @@ void test_SplitePlateByGammaTransform() {
     image = image(rectRoi);
     DebugVisualize("Origin", image);
     PlateColor_t color = PlateColor_t::YellowPlate;
-    auto charInfos = CharSegment_V3::SplitePlateByGammaTransform(image, color);
+    //auto charInfos = CharSegment_V3::SplitePlateByGammaTransform(image, color);
+	Mat PlateMat = image(rectRoi);
+	auto charInfos = CharSegment_V3::SplitePlateByOriginal(image,PlateMat,color);
 
     cout << "Recognized rect count " << charInfos.size() << endl;
     for (auto charInfo : charInfos) {
@@ -78,10 +80,36 @@ void test_SplitePlateByGammaTransform() {
     cout << "Real license " << license << endl;
 }
 
+void test_SplitePlateForAutoSample(int index) {
+	auto data = get_test_data(index);
+	Mat image = get<0>(data);
+	string license = get<1>(data);
+	Rect rectRoi = get<2>(data);
+	PlateColor_t color = get<3>(data);
+
+	image = image(rectRoi);
+	DebugVisualizeNotWait("Origin", image);
+
+	auto CharInfos = CharSegment_V3::SplitePlateForAutoSample(image);
+	cout << "Recognized rect count " << CharInfos.size() << endl;
+
+	Mat rectedImage = image.clone();
+	rectedImage = 0;
+	for (auto charInfo : CharInfos) {
+		// charInfo.PlateChar = PlateChar_t::NonChar;
+		//cout << charInfo.ToString() << charInfo.OriginalRect << endl;
+		rectedImage(charInfo.OriginalRect) = image(charInfo.OriginalRect) + 0;
+	}
+	DebugVisualize("Rect", rectedImage);
+
+	cout << "Real license " << license << endl;
+
+
+}
 #include "PlateLocator_V3.h"
 #include "PlateRecognition_V3.h"
-void test_GetPlateInfo() {
-    auto data = get_test_data(1);
+void test_GetPlateInfo(int index) {
+    auto data = get_test_data(index);
     Mat image = get<0>(data);
     string license = get<1>(data);
     Rect rectRoi = get<2>(data);
@@ -89,9 +117,9 @@ void test_GetPlateInfo() {
 
     image = image(rectRoi);
     DebugVisualizeNotWait("Origin", image);
-    Mat expImage = Utilities::GammaTransform(image, 0.4);
+    //Mat expImage = Utilities::GammaTransform(image, 0.4);
     // Mat expImage = Utilities::HistogramTransform(image);
-    DebugVisualize("Exponential", expImage);
+    //DebugVisualize("Exponential", expImage);
 
     PlateInfo plateInfo = {PlateCategory_t::NormalPlate,
                            rectRoi,
@@ -99,7 +127,7 @@ void test_GetPlateInfo() {
                            {},
                            PlateLocateMethod_t::Color};
     PlateInfo recognizedPlateInfo = PlateRecognition_V3::GetPlateInfo(
-        plateInfo, color, CharSplitMethod_t::Log);
+        plateInfo, color, CharSplitMethod_t::Origin);
 
     auto recognizedCharInfos = recognizedPlateInfo.CharInfos;
     cout << "Recognized rect count " << recognizedCharInfos.size() << endl;
@@ -119,6 +147,12 @@ void test_GetPlateInfo() {
 int main(int argc, char const *argv[]) {
     InitSvm();
     // test_SplitePlateByGammaTransform();
-    test_GetPlateInfo();
+	for (int i = 0; i < 9; i++)
+	{
+		//test_GetPlateInfo(i);
+		test_GetPlateInfo(i);
+	}
+    //test_GetPlateInfo();
+	cout << endl;
     return 0;
 }

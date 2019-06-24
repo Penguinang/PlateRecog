@@ -6,6 +6,7 @@ using cv::Rect;
 using cv::Scalar;
 
 #include <iostream>
+#include <numeric>
 // using namespace std;
 using std::cout;
 using std::endl;
@@ -110,7 +111,7 @@ void test_Char_SVM(){
 void test_Category_SVM(){
     PlateCategory_SVM classifier;
 
-    string imagesPath = "platecharsamples/plates";
+    string imagesPath = "../../bin/platecharsamples/plates";
     vector<string> allImageCategories = Directory::GetFiles(imagesPath);
     vector<vector<float>> Hogs;
     vector<int> Tags;

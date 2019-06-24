@@ -25,11 +25,11 @@ void InitSvm() {
 
 pair<Mat, string> get_test_data(size_t seed) {
     vector<pair<Mat, string>> test_set = {
+		{imread("../../bin/licenses/60T17_61775.jpg"), "粤A DB797" },
         {imread("../../bin/licenses/12867_2019-03-28-08-09-51-086918.jpg"), "粤A CH383"},
         {imread("../../bin/licenses/AM5222_2019-03-23-11-23-57-072708.jpg"), "粤A M5222"},
         {imread("../../bin/licenses/DE4661_2019-03-23-08-55-40-053804.jpg"), "粤A DE466"},
         {imread("../../bin/licenses/CG948_2019-03-23-10-43-23-076807.jpg"), "粤A CG948"},
-        {imread("../../bin/licenses/60T17_61775.jpg"), "粤A DB797"},
         {imread("../../bin/platecharsamples/plates/普通车牌/2019-03-12-09-28-36-069855_颜色法_8.jpg"), "粤K WA305"},
         {imread("../../bin/licenses/CG948_2019-03-23-10-43-23-076807.jpg"), "粤A CG948"},
     };
@@ -40,7 +40,7 @@ pair<Mat, string> get_test_data(size_t seed) {
 }
 
 void test_Recoginition() {
-    for (size_t i = 0; i < 7; i++) {
+    for (size_t i = 0; i < 1; i++) {
         pair<Mat, string> sample = get_test_data(i);
         Mat image =sample.first;
         string license = sample.second;
