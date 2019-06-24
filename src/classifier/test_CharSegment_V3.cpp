@@ -79,6 +79,32 @@ void test_SplitePlateByGammaTransform() {
     cout << "Real license " << license << endl;
 }
 
+void test_SplitePlateForAutoSample(int index) {
+	auto data = get_test_data(index);
+	Mat image = get<0>(data);
+	string license = get<1>(data);
+	Rect rectRoi = get<2>(data);
+	PlateColor_t color = get<3>(data);
+
+	image = image(rectRoi);
+	DebugVisualizeNotWait("Origin", image);
+
+	auto CharInfos = CharSegment_V3::SplitePlateForAutoSample(image);
+	cout << "Recognized rect count " << CharInfos.size() << endl;
+
+	Mat rectedImage = image.clone();
+	rectedImage = 0;
+	for (auto charInfo : CharInfos) {
+		// charInfo.PlateChar = PlateChar_t::NonChar;
+		//cout << charInfo.ToString() << charInfo.OriginalRect << endl;
+		rectedImage(charInfo.OriginalRect) = image(charInfo.OriginalRect) + 0;
+	}
+	DebugVisualize("Rect", rectedImage);
+
+	cout << "Real license " << license << endl;
+
+
+}
 #include "PlateLocator_V3.h"
 #include "PlateRecognition_V3.h"
 void test_GetPlateInfo() {
@@ -120,6 +146,12 @@ void test_GetPlateInfo() {
 int main(int argc, char const *argv[]) {
     InitSvm();
     // test_SplitePlateByGammaTransform();
-    test_GetPlateInfo();
+	for (int i = 0; i < 9; i++)
+	{
+		//test_GetPlateInfo(i);
+		test_GetPlateInfo(i);
+	}
+    //test_GetPlateInfo();
+	cout << endl;
     return 0;
 }

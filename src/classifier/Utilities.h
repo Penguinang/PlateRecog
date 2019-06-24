@@ -31,7 +31,7 @@ public:
             cv::Mat midMat = originalMat.clone();
             midMat.convertTo(midMat, CV_32FC1);
             cv::normalize(midMat, midMat, 0.f, 1.f, cv::NORM_MINMAX);
-            cv::exp(midMat, midMat);
+            cv::pow(midMat,2,midMat);
             cv::normalize(midMat,midMat,0,255,cv::NORM_MINMAX);
             midMat.convertTo(plateMat, CV_8UC1);
         }
@@ -40,8 +40,8 @@ public:
             cv::Mat midMat = originalMat.clone();
             midMat.convertTo(midMat, CV_32FC3);
             cv::normalize(midMat, midMat, 0.f, 1.f, cv::NORM_MINMAX);
-            cv::exp(midMat, midMat);
-            cv::normalize(midMat,midMat,0,255,cv::NORM_MINMAX);
+			cv::pow(midMat, 2, midMat);
+			cv::normalize(midMat,midMat,0,255,cv::NORM_MINMAX);
             midMat.convertTo(plateMat, CV_8UC3);
         }
         return plateMat;
@@ -52,33 +52,37 @@ public:
         cv::Mat plateMat = originalMat.clone();
         if(plateMat.channels()==1)
         {
+			plateMat.convertTo(plateMat, CV_32FC1);
             for(int i=0;i<plateMat.rows;i++)
             {
                 for(int j=0;j<plateMat.cols;j++)
                 {
-                    plateMat.at<uchar>(i,j) = (unsigned char)(logf(plateMat.at<uchar>(i, j)));
+                    plateMat.at<float>(i,j) = log10f(plateMat.at<float>(i, j)+1.0f);
                 }
             }
             cv::normalize(plateMat,plateMat,0,255,cv::NORM_MINMAX);
+			plateMat.convertTo(plateMat, CV_8UC1);
 
         }
         else if(plateMat.channels()==3)
         {
+			plateMat.convertTo(plateMat, CV_32FC3);
             for(int i=0;i<plateMat.rows;i++)
             {
                 for(int j=0;j<plateMat.cols;j++)
                 {
-                    plateMat.at<cv::Vec3b>(i,j)[0]=(unsigned char)(logf(originalMat.at<cv::Vec3b>(i, j)[0]));
-                    plateMat.at<cv::Vec3b>(i,j)[1]=(unsigned char)(logf(originalMat.at<cv::Vec3b>(i, j)[1]));
-                    plateMat.at<cv::Vec3b>(i,j)[2]=(unsigned char)(logf(originalMat.at<cv::Vec3b>(i, j)[2]));
+					plateMat.at<cv::Vec3f>(i, j)[0] = log10f(plateMat.at<cv::Vec3f>(i, j)[0] + 1.0f);
+					plateMat.at<cv::Vec3f>(i, j)[1] = log10f(plateMat.at<cv::Vec3f>(i, j)[1] + 1.0f);
+					plateMat.at<cv::Vec3f>(i, j)[2] = log10f(plateMat.at<cv::Vec3f>(i, j)[2] + 1.0f);
                 }
             }
             cv::normalize(plateMat,plateMat,0,255,cv::NORM_MINMAX);
+			plateMat.convertTo(plateMat, CV_8UC3);
         }
         return plateMat;
     }
 
-    static cv::Mat GammaTransform(cv::Mat &originalMat,float gammaFactor)
+    static cv::Mat GammaTransform(cv::Mat &originalMat,float gammaFactor = 0.4f)
     {      
         cv::Mat plateMat = originalMat.clone();
 		
@@ -97,10 +101,27 @@ public:
 			cv::normalize(plateMat, plateMat, 0, 1, cv::NORM_MINMAX);
 			cv::pow(plateMat, gammaFactor, plateMat);
             cv::normalize(plateMat,plateMat,0,255,cv::NORM_MINMAX);
-            plateMat.convertTo(plateMat, CV_8UC3);
+			plateMat.convertTo(plateMat, CV_8UC3);
         }
         return plateMat;
     }
+
+	static cv::Mat LaplaceTransform(cv::Mat &originalMat)
+	{
+		cv::Mat kernel = cv::Mat(3, 3, CV_32FC1).clone();
+		kernel.at<float>(0, 0) = 0;
+		kernel.at<float>(0, 1) = -1;
+		kernel.at<float>(0, 2) = 0;
+		kernel.at<float>(1, 0) = 0;
+		kernel.at<float>(1, 1) = 5;
+		kernel.at<float>(1, 2) = 0;
+		kernel.at<float>(2, 0) = 0;
+		kernel.at<float>(2, 1) = -1;
+		kernel.at<float>(2, 2) = 0;
+		cv::Mat result;
+		cv::filter2D(originalMat,result, 3, kernel);
+		return result;
+	}
 
     static Rect GetSafeRect(const Rect &rect, const Mat &mat){
         int x = rect.x, y = rect.y, width = rect.width, height = rect.height;

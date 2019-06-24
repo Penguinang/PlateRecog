@@ -57,42 +57,61 @@ class PlateRecognition_V3 {
         return result;
     }
 
-    // 返回值可能是null，改成指针
-  public:
-    static shared_ptr<PlateInfo>
-    GetPlateInfoByMutilMethodAndMutilColor(PlateInfo &plateInfo) {
-        PlateInfo *result = null;
-        if (plateInfo.OriginalMat.empty())
+        // 返回值可能是null，改成指针
+        public:
+        static shared_ptr<PlateInfo> GetPlateInfoByMutilMethodAndMutilColor (PlateInfo &plateInfo) {
+            PlateInfo *result = null;
+            if (plateInfo.OriginalMat.empty()) return shared_ptr<PlateInfo>(result);
+            PlateInfo plateInfo_Blue = GetPlateInfoByMutilMethod (plateInfo, PlateColor_t::BluePlate);
+            /*if (JudgePlateRightful (plateInfo_Blue) == true) {
+                plateInfo_Blue.PlateColor = PlateColor_t::BluePlate;
+                return shared_ptr<PlateInfo>(new PlateInfo(plateInfo_Blue));
+            }*/
+            PlateInfo plateInfo_Yello = GetPlateInfoByMutilMethod (plateInfo, PlateColor_t::YellowPlate);
+           /* if (JudgePlateRightful (plateInfo_Yello) == true) {
+                plateInfo_Yello.PlateColor = PlateColor_t::YellowPlate;
+                return shared_ptr<PlateInfo>(new PlateInfo(plateInfo_Yello));
+            }*/
+			if (GetCharCount(plateInfo_Blue) > GetCharCount(plateInfo_Yello))
+			{
+				plateInfo_Blue.PlateColor = PlateColor_t::BluePlate;
+				return shared_ptr<PlateInfo>(new PlateInfo(plateInfo_Blue));
+			}
+			else
+			{
+				plateInfo_Yello.PlateColor = PlateColor_t::YellowPlate;
+				return shared_ptr<PlateInfo>(new PlateInfo(plateInfo_Yello));
+			}
             return shared_ptr<PlateInfo>(result);
-        PlateInfo plateInfo_Blue =
-            GetPlateInfoByMutilMethod(plateInfo, PlateColor_t::BluePlate);
-        if (JudgePlateRightful(plateInfo_Blue) == true) {
-            plateInfo_Blue.PlateColor = PlateColor_t::BluePlate;
-            return shared_ptr<PlateInfo>(new PlateInfo(plateInfo_Blue));
         }
-        PlateInfo plateInfo_Yello =
-            GetPlateInfoByMutilMethod(plateInfo, PlateColor_t::YellowPlate);
-        if (JudgePlateRightful(plateInfo_Yello) == true) {
-            plateInfo_Yello.PlateColor = PlateColor_t::YellowPlate;
-            return shared_ptr<PlateInfo>(new PlateInfo(plateInfo_Yello));
-        }
-        return shared_ptr<PlateInfo>(result);
-    }
 
-  public:
-    static bool JudgePlateRightful(const PlateInfo &plateInfo) {
-        if (plateInfo.CharInfos.empty() || plateInfo.CharInfos.size() == 0)
-            return false;
-        if (plateInfo.PlateColor == PlateColor_t::UnknownPlate)
-            return false;
-        int charCount = 0;
-        for (auto charInfo : plateInfo.CharInfos) {
-            if (charInfo.PlateChar != PlateChar_t::NonChar) {
-                charCount++;
+        public:
+        static bool JudgePlateRightful(const PlateInfo &plateInfo) {
+            if (plateInfo.CharInfos.empty() || plateInfo.CharInfos.size() == 0)
+                return false;
+            if (plateInfo.PlateColor == PlateColor_t::UnknownPlate)
+                return false;
+            int charCount = 0;
+            for (auto charInfo : plateInfo.CharInfos) {
+                if (charInfo.PlateChar != PlateChar_t::NonChar) {
+                    charCount++;
+                }
             }
+            return (charCount >= 5);
         }
-        return (charCount >= 5);
-    }
+
+		static int GetCharCount(const PlateInfo &plateInfo) {
+			if (plateInfo.CharInfos.empty() || plateInfo.CharInfos.size() == 0) return 0;
+			if (plateInfo.PlateColor == PlateColor_t::UnknownPlate) return 0;
+			int charCount = 0;
+			for (auto charInfo : plateInfo.CharInfos) {
+				if (charInfo.PlateChar != PlateChar_t::NonChar) {
+					charCount++;
+				}
+			}
+			return charCount;
+		}
+		
 
   public:
     static PlateInfo GetPlateInfoByMutilMethod(PlateInfo &plateInfo,

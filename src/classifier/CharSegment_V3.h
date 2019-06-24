@@ -291,9 +291,9 @@ public:
             gray = 255 - gray;
         // DebugVisualize("gray", gray);
         cv::Mat matOfClearMaodingAndBorder = ClearMaodingAndBorder(gray,plateColor);
-        
+		DebugVisualize("gray", gray);
         // DEBUG
-        // DebugVisualize("matOfClearMaodingAndBorder", matOfClearMaodingAndBorder);
+        DebugVisualize("matOfClearMaodingAndBorder", matOfClearMaodingAndBorder);
 
         // std::vector<std::vector<cv::Point>> contours;
         std::vector<cv::Vec4i>hierarchy;
@@ -337,17 +337,16 @@ public:
 
         rects = AdjustRects(rects);
         // DEBUG
-        // Mat rejectedRect = matOfClearMaodingAndBorder.clone();
-        // cv::cvtColor(rejectedRect, rejectedRect, cv::COLOR_GRAY2BGR);
-        // for(auto &rect : rects){
-        //     cv::rectangle(rejectedRect, rect, {0, 0, 255});
-        // }
-        // DebugVisualize("combined Rects ", rejectedRect);
+         Mat rejectedRect = matOfClearMaodingAndBorder.clone();
+         cv::cvtColor(rejectedRect, rejectedRect, cv::COLOR_GRAY2BGR);
+         for(auto &rect : rects){
+             cv::rectangle(rejectedRect, rect, {0, 0, 255});
+         }
+         DebugVisualize("combined Rects ", rejectedRect);
         if(rects.size()==0) return result;
 
         for(size_t index = 0;index<rects.size();index++)
         {
-            // !!! lack of Utilities class
             Rect &rectROI = rects[index];
             rectROI = Utilities::GetSafeRect(rects[index],originalMat);
             CharInfo plateCharInfo;
