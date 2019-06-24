@@ -81,29 +81,20 @@ public:
     static cv::Mat GammaTransform(cv::Mat &originalMat,float gammaFactor)
     {      
         cv::Mat plateMat = originalMat.clone();
+		
+	
         if(plateMat.channels()==1)
         {
-            for(int i=0;i<plateMat.rows;i++)
-            {
-                for(int j=0;j<plateMat.cols;j++)
-                {
-                    plateMat.at<uchar>(i,j) = (unsigned char)(pow(plateMat.at<uchar>(i, j),gammaFactor));
-                }
-            }
+			plateMat.convertTo(plateMat, CV_32FC1);
+			cv::normalize(plateMat, plateMat, 0, 1, cv::NORM_MINMAX);
+			cv::pow(plateMat,gammaFactor,plateMat);
             cv::normalize(plateMat,plateMat,0,255,cv::NORM_MINMAX);
-
         }
         else if(plateMat.channels()==3)
         {
-            for(int i=0;i<plateMat.rows;i++)
-            {
-                for(int j=0;j<plateMat.cols;j++)
-                {
-                    plateMat.at<cv::Vec3b>(i,j)[0]=(unsigned char)(pow(plateMat.at<cv::Vec3b>(i, j)[0],gammaFactor));
-                    plateMat.at<cv::Vec3b>(i,j)[1]=(unsigned char)(pow(plateMat.at<cv::Vec3b>(i, j)[1],gammaFactor));
-                    plateMat.at<cv::Vec3b>(i,j)[2]=(unsigned char)(pow(plateMat.at<cv::Vec3b>(i, j)[2],gammaFactor));
-                }
-            }
+			plateMat.convertTo(plateMat, CV_32FC3);
+			cv::normalize(plateMat, plateMat, 0, 1, cv::NORM_MINMAX);
+			cv::pow(plateMat, gammaFactor, plateMat);
             cv::normalize(plateMat,plateMat,0,255,cv::NORM_MINMAX);
         }
         return plateMat;
