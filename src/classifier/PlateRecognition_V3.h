@@ -57,61 +57,63 @@ class PlateRecognition_V3 {
         return result;
     }
 
-        // 返回值可能是null，改成指针
-        public:
-        static shared_ptr<PlateInfo> GetPlateInfoByMutilMethodAndMutilColor (PlateInfo &plateInfo) {
-            PlateInfo *result = null;
-            if (plateInfo.OriginalMat.empty()) return shared_ptr<PlateInfo>(result);
-            PlateInfo plateInfo_Blue = GetPlateInfoByMutilMethod (plateInfo, PlateColor_t::BluePlate);
-            /*if (JudgePlateRightful (plateInfo_Blue) == true) {
-                plateInfo_Blue.PlateColor = PlateColor_t::BluePlate;
-                return shared_ptr<PlateInfo>(new PlateInfo(plateInfo_Blue));
-            }*/
-            PlateInfo plateInfo_Yello = GetPlateInfoByMutilMethod (plateInfo, PlateColor_t::YellowPlate);
-           /* if (JudgePlateRightful (plateInfo_Yello) == true) {
-                plateInfo_Yello.PlateColor = PlateColor_t::YellowPlate;
-                return shared_ptr<PlateInfo>(new PlateInfo(plateInfo_Yello));
-            }*/
-			if (GetCharCount(plateInfo_Blue) > GetCharCount(plateInfo_Yello))
-			{
-				plateInfo_Blue.PlateColor = PlateColor_t::BluePlate;
-				return shared_ptr<PlateInfo>(new PlateInfo(plateInfo_Blue));
-			}
-			else
-			{
-				plateInfo_Yello.PlateColor = PlateColor_t::YellowPlate;
-				return shared_ptr<PlateInfo>(new PlateInfo(plateInfo_Yello));
-			}
+    // 返回值可能是null，改成指针
+  public:
+    static shared_ptr<PlateInfo>
+    GetPlateInfoByMutilMethodAndMutilColor(PlateInfo &plateInfo) {
+        PlateInfo *result = null;
+        if (plateInfo.OriginalMat.empty())
             return shared_ptr<PlateInfo>(result);
+        PlateInfo plateInfo_Blue =
+            GetPlateInfoByMutilMethod(plateInfo, PlateColor_t::BluePlate);
+        /*if (JudgePlateRightful (plateInfo_Blue) == true) {
+            plateInfo_Blue.PlateColor = PlateColor_t::BluePlate;
+            return shared_ptr<PlateInfo>(new PlateInfo(plateInfo_Blue));
+        }*/
+        PlateInfo plateInfo_Yello =
+            GetPlateInfoByMutilMethod(plateInfo, PlateColor_t::YellowPlate);
+        /* if (JudgePlateRightful (plateInfo_Yello) == true) {
+             plateInfo_Yello.PlateColor = PlateColor_t::YellowPlate;
+             return shared_ptr<PlateInfo>(new PlateInfo(plateInfo_Yello));
+         }*/
+        if (GetCharCount(plateInfo_Blue) > GetCharCount(plateInfo_Yello)) {
+            plateInfo_Blue.PlateColor = PlateColor_t::BluePlate;
+            return shared_ptr<PlateInfo>(new PlateInfo(plateInfo_Blue));
+        } else {
+            plateInfo_Yello.PlateColor = PlateColor_t::YellowPlate;
+            return shared_ptr<PlateInfo>(new PlateInfo(plateInfo_Yello));
         }
+        return shared_ptr<PlateInfo>(result);
+    }
 
-        public:
-        static bool JudgePlateRightful(const PlateInfo &plateInfo) {
-            if (plateInfo.CharInfos.empty() || plateInfo.CharInfos.size() == 0)
-                return false;
-            if (plateInfo.PlateColor == PlateColor_t::UnknownPlate)
-                return false;
-            int charCount = 0;
-            for (auto charInfo : plateInfo.CharInfos) {
-                if (charInfo.PlateChar != PlateChar_t::NonChar) {
-                    charCount++;
-                }
+  public:
+    static bool JudgePlateRightful(const PlateInfo &plateInfo) {
+        if (plateInfo.CharInfos.empty() || plateInfo.CharInfos.size() == 0)
+            return false;
+        if (plateInfo.PlateColor == PlateColor_t::UnknownPlate)
+            return false;
+        int charCount = 0;
+        for (auto charInfo : plateInfo.CharInfos) {
+            if (charInfo.PlateChar != PlateChar_t::NonChar) {
+                charCount++;
             }
-            return (charCount >= 5);
         }
+        return (charCount >= 5);
+    }
 
-		static int GetCharCount(const PlateInfo &plateInfo) {
-			if (plateInfo.CharInfos.empty() || plateInfo.CharInfos.size() == 0) return 0;
-			if (plateInfo.PlateColor == PlateColor_t::UnknownPlate) return 0;
-			int charCount = 0;
-			for (auto charInfo : plateInfo.CharInfos) {
-				if (charInfo.PlateChar != PlateChar_t::NonChar) {
-					charCount++;
-				}
-			}
-			return charCount;
-		}
-		
+    static int GetCharCount(const PlateInfo &plateInfo) {
+        if (plateInfo.CharInfos.empty() || plateInfo.CharInfos.size() == 0)
+            return 0;
+        if (plateInfo.PlateColor == PlateColor_t::UnknownPlate)
+            return 0;
+        int charCount = 0;
+        for (auto charInfo : plateInfo.CharInfos) {
+            if (charInfo.PlateChar != PlateChar_t::NonChar) {
+                charCount++;
+            }
+        }
+        return charCount;
+    }
 
   public:
     static PlateInfo GetPlateInfoByMutilMethod(PlateInfo &plateInfo,
@@ -160,21 +162,22 @@ class PlateRecognition_V3 {
 
         switch (splitMethod) {
         case CharSplitMethod_t::Gamma:
-            charInfos = CharSegment_V3::SplitePlateByGammaTransform(contours, 
-                plateInfo.OriginalMat, plateColor);
+            charInfos = CharSegment_V3::SplitePlateByGammaTransform(
+                contours, plateInfo.OriginalMat, plateColor);
             break;
         case CharSplitMethod_t::Exponential:
-            charInfos = CharSegment_V3::SplitePlateByIndexTransform(contours, 
-                plateInfo.OriginalMat, plateColor);
+            charInfos = CharSegment_V3::SplitePlateByIndexTransform(
+                contours, plateInfo.OriginalMat, plateColor);
             break;
         case CharSplitMethod_t::Log:
-            charInfos = CharSegment_V3::SplitePlateByLogTransform(contours, 
-                plateInfo.OriginalMat, plateColor);
+            charInfos = CharSegment_V3::SplitePlateByLogTransform(
+                contours, plateInfo.OriginalMat, plateColor);
             break;
         case CharSplitMethod_t::Origin:
         default:
-            charInfos = CharSegment_V3::SplitePlateByOriginal(contours, 
-                plateInfo.OriginalMat, plateInfo.OriginalMat, plateColor);
+            charInfos = CharSegment_V3::SplitePlateByOriginal(
+                contours, plateInfo.OriginalMat, plateInfo.OriginalMat,
+                plateColor);
             break;
         }
 
@@ -251,8 +254,7 @@ class PlateRecognition_V3 {
                 float xInterval = (rectCenter(charInfos[5].OriginalRect).x -
                                    rectCenter(charInfos[1].OriginalRect).x) /
                                   4.f;
-                int xFirst =
-                    charInfos[0].OriginalRect.x - xInterval;
+                int xFirst = charInfos[0].OriginalRect.x - xInterval;
                 float meanHeight = std::accumulate(
                     charInfos.begin(), charInfos.end(), 0.f,
                     [](float init, const CharInfo &next) -> float {
@@ -268,8 +270,8 @@ class PlateRecognition_V3 {
                 float meanY = std::accumulate(
                     charInfos.begin(), charInfos.end(), 0.f,
                     [](float init, const CharInfo &next) -> float {
-                        return init +=
-                            next.OriginalRect.y + next.OriginalRect.height / 2;
+                        return init += next.OriginalRect.y +
+                                       next.OriginalRect.height / 2;
                     });
                 meanY /= charInfos.size();
 
@@ -282,10 +284,8 @@ class PlateRecognition_V3 {
                 Rect firstCharRect;
                 for (auto &ct : contours) {
                     Rect bRect = cv::boundingRect(ct);
-                    bool intersectInternal =
-                        (bRect & first).area() > 0;
-                    bool containOuter =
-                        (bRect & firstOutLimit) == bRect;
+                    bool intersectInternal = (bRect & first).area() > 0;
+                    bool containOuter = (bRect & firstOutLimit) == bRect;
                     if (intersectInternal && containOuter) {
                         firstCharRect |= bRect;
                     }

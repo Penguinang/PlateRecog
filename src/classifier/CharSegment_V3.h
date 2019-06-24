@@ -169,11 +169,14 @@ public:
     static vector<CharInfo> SplitePlateForAutoSample(cv::Mat &plateMat)
     {
         vector<CharInfo> result;
-        std::vector<std::vector<cv::Point>> contours;
-        vector<CharInfo> charInfos_Original_Blue=SplitePlateByOriginal(contours, plateMat,plateMat,PlateColor_t::BluePlate);
-        vector<CharInfo> charInfos_IndexTransform_Blue = SplitePlateByIndexTransform(contours, plateMat,PlateColor_t::BluePlate);
-        vector<CharInfo> charInfos_GammaTransform_Blue = SplitePlateByGammaTransform(contours, plateMat,PlateColor_t::BluePlate);
-        vector<CharInfo> charInfos_LogTransform_Blue = SplitePlateByLogTransform(contours, plateMat, PlateColor_t::BluePlate);
+        std::vector<std::vector<cv::Point>> contours_Original_Blue;
+        std::vector<std::vector<cv::Point>> contours_IndexTransform_Blue;
+        std::vector<std::vector<cv::Point>> contours_GammaTransform_Blue;
+        std::vector<std::vector<cv::Point>> contours_LogTransform_Blue;
+        vector<CharInfo> charInfos_Original_Blue=SplitePlateByOriginal(contours_Original_Blue, plateMat,plateMat,PlateColor_t::BluePlate);
+        vector<CharInfo> charInfos_IndexTransform_Blue = SplitePlateByIndexTransform(contours_IndexTransform_Blue, plateMat,PlateColor_t::BluePlate);
+        vector<CharInfo> charInfos_GammaTransform_Blue = SplitePlateByGammaTransform(contours_GammaTransform_Blue, plateMat,PlateColor_t::BluePlate);
+        vector<CharInfo> charInfos_LogTransform_Blue = SplitePlateByLogTransform(contours_LogTransform_Blue, plateMat, PlateColor_t::BluePlate);
 
         vector<CharInfo> charInfos_Blue;
         charInfos_Blue.insert(charInfos_Blue.end(),charInfos_Original_Blue.begin(),charInfos_Original_Blue.end());
@@ -181,7 +184,7 @@ public:
         charInfos_Blue.insert(charInfos_Blue.end(),charInfos_GammaTransform_Blue.begin(),charInfos_GammaTransform_Blue.end());
         charInfos_Blue.insert(charInfos_Blue.end(),charInfos_LogTransform_Blue.begin(),charInfos_LogTransform_Blue.end());
 
-        int isCharCount = 0;
+        int isCharCount_Blue = 0;
         for(size_t index = 0;index<charInfos_Blue.size();index++)
         {
             CharInfo charInfo = charInfos_Blue[index];
@@ -189,15 +192,20 @@ public:
 
             if(charInfo.PlateChar != PlateChar_t::NonChar)
             {
-                isCharCount++;
+                isCharCount_Blue++;
             }
         }
 
-        if (isCharCount >= 15) return charInfos_Blue;
-        vector<CharInfo> charInfos_Original_Yellow = SplitePlateByOriginal(contours, plateMat, plateMat, PlateColor_t::YellowPlate);
-        vector<CharInfo> charInfos_IndexTransform_Yellow = SplitePlateByIndexTransform(contours, plateMat,PlateColor_t::YellowPlate);
-        vector<CharInfo> charInfos_GammaTransform_Yellow = SplitePlateByGammaTransform(contours, plateMat,PlateColor_t::YellowPlate);
-        vector<CharInfo> charInfos_LogTransform_Yellow = SplitePlateByLogTransform(contours, plateMat,PlateColor_t::YellowPlate);
+        // if (isCharCount_Blue >= 15) return charInfos_Blue;
+
+        std::vector<std::vector<cv::Point>> contours_Original_Yellow;
+        std::vector<std::vector<cv::Point>> contours_IndexTransform_Yellow;
+        std::vector<std::vector<cv::Point>> contours_GammaTransform_Yellow;
+        std::vector<std::vector<cv::Point>> contours_LogTransform_Yellow;
+        vector<CharInfo> charInfos_Original_Yellow = SplitePlateByOriginal(contours_Original_Yellow, plateMat, plateMat, PlateColor_t::YellowPlate);
+        vector<CharInfo> charInfos_IndexTransform_Yellow = SplitePlateByIndexTransform(contours_IndexTransform_Yellow, plateMat,PlateColor_t::YellowPlate);
+        vector<CharInfo> charInfos_GammaTransform_Yellow = SplitePlateByGammaTransform(contours_GammaTransform_Yellow, plateMat,PlateColor_t::YellowPlate);
+        vector<CharInfo> charInfos_LogTransform_Yellow = SplitePlateByLogTransform(contours_LogTransform_Yellow, plateMat,PlateColor_t::YellowPlate);
 
         vector<CharInfo> charInfos_Yellow;
         charInfos_Yellow.insert(charInfos_Yellow.end(),charInfos_Original_Yellow.begin(),charInfos_Original_Yellow.end());
@@ -205,16 +213,22 @@ public:
         charInfos_Yellow.insert(charInfos_Yellow.end(),charInfos_GammaTransform_Yellow.begin(),charInfos_GammaTransform_Yellow.end());
         charInfos_Yellow.insert(charInfos_Yellow.end(),charInfos_LogTransform_Yellow.begin(),charInfos_LogTransform_Yellow.end());
 
-        isCharCount = 0;
+        int isCharCount_Yellow = 0;
         for (size_t index = 0; index < charInfos_Yellow.size(); index++)
         {
             CharInfo charInfo = charInfos_Yellow[index];
             charInfo.PlateChar = PlateChar_SVM::Test(charInfo.OriginalMat);
-            if (charInfo.PlateChar != PlateChar_t::NonChar) isCharCount++;
+            if (charInfo.PlateChar != PlateChar_t::NonChar) isCharCount_Yellow++;
         }
-        if (isCharCount >= 15) return charInfos_Yellow;
-        charInfos_Blue.clear();
-        return charInfos_Blue;
+        // if (isCharCount_Yellow >= 15) return charInfos_Yellow;
+        if(isCharCount_Blue > isCharCount_Yellow){
+            return charInfos_Blue;
+        } else{
+            return charInfos_Yellow;
+        }
+
+        // charInfos_Blue.clear();
+        // return charInfos_Blue;
     }
 
     static vector<CharInfo> SplitePlateByIndexTransform(std::vector<std::vector<cv::Point>> &contours, cv::Mat &originalMat,

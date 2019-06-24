@@ -67,7 +67,8 @@ void test_SplitePlateByGammaTransform() {
     DebugVisualize("Origin", image);
     PlateColor_t color = PlateColor_t::YellowPlate;
     std::vector<std::vector<cv::Point>> contours;
-    auto charInfos = CharSegment_V3::SplitePlateByGammaTransform(contours, image, color);
+    auto charInfos =
+        CharSegment_V3::SplitePlateByGammaTransform(contours, image, color);
 
     cout << "Recognized rect count " << charInfos.size() << endl;
     for (auto charInfo : charInfos) {
@@ -79,31 +80,30 @@ void test_SplitePlateByGammaTransform() {
     cout << "Real license " << license << endl;
 }
 
-void test_SplitePlateForAutoSample(int index) {
-	auto data = get_test_data(index);
-	Mat image = get<0>(data);
-	string license = get<1>(data);
-	Rect rectRoi = get<2>(data);
-	PlateColor_t color = get<3>(data);
+void test_SplitePlateForAutoSample() {
+    int index = 0;
+    auto data = get_test_data(index);
+    Mat image = get<0>(data);
+    string license = get<1>(data);
+    Rect rectRoi = get<2>(data);
+    PlateColor_t color = get<3>(data);
 
-	image = image(rectRoi);
-	DebugVisualizeNotWait("Origin", image);
+    image = image(rectRoi);
+    DebugVisualizeNotWait("Origin", image);
 
-	auto CharInfos = CharSegment_V3::SplitePlateForAutoSample(image);
-	cout << "Recognized rect count " << CharInfos.size() << endl;
+    auto CharInfos = CharSegment_V3::SplitePlateForAutoSample(image);
+    cout << "Recognized rect count " << CharInfos.size() << endl;
 
-	Mat rectedImage = image.clone();
-	rectedImage = 0;
-	for (auto charInfo : CharInfos) {
-		// charInfo.PlateChar = PlateChar_t::NonChar;
-		//cout << charInfo.ToString() << charInfo.OriginalRect << endl;
-		rectedImage(charInfo.OriginalRect) = image(charInfo.OriginalRect) + 0;
-	}
-	DebugVisualize("Rect", rectedImage);
+    Mat rectedImage = image.clone();
+    rectedImage = 0;
+    for (auto charInfo : CharInfos) {
+        // charInfo.PlateChar = PlateChar_t::NonChar;
+        // cout << charInfo.ToString() << charInfo.OriginalRect << endl;
+        rectedImage(charInfo.OriginalRect) = image(charInfo.OriginalRect) + 0;
+    }
+    DebugVisualize("Rect", rectedImage);
 
-	cout << "Real license " << license << endl;
-
-
+    cout << "Real license " << license << endl;
 }
 #include "PlateLocator_V3.h"
 #include "PlateRecognition_V3.h"
@@ -146,12 +146,6 @@ void test_GetPlateInfo() {
 int main(int argc, char const *argv[]) {
     InitSvm();
     // test_SplitePlateByGammaTransform();
-	for (int i = 0; i < 9; i++)
-	{
-		//test_GetPlateInfo(i);
-		test_GetPlateInfo(i);
-	}
-    //test_GetPlateInfo();
-	cout << endl;
+    // test_GetPlateInfo();
     return 0;
 }

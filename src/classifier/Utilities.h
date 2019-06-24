@@ -82,7 +82,7 @@ public:
         return plateMat;
     }
 
-    static cv::Mat GammaTransform(cv::Mat &originalMat,float gammaFactor = 0.4f)
+    static cv::Mat GammaTransform(cv::Mat &originalMat,float gammaFactor)
     {      
         cv::Mat plateMat = originalMat.clone();
 		
