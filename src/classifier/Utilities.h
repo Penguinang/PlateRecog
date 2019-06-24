@@ -1,4 +1,4 @@
-﻿#ifndef UTILITIES_H
+#ifndef UTILITIES_H
 #define UTILITIES_H
 
 #include <opencv2/core.hpp>
@@ -28,28 +28,21 @@ public:
         cv::Mat plateMat = originalMat.clone();
         if(plateMat.channels()==1)
         {
-            for(int i=0;i<plateMat.rows;i++)
-            {
-                for(int j=0;j<plateMat.cols;j++)
-                {
-                    plateMat.at<uchar>(i,j) = (unsigned char)(255.0*expf(originalMat.at<uchar>(i, j)));
-                }
-            }
-            cv::normalize(plateMat,plateMat,0,255, cv::NORM_MINMAX);
-
+            cv::Mat midMat = originalMat.clone();
+            midMat.convertTo(midMat, CV_32FC1);
+            cv::normalize(midMat, midMat, 0.f, 1.f, cv::NORM_MINMAX);
+            cv::exp(midMat, midMat);
+            cv::normalize(midMat,midMat,0,255,cv::NORM_MINMAX);
+            midMat.convertTo(plateMat, CV_8UC1);
         }
         else if(plateMat.channels()==3)
         {
-            for(int i=0;i<plateMat.rows;i++)
-            {
-                for(int j=0;j<plateMat.cols;j++)
-                {
-                    plateMat.at<cv::Vec3b>(i,j)[0]=(unsigned char)(expf(originalMat.at<cv::Vec3b>(i, j)[0]));
-                    plateMat.at<cv::Vec3b>(i,j)[1]=(unsigned char)(expf(originalMat.at<cv::Vec3b>(i, j)[1]));
-                    plateMat.at<cv::Vec3b>(i,j)[2]=(unsigned char)(expf(originalMat.at<cv::Vec3b>(i, j)[2]));
-                }
-            }
-            cv::normalize(plateMat,plateMat,0,255,cv::NORM_MINMAX);
+            cv::Mat midMat = originalMat.clone();
+            midMat.convertTo(midMat, CV_32FC3);
+            cv::normalize(midMat, midMat, 0.f, 1.f, cv::NORM_MINMAX);
+            cv::exp(midMat, midMat);
+            cv::normalize(midMat,midMat,0,255,cv::NORM_MINMAX);
+            midMat.convertTo(plateMat, CV_8UC3);
         }
         return plateMat;
     }
@@ -145,6 +138,17 @@ public:
         }
                 
         return {x, y, width, height};
+    }
+
+    static cv::Mat HistogramTransform(cv::Mat &originalMat){
+        Mat transMat = originalMat.clone();
+        vector<Mat> bgrMats(3);
+        cv::split(transMat, bgrMats);
+        cv::equalizeHist(bgrMats[0], bgrMats[0]);
+        cv::equalizeHist(bgrMats[1], bgrMats[1]);
+        cv::equalizeHist(bgrMats[2], bgrMats[2]);
+        cv::merge(bgrMats, transMat);
+        return transMat;
     }
 };
 }
