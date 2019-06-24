@@ -169,10 +169,11 @@ public:
     static vector<CharInfo> SplitePlateForAutoSample(cv::Mat &plateMat)
     {
         vector<CharInfo> result;
-        vector<CharInfo> charInfos_Original_Blue=SplitePlateByOriginal(plateMat,plateMat,PlateColor_t::BluePlate);
-        vector<CharInfo> charInfos_IndexTransform_Blue = SplitePlateByIndexTransform(plateMat,PlateColor_t::BluePlate);
-        vector<CharInfo> charInfos_GammaTransform_Blue = SplitePlateByGammaTransform(plateMat,PlateColor_t::BluePlate);
-        vector<CharInfo> charInfos_LogTransform_Blue = SplitePlateByLogTransform(plateMat, PlateColor_t::BluePlate);
+        std::vector<std::vector<cv::Point>> contours;
+        vector<CharInfo> charInfos_Original_Blue=SplitePlateByOriginal(contours, plateMat,plateMat,PlateColor_t::BluePlate);
+        vector<CharInfo> charInfos_IndexTransform_Blue = SplitePlateByIndexTransform(contours, plateMat,PlateColor_t::BluePlate);
+        vector<CharInfo> charInfos_GammaTransform_Blue = SplitePlateByGammaTransform(contours, plateMat,PlateColor_t::BluePlate);
+        vector<CharInfo> charInfos_LogTransform_Blue = SplitePlateByLogTransform(contours, plateMat, PlateColor_t::BluePlate);
 
         vector<CharInfo> charInfos_Blue;
         charInfos_Blue.insert(charInfos_Blue.end(),charInfos_Original_Blue.begin(),charInfos_Original_Blue.end());
@@ -193,10 +194,10 @@ public:
         }
 
         if (isCharCount >= 15) return charInfos_Blue;
-        vector<CharInfo> charInfos_Original_Yellow = SplitePlateByOriginal(plateMat, plateMat, PlateColor_t::YellowPlate);
-        vector<CharInfo> charInfos_IndexTransform_Yellow = SplitePlateByIndexTransform(plateMat,PlateColor_t::YellowPlate);
-        vector<CharInfo> charInfos_GammaTransform_Yellow = SplitePlateByGammaTransform(plateMat,PlateColor_t::YellowPlate);
-        vector<CharInfo> charInfos_LogTransform_Yellow = SplitePlateByLogTransform(plateMat,PlateColor_t::YellowPlate);
+        vector<CharInfo> charInfos_Original_Yellow = SplitePlateByOriginal(contours, plateMat, plateMat, PlateColor_t::YellowPlate);
+        vector<CharInfo> charInfos_IndexTransform_Yellow = SplitePlateByIndexTransform(contours, plateMat,PlateColor_t::YellowPlate);
+        vector<CharInfo> charInfos_GammaTransform_Yellow = SplitePlateByGammaTransform(contours, plateMat,PlateColor_t::YellowPlate);
+        vector<CharInfo> charInfos_LogTransform_Yellow = SplitePlateByLogTransform(contours, plateMat,PlateColor_t::YellowPlate);
 
         vector<CharInfo> charInfos_Yellow;
         charInfos_Yellow.insert(charInfos_Yellow.end(),charInfos_Original_Yellow.begin(),charInfos_Original_Yellow.end());
@@ -216,7 +217,7 @@ public:
         return charInfos_Blue;
     }
 
-    static vector<CharInfo> SplitePlateByIndexTransform(cv::Mat &originalMat,
+    static vector<CharInfo> SplitePlateByIndexTransform(std::vector<std::vector<cv::Point>> &contours, cv::Mat &originalMat,
                                                         PlateColor_t plateColor,
                                                         int leftLimit=0,int rightLimit=0,
                                                         int topLimit = 0, int bottomLimit = 0,
@@ -226,7 +227,7 @@ public:
     {
 
         cv::Mat plateMat = Utilities::IndexTransform(originalMat);
-        return SplitePlateByOriginal(originalMat,plateMat,plateColor,
+        return SplitePlateByOriginal(contours, originalMat,plateMat,plateColor,
                                      CharSplitMethod_t::Exponential,
                                      leftLimit,rightLimit,
                                      topLimit, bottomLimit,
@@ -235,7 +236,7 @@ public:
                                      minRatio, maxRatio);
     }
 
-    static vector<CharInfo> SplitePlateByLogTransform(cv::Mat &originalMat,
+    static vector<CharInfo> SplitePlateByLogTransform(std::vector<std::vector<cv::Point>> &contours, cv::Mat &originalMat,
                                                       PlateColor_t plateColor,
                                                       int leftLimit = 0, int rightLimit = 0,
                                                       int topLimit = 0, int bottomLimit = 0,
@@ -244,7 +245,7 @@ public:
                                                       float minRatio = 0.08f, float maxRatio = 2.0f)
     {
         cv::Mat plateMat = Utilities::LogTransform(originalMat);
-        return SplitePlateByOriginal(originalMat, plateMat, plateColor,
+        return SplitePlateByOriginal(contours, originalMat, plateMat, plateColor,
                                      CharSplitMethod_t::Log,
                                      leftLimit, rightLimit,
                                      topLimit, bottomLimit,
@@ -253,7 +254,7 @@ public:
                                      minRatio, maxRatio);
     }
 
-    static vector<CharInfo> SplitePlateByGammaTransform(Mat &originalMat,
+    static vector<CharInfo> SplitePlateByGammaTransform(std::vector<std::vector<cv::Point>> &contours, Mat &originalMat,
                                                         PlateColor_t plateColor,
                                                         float gammaFactor = 0.40f,
                                                         int leftLimit = 0, int rightLimit = 0,
@@ -263,7 +264,7 @@ public:
                                                         float minRatio = 0.08f, float maxRatio = 2.0f)
     {
         cv::Mat plateMat = Utilities::GammaTransform(originalMat,gammaFactor);
-        return SplitePlateByOriginal(originalMat, plateMat, plateColor,
+        return SplitePlateByOriginal(contours, originalMat, plateMat, plateColor,
                                      CharSplitMethod_t::Gamma,
                                      leftLimit, rightLimit,
                                      topLimit, bottomLimit,
@@ -272,7 +273,7 @@ public:
                                      minRatio, maxRatio);
     }
 
-    static vector<CharInfo> SplitePlateByOriginal(cv::Mat &originalMat, cv::Mat &plateMat,
+    static vector<CharInfo> SplitePlateByOriginal(std::vector<std::vector<cv::Point>> &contours, cv::Mat &originalMat, cv::Mat &plateMat,
                                                   PlateColor_t plateColor,
                                                   CharSplitMethod_t charSplitMethod = CharSplitMethod_t::Origin,
                                                   int leftLimit = 0, int rightLimit = 0,
@@ -285,15 +286,16 @@ public:
 
         cv::Mat gray;
         cv::cvtColor(plateMat,gray,cv::COLOR_BGR2GRAY);
-        
+
         if(plateColor == PlateColor_t::WhitePlate || plateColor == PlateColor_t::YellowPlate || plateColor == PlateColor_t::GreenPlate)
             gray = 255 - gray;
+        // DebugVisualize("gray", gray);
         cv::Mat matOfClearMaodingAndBorder = ClearMaodingAndBorder(gray,plateColor);
         
         // DEBUG
         // DebugVisualize("matOfClearMaodingAndBorder", matOfClearMaodingAndBorder);
 
-        std::vector<std::vector<cv::Point>> contours;
+        // std::vector<std::vector<cv::Point>> contours;
         std::vector<cv::Vec4i>hierarchy;
         cv::findContours(matOfClearMaodingAndBorder,contours,hierarchy,cv::RETR_EXTERNAL,cv::CHAIN_APPROX_NONE);
         
@@ -306,9 +308,9 @@ public:
         for(auto &contour : contours){
             Rect rect = cv::boundingRect(contour);
             cv::rectangle(rectedMat, rect, {0, 0, 255});
-            // DebugVisualizeNotWait((string("contRect ")+ CharSplitMethod_tToString[static_cast<size_t>(charSplitMethod)]).c_str(), rectedMat);
+            DebugVisualizeNotWait((string("contRect ")+ CharSplitMethod_tToString[static_cast<size_t>(charSplitMethod)]).c_str(), rectedMat);
         }
-        // DebugVisualize((string("contimage ")+ CharSplitMethod_tToString[static_cast<size_t>(charSplitMethod)]).c_str(), contimage);
+        DebugVisualize((string("contimage ")+ CharSplitMethod_tToString[static_cast<size_t>(charSplitMethod)]).c_str(), contimage);
 
 
         vector<Rect> rects;
@@ -317,16 +319,16 @@ public:
             Rect rect = cv::boundingRect(contours[index]);
 
             //DEBUG
-            // Mat pos = matOfClearMaodingAndBorder.clone();
-            // cv::cvtColor(pos, pos, cv::COLOR_GRAY2BGR);
-            // cv::rectangle(pos, rect, {0, 0, 255});
-            // DebugVisualize("rects", pos);
+            Mat pos = matOfClearMaodingAndBorder.clone();
+            cv::cvtColor(pos, pos, cv::COLOR_GRAY2BGR);
+            cv::rectangle(pos, rect, {0, 0, 255});
+            // DebugVisualizeNotWait("rects", pos);
 
             if(NotOnBorder(rect,cv::Size(plateMat.cols,plateMat.rows),leftLimit,rightLimit, topLimit, bottomLimit)&&
                     VerifyRect(rect, minWidth, maxWidth, minHeight, maxHeight, minRatio, maxRatio))
             {
                 rects.push_back(rect);
-                // DebugVisualize("rects", matOfClearMaodingAndBorder(rect));
+                // DebugVisualize("rects after judgement", matOfClearMaodingAndBorder(rect));
             }
         }
 
