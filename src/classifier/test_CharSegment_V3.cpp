@@ -8,11 +8,18 @@ using cv::Rect;
 #include <iostream>
 using std::cout;
 using std::endl;
+using std::cerr;
 #include <string>
 using std::string;
+#include <utility>
+using std::tuple;
+using std::get;
 
 #include "CharInfo.h"
 #include "CharSegment_V3.h"
+#include "PlateCategory_SVM.h"
+#include "PlateChar_SVM.h"
+
 using namespace Doit::CV::PlateRecogn;
 
 #include "debug.h"

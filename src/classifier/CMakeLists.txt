@@ -25,7 +25,7 @@ elseif(WIN32)
 set(EXTENSION_NAME )
 endif(UNIX)
 
-add_compile_definitions(VISUALIZE_DEBUG)
+# add_compile_definitions(VISUALIZE_DEBUG)
 
 #########################################################################
 ## Opencv
@@ -61,15 +61,21 @@ endif(UNIX)
 
 #########################################################################
 ## Sources
-set(Headers
+set(Sources
     CharInfo.h  
     CharSegment_V3.h  
+    CharSegment_V3.cpp
     csharpImplementations.h  
     PlateCategory_SVM.h  
+    PlateCategory_SVM.cpp
     PlateChar_SVM.h  
+    PlateChar_SVM.cpp
     PlateLocator_V3.h  
+    PlateLocator_V3.cpp
     PlateRecognition_V3.h  
+    PlateRecognition_V3.cpp
     Utilities.h
+    Utilities.cpp
 )
 
 
@@ -87,7 +93,7 @@ endif(MSVC)
 #########################################################################
 ## test_SVM
 add_executable(test_SVM${EXTENSION_NAME})
-foreach(file ${Headers})
+foreach(file ${Sources})
 target_sources(test_SVM${EXTENSION_NAME} PUBLIC ${file})
 endforeach(file)
 target_sources(test_SVM${EXTENSION_NAME} PUBLIC test_SVM.cpp)
@@ -95,7 +101,7 @@ target_sources(test_SVM${EXTENSION_NAME} PUBLIC test_SVM.cpp)
 #########################################################################
 ## test_PlateRecognition
 add_executable(test_PlateRecognition${EXTENSION_NAME})
-foreach(file ${Headers})
+foreach(file ${Sources})
     target_sources(test_PlateRecognition${EXTENSION_NAME} PUBLIC ${file})
 endforeach(file)
 target_sources(test_PlateRecognition${EXTENSION_NAME} PUBLIC test_PlateRecognition.cpp)
@@ -103,7 +109,7 @@ target_sources(test_PlateRecognition${EXTENSION_NAME} PUBLIC test_PlateRecogniti
 #########################################################################
 ## test_CharSegment_V3
 add_executable(test_CharSegment_V3${EXTENSION_NAME})
-foreach(file ${Headers})
+foreach(file ${Sources})
     target_sources(test_CharSegment_V3${EXTENSION_NAME} PUBLIC ${file})
 endforeach(file)
 target_sources(test_CharSegment_V3${EXTENSION_NAME} PUBLIC test_CharSegment_V3.cpp)

@@ -13,6 +13,8 @@ using std::ostringstream;
 using std::vector;
 #include <iomanip>
 using std::ios;
+#include <string>
+using std::string;
 
 /*--------  CharInfo.h  --------*/
 namespace Doit {
@@ -189,7 +191,6 @@ enum class PlateChar_t {
 // HACK
 // convert enum to string
 constexpr const char *PlateChar_tToString[] = {
-    // TODO 改成正确的枚举
     "非字符", "穗", "A",  "B",  "C",  "D",  "E",  "F",  "G",  "H",  "I",
     "J",      "K",  "L",  "M",  "N",  "O",  "P",  "Q",  "R",  "S",  "T",
     "U",      "V",  "W",  "X",  "Y",  "Z",  "_0", "_1", "_2", "_3", "_4",
@@ -213,7 +214,6 @@ enum class PlateLocateMethod_t {
 // HACK
 // convert enum to string
 constexpr const char *PlateLocateMethod_tToString[] = {
-    // TODO 改成正确的枚举
     "Unknown", "ColorBlueBlack", "ColorYellowWhite", "Color", "Sobel", "MSER"};
 EnumOstreamOverload(PlateLocateMethod_t);
 
@@ -224,8 +224,6 @@ enum class CharSplitMethod_t { Unknown = 0, Origin, Gamma, Exponential, Log };
 // HACK
 // convert enum to string
 constexpr const char *CharSplitMethod_tToString[] = {
-    // TODO 改成正确的枚举
-
     "Unknown", "Origin", "Gamma", "Exponential", "Log"};
 
 EnumOstreamOverload(CharSplitMethod_t);
@@ -262,39 +260,7 @@ class CharInfo {
     Rect OriginalRect;
     PlateLocateMethod_t PlateLocateMethod;
     CharSplitMethod_t CharSplitMethod;
-    //         string Info {
-    //             get {
-    //                 return string.Format ("字符:{0} \r\n宽:{1} \r\n⾼:{2}
-    //                 \r\n宽⾼⽐:{3:0.00} \r\n左:{4} \r\n右:{5} \r\n上:{6}
-    // \r\n下:{7} \r\n⻋牌定位:{8} \r\n字符切分:{9} \r\n",
-    //                     this.PlateChar,
-    //                     this.OriginalRect.Width,
-    //                     this.OriginalRect.Height,
-    //                     (float) this.OriginalRect.Width /
-    //                     this.OriginalRect.Height, this.OriginalRect.Left,
-    //                     this.OriginalRect.Right,
-    //                     this.OriginalRect.Top,
-    //                     this.OriginalRect.Bottom,
-    //                     this.PlateLocateMethod,
-    //                     this.CharSplitMethod);
-    //             }
-    //         }
-    string Info() {
-        ostringstream buffer;
-        buffer << "字符:" << PlateChar << " \r\n宽:" << OriginalRect.width
-               << " \r\n高:" << OriginalRect.height << " \r\n宽高比:" <<
-            // TODO 格式不确定
-            std::setiosflags(ios::fixed) << std::setprecision(2)
-               << float(OriginalRect.width) / OriginalRect.height
-               // TODO \r\n ? left right?
-               << " \r\n左:" << OriginalRect.x
-               << " \r\n右:" << OriginalRect.x + OriginalRect.width
-               << " \r\n上:" << OriginalRect.y
-               << "\r\n下:" << OriginalRect.y + OriginalRect.height
-               << " \r\n⻋牌定位:" << PlateLocateMethod
-               << " \r\n字符切分:" << CharSplitMethod << " \r\n";
-        return buffer.str();
-    }
+
     CharInfo() {}
     CharInfo(PlateChar_t plateChar, const Mat &originalMat,
              const Rect &originalRect, PlateLocateMethod_t plateLocateMethod,
@@ -302,6 +268,22 @@ class CharInfo {
         : PlateChar(plateChar), OriginalMat(originalMat),
           OriginalRect(originalRect), PlateLocateMethod(plateLocateMethod),
           CharSplitMethod(charSplitMethod) {}
+
+    string Info() {
+        ostringstream buffer;
+        buffer << "字符:" << PlateChar << " \r\n宽:" << OriginalRect.width
+               << " \r\n高:" << OriginalRect.height
+               << " \r\n宽高比:" << std::setiosflags(ios::fixed)
+               << std::setprecision(2)
+               << float(OriginalRect.width) / OriginalRect.height
+               << " \r\n左:" << OriginalRect.x
+               << " \r\n右:" << OriginalRect.x + OriginalRect.width
+               << " \r\n上:" << OriginalRect.y
+               << " \r\n下:" << OriginalRect.y + OriginalRect.height
+               << " \r\n⻋牌定位:" << PlateLocateMethod
+               << " \r\n字符切分:" << CharSplitMethod << " \r\n";
+        return buffer.str();
+    }
 
     string ToString() {
         string ret = string(PlateChar_tToString[static_cast<int>(PlateChar)]);
@@ -323,13 +305,22 @@ class PlateInfo {
     PlateLocateMethod_t PlateLocateMethod;
     PlateColor_t PlateColor = PlateColor_t::UnknownPlate;
     RotatedRect_t RotatedRect;
+
+    PlateInfo() {}
+    PlateInfo(PlateCategory_t plateCategory, const Rect &originalRect,
+              const Mat &originalMat, const vector<CharInfo> &charInfos,
+              PlateLocateMethod_t plateLocateMethod)
+        : PlateCategory(plateCategory), OriginalRect(originalRect),
+          OriginalMat(originalMat), CharInfos(charInfos),
+          PlateLocateMethod(plateLocateMethod) {}
+
     string Info() {
         ostringstream buffer;
         buffer << "类型:" << PlateCategory << " \r\n颜色:" << PlateColor
                << " \r\n字符:" << ToString() << " \r\n宽:" << OriginalRect.width
-               << " \r\n高:" << OriginalRect.height << " \r\n宽高⽐:" <<
-            //    std::setfill('0') << std::setw(1) << std::setprecision(2)
-            std::setiosflags(ios::fixed) << std::setprecision(2)
+               << " \r\n高:" << OriginalRect.height
+               << " \r\n宽高⽐:" << std::setiosflags(ios::fixed)
+               << std::setprecision(2)
                << float(OriginalRect.width) / OriginalRect.height
                << " \r\n左 : " << OriginalRect.x
                << " \r\n右: " << OriginalRect.x + OriginalRect.width
@@ -338,35 +329,20 @@ class PlateInfo {
                << " \r\n车牌定位: " << PlateLocateMethod << "\r\n ";
         return buffer.str();
     }
-    PlateInfo() {}
-    PlateInfo(PlateCategory_t plateCategory, const Rect &originalRect,
-              const Mat &originalMat, const vector<CharInfo> &charInfos,
-              PlateLocateMethod_t plateLocateMethod)
-        : PlateCategory(plateCategory), OriginalRect(originalRect),
-          OriginalMat(originalMat), CharInfos(charInfos),
-          PlateLocateMethod(plateLocateMethod) {}
+
     string ToString() {
         if (CharInfos.empty()) {
             return "";
         }
-        // StringBuilder stringBuilder = new StringBuilder();
         ostringstream stringBuilder;
-        // // stringBuilder.Append(this.PlateCategory.ToString());
-        // // stringBuilder.Append(" ");
-        // foreach (CharInfo charInfo in this.CharInfos) {
-        //     stringBuilder.Append(charInfo.ToString());
-        // }
         for (auto charInfo : CharInfos) {
             stringBuilder << charInfo.ToString();
         }
-        // string result = stringBuilder.ToString();
         string result = stringBuilder.str();
-        // result = result.Replace("⾮字符", "");
         size_t pos = string::npos;
         while ((pos = result.find("非字符")) != string::npos) {
             result.erase(pos, strlen("非字符"));
         }
-        // return result;
         return result;
     }
 };

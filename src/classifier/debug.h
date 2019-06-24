@@ -5,14 +5,14 @@
 #include <opencv2/highgui.hpp>
 using cv::Mat;
 
-inline void DebugVisualize(const char *WindowName, const Mat &mat){
+inline void DebugVisualize(const char *WindowName, const Mat &mat) {
 #ifdef VISUALIZE_DEBUG
     cv::imshow(WindowName, mat);
     cv::waitKey(0);
 #endif // VISUALIZE_DEBUG
 }
 
-inline void DebugVisualizeNotWait(const char *WindowName, const Mat &mat){
+inline void DebugVisualizeNotWait(const char *WindowName, const Mat &mat) {
 #ifdef VISUALIZE_DEBUG
     cv::imshow(WindowName, mat);
 #endif // VISUALIZE_DEBUG

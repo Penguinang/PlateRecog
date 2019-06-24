@@ -6,5 +6,5 @@ test_SVM:
 	cd build && make test_SVM.out
 clean:
 	cd build && make clean
-%:
+%.o:
 	cd build && make $@

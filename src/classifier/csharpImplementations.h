@@ -9,92 +9,85 @@ using std::string;
 #if __cplusplus >= 201703L
 #include <filesystem>
 using std::filesystem::create_directory;
+using std::filesystem::directory_iterator;
 using std::filesystem::exists;
 using std::filesystem::filesystem_error;
-using std::filesystem::directory_iterator;
 #else
 //#error("至少c++17")
-#include<Windows.h>
+#include <Windows.h>
 
 #endif
 
 /*--------  c# class implementations for cpp  --------*/
 class Random {
-	std::default_random_engine e;
+    std::default_random_engine e;
 
-public:
-	Random() {}
-	int Next(int max) {
-		std::uniform_int_distribution<int> generator(0, max);
-		return generator(e);
-	}
+  public:
+    Random() {}
+    int Next(int max) {
+        std::uniform_int_distribution<int> generator(0, max);
+        return generator(e);
+    }
 };
 
 class DateTime {
-public:
-	int Year;
-	int Month;
-	int Day;
-	int Hour;
-	int Minute;
-	int Second;
-	static DateTime Now() {
-		time_t n = time(NULL);
-		tm *now = localtime(&n);
-		return { now->tm_year, now->tm_mon, now->tm_mday,
-				now->tm_hour, now->tm_min, now->tm_sec };
-	}
+  public:
+    int Year;
+    int Month;
+    int Day;
+    int Hour;
+    int Minute;
+    int Second;
+    static DateTime Now() {
+        time_t n = time(NULL);
+        tm *now = localtime(&n);
+        return {now->tm_year, now->tm_mon, now->tm_mday,
+                now->tm_hour, now->tm_min, now->tm_sec};
+    }
 };
 
 class Directory {
-public:
+  public:
 #if __cplusplus >= 201703L
-	static bool Exists(const string &path) { return exists(path); }
-	static void CreateDirectory(const string &path) { create_directory(path); }
-	static vector<string> GetFiles(const string &path) {
-		vector<string> ret = {};
-		for (auto &p : directory_iterator(path)) {
-			ret.push_back(p.path());
-		}
-		return ret;
-	}
+    static bool Exists(const string &path) { return exists(path); }
+    static void CreateDirectory(const string &path) { create_directory(path); }
+    static vector<string> GetFiles(const string &path) {
+        vector<string> ret = {};
+        for (auto &p : directory_iterator(path)) {
+            ret.push_back(p.path());
+        }
+        return ret;
+    }
 #else
-	//#error("至少c++17")
-	static bool Exists(const string &path)
-	{
-		WIN32_FIND_DATAA  FindFileData;
-		HANDLE hFind;
-		hFind = FindFirstFileA(path.c_str(), &FindFileData);
-		if (hFind != INVALID_HANDLE_VALUE)
-		{
-			FindClose(hFind);
-			return TRUE;
-		}
-		FindClose(hFind);
-		return FALSE;
-	}
-	static void CreateDirectory(const string &path)
-	{
-		CreateDirectory(path);
-	}
-	static vector<string> GetFiles(const string &path)
-	{
-		HANDLE hFind;
-		WIN32_FIND_DATAA findData;
-		vector<string> ret;
-		hFind = FindFirstFileA((path+"\\*").c_str(), &findData);
-		if (hFind == INVALID_HANDLE_VALUE)
-		{
-			return {};
-		}
-		do
-		{
-			if (strcmp(findData.cFileName, ".") == 0 || strcmp(findData.cFileName, "..") == 0)
-				continue;
-			ret.push_back(path + "\\" + findData.cFileName);
-		} while (FindNextFileA(hFind, &findData));
-		return ret;
-	}
+    //#error("至少c++17")
+    static bool Exists(const string &path) {
+        WIN32_FIND_DATAA FindFileData;
+        HANDLE hFind;
+        hFind = FindFirstFileA(path.c_str(), &FindFileData);
+        if (hFind != INVALID_HANDLE_VALUE) {
+            FindClose(hFind);
+            return TRUE;
+        }
+        FindClose(hFind);
+        return FALSE;
+    }
+    static void CreateDirectory(const string &path) { CreateDirectory(path); }
+    static vector<string> GetFiles(const string &path) {
+        HANDLE hFind;
+        WIN32_FIND_DATAA findData;
+        vector<string> ret;
+        hFind = FindFirstFileA((path + "\\*").c_str(), &findData);
+        if (hFind == INVALID_HANDLE_VALUE) {
+            return {};
+        }
+        do {
+            if (strcmp(findData.cFileName, ".") == 0 ||
+                strcmp(findData.cFileName, "..") == 0)
+                continue;
+            ret.push_back(path + "\\" + findData.cFileName);
+        } while (FindNextFileA(hFind, &findData));
+        return ret;
+    }
 
 #endif
 };
