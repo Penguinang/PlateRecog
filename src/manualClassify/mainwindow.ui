@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1033</width>
+    <height>638</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Plates</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout">
+            <item>
+             <widget class="QComboBox" name="comboBox">
+              <item>
+               <property name="text">
+                <string>澳门车牌</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>澳门车牌_两行</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>澳门车牌_内</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>非车牌</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>警牌</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>军牌</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>军牌_两行</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>内集车牌</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>普通车牌</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>普通车牌_两行</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>香港车牌</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>香港车牌_两行</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>香港车牌_内</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>新能源</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item>
+             <widget class="QListWidget" name="imageShowWidget"/>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <item>
+             <widget class="QRadioButton" name="nonPlateButton">
+              <property name="text">
+               <string>非车牌</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="normalplateButton">
+              <property name="text">
+               <string>普通车牌</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="aomenplateButton">
+              <property name="text">
+               <string>澳门车牌</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="anmeoTwoplateButton">
+              <property name="text">
+               <string>澳门车牌_两行</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="aomenInsideButton">
+              <property name="text">
+               <string>澳门车牌_内</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="jinPlateButton">
+              <property name="text">
+               <string>警牌</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="junPlateButton">
+              <property name="text">
+               <string>军牌</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="junTwoButton">
+              <property name="text">
+               <string>军牌_两行</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="insidePlateButton">
+              <property name="text">
+               <string>内集车牌</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="normalTwoButton">
+              <property name="text">
+               <string>普通车牌_两行</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="xiangganButton">
+              <property name="text">
+               <string>香港车牌</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="xianggangTwoButton">
+              <property name="text">
+               <string>香港车牌_两行</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="xianggangInsideButton">
+              <property name="text">
+               <string>香港车牌_内</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="newEnergyPlateButton">
+              <property name="text">
+               <string>新能源</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_2">
+       <attribute name="title">
+        <string>Chars</string>
+       </attribute>
+       <widget class="QListWidget" name="listWidget">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>20</y>
+          <width>531</width>
+          <height>451</height>
+         </rect>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1033</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>菜单</string>
+    </property>
+    <addaction name="actionopenFolder"/>
+   </widget>
+   <addaction name="menu"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionopenFolder">
+   <property name="text">
+    <string>openFolder</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
