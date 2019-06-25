@@ -10,29 +10,21 @@ using cv::Size;
 #include <vector>
 using std::vector;
 
+
+// 保存中间结果
 extern Size gridSize;
 extern vector<Mat> outImages;
-inline void addtoOutput(Mat image){
-    Size size = image.size();
-    if(size.width > gridSize.width){
-        cv::resize(image, image, {gridSize.width, size.height});
-    }
-    size = image.size();
-    if(size.height > gridSize.height){
-        cv::resize(image, image, {size.width, gridSize.height});
-    }
-    size = image.size();
+void addtoOutput(Mat image);
+Mat concatenteImags(vector<Mat> &images, int colCount = 5);
 
-    cv::copyMakeBorder(image, image, 0, gridSize.height - size.height, 0, gridSize.width - size.width, CV_HAL_BORDER_CONSTANT);
-    outImages.push_back(image);
-}
 
+// 可视化中间矩阵
 inline void DebugVisualize(const char *WindowName, const Mat &mat) {
 #ifdef VISUALIZE_DEBUG
     cv::imshow(WindowName, mat);
     cv::waitKey(0);
 #endif // VISUALIZE_DEBUG
-#if 1
+#ifdef SAVE_INTERNAL_IMAGE
     addtoOutput(mat.clone());
 #endif
 }
@@ -41,7 +33,7 @@ inline void DebugVisualizeNotWait(const char *WindowName, const Mat &mat) {
 #ifdef VISUALIZE_DEBUG
     cv::imshow(WindowName, mat);
 #endif // VISUALIZE_DEBUG
-#if 1
+#ifdef SAVE_INTERNAL_IMAGE
     // addtoOutput(mat);
 #endif
 }

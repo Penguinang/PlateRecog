@@ -6,6 +6,8 @@
 #include "PlateRecognition_V3.h"
 using namespace Doit::CV::PlateRecogn;
 
+#include "debug.h"
+
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
 using cv::imread;
@@ -25,26 +27,6 @@ using std::pair;
 using std::tuple;
 #include <vector>
 using std::vector;
-
-Size gridSize = {200, 100};
-vector<Mat> outImages;
-#include "debug.h"
-Mat concatenteImags(vector<Mat> &images, int colCount = 5){
-    int count = images.size();
-    int rows = count / colCount + (count % colCount != 0 ? 1 : 0);
-    Mat out(vector<int>{gridSize.height * rows, gridSize.width * colCount}, CV_8UC3);
-    out = 0;
-    auto it = images.begin();
-    for(int r = 0; r < rows; ++ r){
-        for(int c = 0; c < colCount; ++ c){
-            if(it == images.end())
-                break;
-            out(Rect({gridSize.width*c, gridSize.height*r}, gridSize)) = *it + 0;
-            ++ it;
-        }
-    }
-    return out;
-}
 
 void InitSvm() {
     try {
@@ -127,33 +109,23 @@ void test_Recoginition() {
             if (license == plateInfo.ToString()) {
                 ++correct_test;
             } else {
-                // cout << "Recognized Plate: " << endl
-                //     << plateInfo.ToString() << endl;
-                // cout << "Real: " << license << endl;
-                // DebugVisualize("original", image);
-                // imwrite("../../bin/wrong/" + fileName + "-" + license + "_" +
-                // plateInfo.ToString() + ".jpg", image);
                 DebugVisualize("origin", image);
+
+                Mat rectedImage = plateInfo.OriginalMat.clone();
+                rectedImage = 0;
+                for (auto &charinfo : plateInfo.CharInfos) {
+                    rectedImage(charinfo.OriginalRect) = plateInfo.OriginalMat(charinfo.OriginalRect) + 0;
+                }
+                DebugVisualize("rectChars", rectedImage);
+
                 imwrite("../../bin/wrong/" + fileName + "-" + license + "_" +
                             plateInfo.ToString() + ".png",
                         concatenteImags(outImages));
             }
-
-            // Mat rectedImage = plateInfo.OriginalMat;
-            // for (auto &charinfo : plateInfo.CharInfos) {
-            //     cv::rectangle(rectedImage, charinfo.OriginalRect, {0, 0,
-            //     255});
-            // }
-            // DebugVisualize("rectChars", rectedImage);
         }
         if (plateInfos.size() == 0) {
-            // cout << "Recognized Plate: null" << endl;
-            // cout << "Real: " << license << endl;
-            // DebugVisualize("original", image);
-            // imwrite("../../bin/wrong/" + fileName + "-" + license + "_null" +
-            //             ".jpg",
-            //         image);
             DebugVisualize("origin", image);
+
             imwrite("../../bin/wrong/" + fileName + "-" + license + "_null" + ".png",
                     concatenteImags(outImages));
         }

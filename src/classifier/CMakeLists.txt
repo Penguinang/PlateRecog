@@ -26,6 +26,8 @@ set(EXTENSION_NAME )
 endif(UNIX)
 
 # add_compile_definitions(VISUALIZE_DEBUG)
+add_compile_definitions(SAVE_INTERNAL_IMAGE)
+
 
 #########################################################################
 ## Opencv
@@ -76,8 +78,9 @@ set(Sources
     PlateRecognition_V3.cpp
     Utilities.h
     Utilities.cpp
+    debug.h
+    debug.cpp
 )
-
 
 if(MSVC)
 add_definitions(/source-charset:utf-8)

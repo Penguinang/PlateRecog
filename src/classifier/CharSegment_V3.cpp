@@ -331,9 +331,6 @@ vector<CharInfo> CharSegment_V3::SplitePlateByOriginal(
         }
     }
 
-    rects = RejectInnerRectFromRects(rects);
-
-    rects = AdjustRects(rects);
     // DEBUG
     Mat rejectedRect = matOfClearMaodingAndBorder.clone();
     cv::cvtColor(rejectedRect, rejectedRect, cv::COLOR_GRAY2BGR);
@@ -341,6 +338,10 @@ vector<CharInfo> CharSegment_V3::SplitePlateByOriginal(
         cv::rectangle(rejectedRect, rect, {0, 0, 255});
     }
     DebugVisualize("AfterClipBorder ", rejectedRect);
+
+    rects = RejectInnerRectFromRects(rects);
+    rects = AdjustRects(rects);
+
     if (rects.size() == 0)
         return result;
 
@@ -393,16 +394,19 @@ bool CharSegment_V3::NotOnBorder(Rect &rectToJudge, cv::Size borderSize,
     Rect rectLimit;
     rectLimit.x = xLimit;
     rectLimit.y = yLimit;
-    rectLimit.width = widthLimit;
-    rectLimit.height = heightLimit;
+    rectLimit.width = widthLimit + 1;
+    rectLimit.height = heightLimit + 1;
 
-    return rectLimit.contains(cv::Point(rectToJudge.x, rectToJudge.y)) &&
-           rectLimit.contains(
-               cv::Point(rectToJudge.x, rectToJudge.y + rectToJudge.height)) &&
-           rectLimit.contains(
-               cv::Point(rectToJudge.x + rectToJudge.width, rectToJudge.y)) &&
-           rectLimit.contains(cv::Point(rectToJudge.x + rectToJudge.width,
-                                        rectToJudge.y + rectToJudge.height));
+    // contains 左闭右开，上闭下开
+    bool ret =
+        rectLimit.contains(cv::Point(rectToJudge.x, rectToJudge.y)) &&
+        rectLimit.contains(
+            cv::Point(rectToJudge.x, rectToJudge.y + rectToJudge.height)) &&
+        rectLimit.contains(
+            cv::Point(rectToJudge.x + rectToJudge.width, rectToJudge.y)) &&
+        rectLimit.contains(cv::Point(rectToJudge.x + rectToJudge.width,
+                                     rectToJudge.y + rectToJudge.height));
+    return ret;
 }
 
 Rect CharSegment_V3::MergeRect(Rect &A, Rect &B) {
