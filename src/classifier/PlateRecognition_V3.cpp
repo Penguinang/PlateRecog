@@ -5,7 +5,7 @@
 #include "PlateLocator_V3.h"
 #include "PlateRecognition_V3.h"
 #include "PlateChar_SVM.h"
-
+#include <numeric>
 
 using namespace Doit::CV::PlateRecogn;
 

@@ -120,7 +120,7 @@ void test_Recoginition() {
         Mat image = get<0>(sample);
         string license = get<1>(sample);
         string filePath = get<2>(sample);
-        string fileName = filePath.substr(filePath.find_last_of("/") + 1);
+        string fileName = filePath.substr(filePath.find_last_of(DIRECTORY_DELIMITER) + 1);
 
         auto plateInfos = PlateRecognition_V3::Recognite(image);
         for (auto &plateInfo : plateInfos) {
