@@ -53,7 +53,7 @@ void test_plateinfo() {
 void test_Char_SVM() {
     PlateChar_SVM classifier;
 
-    string charsPath = "platecharsamples/chars";
+    string charsPath = "../../bin/platecharsamples/chars";
     vector<string> allImageCategories = Directory::GetFiles(charsPath);
     vector<vector<float>> Hogs;
     vector<int> Tags;
@@ -207,7 +207,8 @@ void test_Category_SVM() {
 int main(int argc, char const *argv[]) {
     // test_charinfo();
     // test_plateinfo();
-    // test_Char_SVM();
+    test_Char_SVM();
+    cout << endl;
     test_Category_SVM();
 
     return 0;

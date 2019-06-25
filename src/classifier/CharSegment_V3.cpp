@@ -2,10 +2,9 @@
 using std::string;
 #include "CharInfo.h"
 #include "CharSegment_V3.h"
-#include "Utilities.h"
 #include "PlateChar_SVM.h"
+#include "Utilities.h"
 #include "debug.h"
-
 
 using namespace Doit::CV::PlateRecogn;
 
@@ -120,7 +119,7 @@ vector<CharInfo> CharSegment_V3::SpliteCharsInPlateMat(cv::Mat &plateMat,
     vector<CharInfo> result;
     for (size_t index = 0; index < rects.size(); index++) {
         Rect rect = rects[index];
-        // rect = Utilities.GetSafeRect(rect,plateMat);
+        rect = Utilities::GetSafeRect(rect, plateMat);
 
         CharInfo charInfo;
         cv::Mat originalMat = plateMat(rect);
@@ -281,9 +280,9 @@ vector<CharInfo> CharSegment_V3::SplitePlateByOriginal(
     // DebugVisualize("gray", gray);
     cv::Mat matOfClearMaodingAndBorder =
         ClearMaodingAndBorder(gray, plateColor);
-    DebugVisualize("gray", gray);
+    // DebugVisualize("gray", gray);
     // DEBUG
-    DebugVisualize("matOfClearMaodingAndBorder", matOfClearMaodingAndBorder);
+    // DebugVisualize("matOfClearMaodingAndBorder", matOfClearMaodingAndBorder);
 
     // std::vector<std::vector<cv::Point>> contours;
     std::vector<cv::Vec4i> hierarchy;
@@ -294,22 +293,23 @@ vector<CharInfo> CharSegment_V3::SplitePlateByOriginal(
     Mat contimage = matOfClearMaodingAndBorder.clone();
     cv::cvtColor(contimage, contimage, cv::COLOR_GRAY2BGR);
     cv::drawContours(contimage, contours, -1, Scalar(0, 0, 255), 1);
-    Mat rectedMat = matOfClearMaodingAndBorder.clone();
-    cv::cvtColor(rectedMat, rectedMat, cv::COLOR_GRAY2BGR);
-    for (auto &contour : contours) {
-        Rect rect = cv::boundingRect(contour);
-        cv::rectangle(rectedMat, rect, {0, 0, 255});
-        DebugVisualizeNotWait(
-            (string("contRect ") +
-             CharSplitMethod_tToString[static_cast<size_t>(charSplitMethod)])
-                .c_str(),
-            rectedMat);
-    }
     DebugVisualize(
         (string("contimage ") +
          CharSplitMethod_tToString[static_cast<size_t>(charSplitMethod)])
             .c_str(),
         contimage);
+
+    Mat rectedMat = matOfClearMaodingAndBorder.clone();
+    cv::cvtColor(rectedMat, rectedMat, cv::COLOR_GRAY2BGR);
+    for (auto &contour : contours) {
+        Rect rect = cv::boundingRect(contour);
+        cv::rectangle(rectedMat, rect, {0, 0, 255});
+    }
+    DebugVisualize(
+        (string("contRect ") +
+         CharSplitMethod_tToString[static_cast<size_t>(charSplitMethod)])
+            .c_str(),
+        rectedMat);
 
     vector<Rect> rects;
     for (size_t index = 0; index < contours.size(); index++) {
@@ -340,7 +340,7 @@ vector<CharInfo> CharSegment_V3::SplitePlateByOriginal(
     for (auto &rect : rects) {
         cv::rectangle(rejectedRect, rect, {0, 0, 255});
     }
-    DebugVisualize("combined Rects ", rejectedRect);
+    DebugVisualize("AfterClipBorder ", rejectedRect);
     if (rects.size() == 0)
         return result;
 
@@ -454,7 +454,6 @@ vector<Rect> CharSegment_V3::MergeRects(vector<Rect> &rects) {
     float hightLimit = averageHeight * 0.5f;
     vector<int>::iterator iter;
 
-    // TODO size()-1可能是0-1,size_t_max
     for (size_t index = rects.size() - 1; index < rects.size(); index--) {
         if (find(indexesBeMerged.begin(), indexesBeMerged.end(), index) !=
             indexesBeMerged.end())

@@ -57,6 +57,9 @@ DataItemType get_test_data(size_t seed) {
         {imread("../../bin/licenses/CG948_2019-03-23-10-43-23-076807.jpg"),
          "粤A CG948", Rect(Point2i{772, 144}, Point2i{841, 193}),
          PlateColor_t::YellowPlate},
+        {imread("../../bin/plateSamples/粤A1KE07_2019-03-20-09-26-31-044685.jpg"),
+         "粤A 1kE407", Rect(Point2i{412, 244}, Point2i{487, 272}),
+         PlateColor_t::BluePlate},
     };
 
     size_t index = seed % test_set.size();
@@ -112,10 +115,12 @@ void test_SplitePlateForAutoSample() {
 
     cout << "Real license " << license << endl;
 }
+
+
 #include "PlateLocator_V3.h"
 #include "PlateRecognition_V3.h"
 void test_GetPlateInfo() {
-    auto data = get_test_data(5);
+    auto data = get_test_data(7);
     Mat image = get<0>(data);
     string license = get<1>(data);
     Rect rectRoi = get<2>(data);
@@ -133,7 +138,7 @@ void test_GetPlateInfo() {
                            {},
                            PlateLocateMethod_t::Color};
     PlateInfo recognizedPlateInfo = PlateRecognition_V3::GetPlateInfo(
-        plateInfo, color, CharSplitMethod_t::Origin);
+        plateInfo, color, CharSplitMethod_t::Gamma);
 
     auto recognizedCharInfos = recognizedPlateInfo.CharInfos;
     cout << "Recognized rect count " << recognizedCharInfos.size() << endl;
@@ -153,6 +158,6 @@ void test_GetPlateInfo() {
 int main(int argc, char const *argv[]) {
     InitSvm();
     // test_SplitePlateByGammaTransform();
-    // test_GetPlateInfo();
+    test_GetPlateInfo();
     return 0;
 }

@@ -55,7 +55,6 @@ vector<PlateInfo> PlateLocator_V3::LocatePlatesForAutoSample(
     // blur = gray.GaussianBlur (new const cv::Size &(blur_Size, blur_Size),
     // 0, 0,
     //     BorderTypes.Default);
-    // TODO size 构造不确定
     GaussianBlur(gray, blur, cv::Size(blur_Size, blur_Size), 0, 0,
                  cv::BorderTypes::BORDER_DEFAULT);
     // Mat hsv = matSource.CvtColor (ColorConversionCodes.BGR2HSV);
@@ -386,7 +385,7 @@ vector<PlateInfo> PlateLocator_V3::LocatePlatesBySobel(
         cv::getStructuringElement(cv::MorphShapes::MORPH_RECT, cv::Size(5, 5));
     // Mat threshold_Erode = threshold_Close.Erode(element_Erode);
     Mat threshold_Erode;
-    cv::erode(threshold_Close, threshold_Close, element_Erode);
+    cv::erode(threshold_Close, threshold_Erode, element_Erode);
     // Find 轮廓 of possibles plates
     // 求轮廓。求出图中所有的轮廓。这个算法会把全图的轮廓都计算出来，
     // 因此要进⾏ 筛选。
