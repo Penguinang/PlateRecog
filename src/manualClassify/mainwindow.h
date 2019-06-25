@@ -23,11 +23,17 @@ public:
     ~MainWindow();
 
     void showImagesByPath(QString imagePath);
+    void showCharImageByPath(QString charImagePath);
     void moveFile(QString fullSourceFileName,QString destinationPath);
     void showImages(int tag);
     void labelImage(QString imageFilename,int tag);
     void labelImage(QString imageFilename,QString tag);
+    void labelCharImage(QString imageFilename,QString tag);
     void updateWindow();
+    void updateNumberWindow();
+    void updateLetterWindow();
+    void updateHanziWindow();
+    void updateCharWindow();
 
 
 private slots:
@@ -38,11 +44,20 @@ private slots:
 
     void on_actionopenFolder_triggered();
 
+    void on_comboBox_number_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_char_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_chineseChar_currentTextChanged(const QString &arg1);
+
+    void on_charListWidget_itemDoubleClicked(QListWidgetItem *item);
+
 private:
     Ui::MainWindow *ui;
     QString plateCategoryPath;
     QString charCategoryPath;
     QString plateSamplePath=QDir::currentPath()+"/samples/plates/";
+    QString charSamplepath=QDir::currentPath()+"/samples/chars/";
 };
 
 #endif // MAINWINDOW_H

@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_2">
+   <layout class="QHBoxLayout" name="horizontalLayout_4">
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
@@ -24,9 +24,9 @@
        <attribute name="title">
         <string>Plates</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout">
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
            <layout class="QVBoxLayout" name="verticalLayout">
             <item>
@@ -218,16 +218,974 @@
        <attribute name="title">
         <string>Chars</string>
        </attribute>
-       <widget class="QListWidget" name="listWidget">
-        <property name="geometry">
-         <rect>
-          <x>20</x>
-          <y>20</y>
-          <width>531</width>
-          <height>451</height>
-         </rect>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout" name="horizontalLayout_7">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_5">
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <item>
+             <widget class="QTabWidget" name="tabWidget_allchars">
+              <property name="currentIndex">
+               <number>0</number>
+              </property>
+              <widget class="QWidget" name="tab_3">
+               <attribute name="title">
+                <string>数字</string>
+               </attribute>
+               <layout class="QVBoxLayout" name="verticalLayout_4">
+                <item>
+                 <widget class="QComboBox" name="comboBox_number">
+                  <item>
+                   <property name="text">
+                    <string>_0</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>_1</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>_2</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>_3</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>_4</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>_5</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>_6</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>_7</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>_8</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>_9</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="tab_4">
+               <attribute name="title">
+                <string>字母</string>
+               </attribute>
+               <layout class="QHBoxLayout" name="horizontalLayout_6">
+                <item>
+                 <layout class="QVBoxLayout" name="verticalLayout_7">
+                  <item>
+                   <widget class="QComboBox" name="comboBox_char">
+                    <item>
+                     <property name="text">
+                      <string>A</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>B</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>C</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>D</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>E</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>F</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>G</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>I</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>J</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>K</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>L</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>M</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>N</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>O</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>P</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Q</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>R</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>S</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>T</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>U</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>V</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>W</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>X</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Y</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Z</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="tab_5">
+               <attribute name="title">
+                <string>汉字</string>
+               </attribute>
+               <layout class="QHBoxLayout" name="horizontalLayout_8">
+                <item>
+                 <widget class="QComboBox" name="comboBox_chineseChar">
+                  <item>
+                   <property name="text">
+                    <string>澳</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>藏</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>川</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>点</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>鄂</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>非字符</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>甘</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>赣</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>港</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>贵</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>桂</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>黑</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>沪</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>吉</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>冀</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>津</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>晋</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>京</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>警</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>辽</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>鲁</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>蒙</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>闽</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>宁</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>青</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>琼</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>陕</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>苏</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>穗</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>皖</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>湘</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>新</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>渝</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>豫</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>粤</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>云</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>浙</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </widget>
+            </item>
+            <item>
+             <widget class="QListWidget" name="charListWidget">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>450</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_6">
+              <item>
+               <widget class="QRadioButton" name="radioButton_0">
+                <property name="text">
+                 <string>_0</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_1">
+                <property name="text">
+                 <string>_1</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_2">
+                <property name="text">
+                 <string>_2</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_3">
+                <property name="text">
+                 <string>_3</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_4">
+                <property name="text">
+                 <string>_4</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_5">
+                <property name="text">
+                 <string>_5</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_6">
+                <property name="text">
+                 <string>_6</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_7">
+                <property name="text">
+                 <string>_7</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_8">
+                <property name="text">
+                 <string>_8</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_9">
+                <property name="text">
+                 <string>_9</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_8">
+              <item>
+               <widget class="QRadioButton" name="radioButton_A">
+                <property name="text">
+                 <string>A</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_B">
+                <property name="text">
+                 <string>B</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_C">
+                <property name="text">
+                 <string>C</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_D">
+                <property name="text">
+                 <string>D</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_E">
+                <property name="text">
+                 <string>E</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_F">
+                <property name="text">
+                 <string>F</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_G">
+                <property name="text">
+                 <string>G</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_H">
+                <property name="text">
+                 <string>H</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_I">
+                <property name="text">
+                 <string>I</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_J">
+                <property name="text">
+                 <string>J</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_K">
+                <property name="text">
+                 <string>K</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_L">
+                <property name="text">
+                 <string>L</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_M">
+                <property name="text">
+                 <string>M</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_9">
+              <item>
+               <widget class="QRadioButton" name="radioButton_N">
+                <property name="text">
+                 <string>N</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_O">
+                <property name="text">
+                 <string>O</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_P">
+                <property name="text">
+                 <string>P</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_Q">
+                <property name="text">
+                 <string>Q</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_R">
+                <property name="text">
+                 <string>R</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_S">
+                <property name="text">
+                 <string>S</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_T">
+                <property name="text">
+                 <string>T</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_U">
+                <property name="text">
+                 <string>U</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_V">
+                <property name="text">
+                 <string>V</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_W">
+                <property name="text">
+                 <string>W</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_X">
+                <property name="text">
+                 <string>X</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_Y">
+                <property name="text">
+                 <string>Y</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_Z">
+                <property name="text">
+                 <string>Z</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_12">
+              <item>
+               <widget class="QRadioButton" name="radioButton_jin1">
+                <property name="text">
+                 <string>津</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_jin4">
+                <property name="text">
+                 <string>晋</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_jing1">
+                <property name="text">
+                 <string>京</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_jing3">
+                <property name="text">
+                 <string>警</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_liao">
+                <property name="text">
+                 <string>辽</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_lu">
+                <property name="text">
+                 <string>鲁</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_meng">
+                <property name="text">
+                 <string>蒙</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_min">
+                <property name="text">
+                 <string>闽</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_ning">
+                <property name="text">
+                 <string>宁</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_qing">
+                <property name="text">
+                 <string>青</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_qiong">
+                <property name="text">
+                 <string>琼</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_shan">
+                <property name="text">
+                 <string>陕</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_su">
+                <property name="text">
+                 <string>苏</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_11">
+              <item>
+               <widget class="QRadioButton" name="radioButton_ao">
+                <property name="text">
+                 <string>澳</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_zang">
+                <property name="text">
+                 <string>藏</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_chuan">
+                <property name="text">
+                 <string>川</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_e">
+                <property name="text">
+                 <string>鄂</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_gan1">
+                <property name="text">
+                 <string>甘</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_gan4">
+                <property name="text">
+                 <string>赣</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_gang">
+                <property name="text">
+                 <string>港</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_gui">
+                <property name="text">
+                 <string>贵</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_mugui">
+                <property name="text">
+                 <string>桂</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_hei">
+                <property name="text">
+                 <string>黑</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_hu">
+                <property name="text">
+                 <string>沪</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_ji">
+                <property name="text">
+                 <string>吉</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_ji4">
+                <property name="text">
+                 <string>冀</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_13">
+              <item>
+               <widget class="QRadioButton" name="radioButton_sui">
+                <property name="text">
+                 <string>穗</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_wan">
+                <property name="text">
+                 <string>皖</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_xiang">
+                <property name="text">
+                 <string>湘</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_xin">
+                <property name="text">
+                 <string>新</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_yu">
+                <property name="text">
+                 <string>渝</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_yu_2">
+                <property name="text">
+                 <string>豫</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_yue">
+                <property name="text">
+                 <string>粤</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_yun">
+                <property name="text">
+                 <string>云</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_zhe">
+                <property name="text">
+                 <string>浙</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_dian">
+                <property name="text">
+                 <string>点</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_nonchar">
+                <property name="text">
+                 <string>非字符</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
