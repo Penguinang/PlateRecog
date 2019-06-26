@@ -24,9 +24,16 @@ vector<float> PlateChar_SVM::ComputeHogDescriptors(Mat &image) {
 bool PlateChar_SVM::PlateChar_SVM::Train(Mat &samples, Mat &responses) {
     svm = SVM::create();
     svm->setType(SVM::Types::C_SVC);
-    svm->setKernel(SVM::KernelTypes::LINEAR);
+    // svm->setKernel(SVM::KernelTypes::LINEAR);
+    svm->setKernel(SVM::KernelTypes::RBF);
+    // svm->setC(5);
+    // svm->setGamma(2);
+
+    // svm->setTermCriteria(
+    //     TermCriteria(TermCriteria::Type::MAX_ITER, 1000, 1e-5));
     svm->setTermCriteria(
         TermCriteria(TermCriteria::Type::MAX_ITER, 10000, 1e-10));
+
     IsReady = true;
     return svm->train(samples, SampleTypes::ROW_SAMPLE, responses);
 }
