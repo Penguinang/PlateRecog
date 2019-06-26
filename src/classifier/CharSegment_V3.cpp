@@ -1,10 +1,15 @@
 #include <string>
 using std::string;
+#include <utility>
+using std::tuple;
+
 #include "CharInfo.h"
 #include "CharSegment_V3.h"
 #include "PlateChar_SVM.h"
 #include "Utilities.h"
 #include "debug.h"
+
+using cv::Point;
 
 using namespace Doit::CV::PlateRecogn;
 
@@ -134,48 +139,81 @@ vector<CharInfo> CharSegment_V3::SpliteCharsInPlateMat(cv::Mat &plateMat,
     return result;
 }
 
-vector<CharInfo> CharSegment_V3::SplitePlateForAutoSample(cv::Mat &plateMat) {
-    vector<CharInfo> result;
+// vector<CharInfo>
+// @return {charinfos, binary image, rected image}
+vector<tuple<vector<CharInfo>, Mat, Mat>>
+CharSegment_V3::SplitePlateForAutoSample(cv::Mat &plateMat) {
+
+    // For blue
     std::vector<std::vector<cv::Point>> contours_Original_Blue;
     std::vector<std::vector<cv::Point>> contours_IndexTransform_Blue;
     std::vector<std::vector<cv::Point>> contours_GammaTransform_Blue;
     std::vector<std::vector<cv::Point>> contours_LogTransform_Blue;
     vector<CharInfo> charInfos_Original_Blue = SplitePlateByOriginal(
         contours_Original_Blue, plateMat, plateMat, PlateColor_t::BluePlate);
+    Mat binaryMat_Original_Blue = plateMat.clone() = 0;
+    cv::drawContours(binaryMat_Original_Blue, contours_Original_Blue, -1,
+                     {255, 255, 255}, cv::FILLED);
+    Mat rectedMat_Original_Blue = plateMat.clone();
+    reserveBoundingRects(rectedMat_Original_Blue, contours_Original_Blue, -1,
+                     {0, 0, 255});
+
     vector<CharInfo> charInfos_IndexTransform_Blue =
         SplitePlateByIndexTransform(contours_IndexTransform_Blue, plateMat,
                                     PlateColor_t::BluePlate);
+    Mat binaryMat_IndexTransform_Blue = plateMat.clone() = 0;
+    cv::drawContours(binaryMat_IndexTransform_Blue,
+                     contours_IndexTransform_Blue, -1, {255, 255, 255}, cv::FILLED);
+    Mat rectedMat_IndexTransform_Blue = plateMat.clone();
+    reserveBoundingRects(rectedMat_IndexTransform_Blue, contours_IndexTransform_Blue, -1,
+                     {0, 0, 255});
+
     vector<CharInfo> charInfos_GammaTransform_Blue =
         SplitePlateByGammaTransform(contours_GammaTransform_Blue, plateMat,
                                     PlateColor_t::BluePlate);
+    Mat binaryMat_GammaTransform_Blue = plateMat.clone() = 0;
+    cv::drawContours(binaryMat_GammaTransform_Blue,
+                     contours_GammaTransform_Blue, -1, {255, 255, 255}, cv::FILLED);
+    Mat rectedMat_GammaTransform_Blue = plateMat.clone();
+    reserveBoundingRects(rectedMat_GammaTransform_Blue, contours_GammaTransform_Blue, -1,
+                     {0, 0, 255});
+
     vector<CharInfo> charInfos_LogTransform_Blue = SplitePlateByLogTransform(
         contours_LogTransform_Blue, plateMat, PlateColor_t::BluePlate);
-
-    vector<CharInfo> charInfos_Blue;
-    charInfos_Blue.insert(charInfos_Blue.end(), charInfos_Original_Blue.begin(),
-                          charInfos_Original_Blue.end());
-    charInfos_Blue.insert(charInfos_Blue.end(),
-                          charInfos_IndexTransform_Blue.begin(),
-                          charInfos_IndexTransform_Blue.end());
-    charInfos_Blue.insert(charInfos_Blue.end(),
-                          charInfos_GammaTransform_Blue.begin(),
-                          charInfos_GammaTransform_Blue.end());
-    charInfos_Blue.insert(charInfos_Blue.end(),
-                          charInfos_LogTransform_Blue.begin(),
-                          charInfos_LogTransform_Blue.end());
+    Mat binaryMat_LogTransform_Blue = plateMat.clone() = 0;
+    cv::drawContours(binaryMat_LogTransform_Blue, contours_LogTransform_Blue,
+                     -1, {255, 255, 255}, cv::FILLED);
+    Mat rectedMat_LogTransform_Blue = plateMat.clone();
+    reserveBoundingRects(rectedMat_LogTransform_Blue, contours_LogTransform_Blue, -1,
+                     {0, 0, 255});
 
     int isCharCount_Blue = 0;
-    for (size_t index = 0; index < charInfos_Blue.size(); index++) {
-        CharInfo charInfo = charInfos_Blue[index];
+    for (auto &charInfo : charInfos_Original_Blue) {
         charInfo.PlateChar = PlateChar_SVM::Test(charInfo.OriginalMat);
-
+        if (charInfo.PlateChar != PlateChar_t::NonChar) {
+            isCharCount_Blue++;
+        }
+    }
+    for (auto &charInfo : charInfos_IndexTransform_Blue) {
+        charInfo.PlateChar = PlateChar_SVM::Test(charInfo.OriginalMat);
+        if (charInfo.PlateChar != PlateChar_t::NonChar) {
+            isCharCount_Blue++;
+        }
+    }
+    for (auto &charInfo : charInfos_GammaTransform_Blue) {
+        charInfo.PlateChar = PlateChar_SVM::Test(charInfo.OriginalMat);
+        if (charInfo.PlateChar != PlateChar_t::NonChar) {
+            isCharCount_Blue++;
+        }
+    }
+    for (auto &charInfo : charInfos_LogTransform_Blue) {
+        charInfo.PlateChar = PlateChar_SVM::Test(charInfo.OriginalMat);
         if (charInfo.PlateChar != PlateChar_t::NonChar) {
             isCharCount_Blue++;
         }
     }
 
-    // if (isCharCount_Blue >= 15) return charInfos_Blue;
-
+    // For yellow
     std::vector<std::vector<cv::Point>> contours_Original_Yellow;
     std::vector<std::vector<cv::Point>> contours_IndexTransform_Yellow;
     std::vector<std::vector<cv::Point>> contours_GammaTransform_Yellow;
@@ -183,45 +221,80 @@ vector<CharInfo> CharSegment_V3::SplitePlateForAutoSample(cv::Mat &plateMat) {
     vector<CharInfo> charInfos_Original_Yellow =
         SplitePlateByOriginal(contours_Original_Yellow, plateMat, plateMat,
                               PlateColor_t::YellowPlate);
+    Mat binaryMat_Original_Yellow = plateMat.clone() = 0;
+    cv::drawContours(binaryMat_Original_Yellow, contours_Original_Yellow, -1,
+                     {255, 255, 255}, cv::FILLED);
+    Mat rectedMat_Original_Yellow = plateMat.clone();
+    reserveBoundingRects(rectedMat_Original_Yellow, contours_Original_Yellow, -1,
+                     {0, 0, 255});
+
     vector<CharInfo> charInfos_IndexTransform_Yellow =
         SplitePlateByIndexTransform(contours_IndexTransform_Yellow, plateMat,
                                     PlateColor_t::YellowPlate);
+    Mat binaryMat_IndexTransform_Yellow = plateMat.clone() = 0;
+    cv::drawContours(binaryMat_IndexTransform_Yellow,
+                     contours_IndexTransform_Yellow, -1, {255, 255, 255}, cv::FILLED);
+    Mat rectedMat_IndexTransform_Yellow = plateMat.clone();
+    reserveBoundingRects(rectedMat_IndexTransform_Yellow, contours_IndexTransform_Yellow, -1,
+                     {0, 0, 255});
+
     vector<CharInfo> charInfos_GammaTransform_Yellow =
         SplitePlateByGammaTransform(contours_GammaTransform_Yellow, plateMat,
                                     PlateColor_t::YellowPlate);
+    Mat binaryMat_GammaTransform_Yellow = plateMat.clone() = 0;
+    cv::drawContours(binaryMat_GammaTransform_Yellow,
+                     contours_GammaTransform_Yellow, -1, {255, 255, 255}, cv::FILLED);
+    Mat rectedMat_GammaTransform_Yellow = plateMat.clone();
+    reserveBoundingRects(rectedMat_GammaTransform_Yellow, contours_GammaTransform_Yellow, -1,
+                     {0, 0, 255});
+
     vector<CharInfo> charInfos_LogTransform_Yellow = SplitePlateByLogTransform(
         contours_LogTransform_Yellow, plateMat, PlateColor_t::YellowPlate);
+    Mat binaryMat_LogTransform_Yellow = plateMat.clone() = 0;
+    cv::drawContours(binaryMat_LogTransform_Yellow, contours_LogTransform_Yellow,
+                     -1, {255, 255, 255}, cv::FILLED);
+    Mat rectedMat_LogTransform_Yellow = plateMat.clone();
+    reserveBoundingRects(rectedMat_LogTransform_Yellow, contours_LogTransform_Yellow, -1,
+                     {0, 0, 255});
 
-    vector<CharInfo> charInfos_Yellow;
-    charInfos_Yellow.insert(charInfos_Yellow.end(),
-                            charInfos_Original_Yellow.begin(),
-                            charInfos_Original_Yellow.end());
-    charInfos_Yellow.insert(charInfos_Yellow.end(),
-                            charInfos_IndexTransform_Yellow.begin(),
-                            charInfos_IndexTransform_Yellow.end());
-    charInfos_Yellow.insert(charInfos_Yellow.end(),
-                            charInfos_GammaTransform_Yellow.begin(),
-                            charInfos_GammaTransform_Yellow.end());
-    charInfos_Yellow.insert(charInfos_Yellow.end(),
-                            charInfos_LogTransform_Yellow.begin(),
-                            charInfos_LogTransform_Yellow.end());
 
     int isCharCount_Yellow = 0;
-    for (size_t index = 0; index < charInfos_Yellow.size(); index++) {
-        CharInfo charInfo = charInfos_Yellow[index];
+    for (auto &charInfo : charInfos_Original_Yellow) {
         charInfo.PlateChar = PlateChar_SVM::Test(charInfo.OriginalMat);
-        if (charInfo.PlateChar != PlateChar_t::NonChar)
+        if (charInfo.PlateChar != PlateChar_t::NonChar) {
             isCharCount_Yellow++;
+        }
     }
-    // if (isCharCount_Yellow >= 15) return charInfos_Yellow;
-    if (isCharCount_Blue > isCharCount_Yellow) {
-        return charInfos_Blue;
-    } else {
-        return charInfos_Yellow;
+    for (auto &charInfo : charInfos_IndexTransform_Yellow) {
+        charInfo.PlateChar = PlateChar_SVM::Test(charInfo.OriginalMat);
+        if (charInfo.PlateChar != PlateChar_t::NonChar) {
+            isCharCount_Yellow++;
+        }
+    }
+    for (auto &charInfo : charInfos_GammaTransform_Yellow) {
+        charInfo.PlateChar = PlateChar_SVM::Test(charInfo.OriginalMat);
+        if (charInfo.PlateChar != PlateChar_t::NonChar) {
+            isCharCount_Yellow++;
+        }
+    }
+    for (auto &charInfo : charInfos_LogTransform_Yellow) {
+        charInfo.PlateChar = PlateChar_SVM::Test(charInfo.OriginalMat);
+        if (charInfo.PlateChar != PlateChar_t::NonChar) {
+            isCharCount_Yellow++;
+        }
     }
 
-    // charInfos_Blue.clear();
-    // return charInfos_Blue;
+    if (isCharCount_Blue > isCharCount_Yellow) {
+        return {{charInfos_Original_Blue, binaryMat_Original_Blue, rectedMat_Original_Blue},
+                {charInfos_IndexTransform_Blue, binaryMat_IndexTransform_Blue, rectedMat_IndexTransform_Blue},
+                {charInfos_GammaTransform_Blue, binaryMat_GammaTransform_Blue, rectedMat_GammaTransform_Blue},
+                {charInfos_LogTransform_Blue, binaryMat_LogTransform_Blue, rectedMat_LogTransform_Blue}};
+    } else {
+        return {{charInfos_Original_Yellow, binaryMat_Original_Yellow, rectedMat_Original_Yellow},
+                {charInfos_IndexTransform_Yellow, binaryMat_IndexTransform_Yellow, rectedMat_IndexTransform_Yellow},
+                {charInfos_GammaTransform_Yellow, binaryMat_GammaTransform_Yellow, rectedMat_GammaTransform_Yellow},
+                {charInfos_LogTransform_Yellow, binaryMat_LogTransform_Yellow, rectedMat_LogTransform_Yellow}};
+    }
 }
 
 vector<CharInfo> CharSegment_V3::SplitePlateByIndexTransform(

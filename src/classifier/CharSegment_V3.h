@@ -10,15 +10,18 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/ml.hpp>
 #include <opencv2/objdetect.hpp>
-using cv::Scalar;
-using cv::Rect;
 using cv::Mat;
+using cv::Point;
+using cv::Rect;
+using cv::Scalar;
 
 #include <cmath>
 #include <string>
 using std::string;
 #include <vector>
 using std::vector;
+#include <utility>
+using std::tuple;
 
 /*--------  Forward declarations  --------*/
 
@@ -48,7 +51,9 @@ class CharSegment_V3 {
     static vector<CharInfo> SpliteCharsInPlateMat(cv::Mat &plateMat,
                                                   vector<Rect> &rects);
 
-    static vector<CharInfo> SplitePlateForAutoSample(cv::Mat &plateMat);
+    // return {charinfos, binary image, rected image}
+    static vector<tuple<vector<CharInfo>, Mat, Mat>>
+    SplitePlateForAutoSample(cv::Mat &plateMat);
 
     static vector<CharInfo> SplitePlateByIndexTransform(
         std::vector<std::vector<cv::Point>> &contours, cv::Mat &originalMat,

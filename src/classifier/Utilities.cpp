@@ -1,5 +1,10 @@
 #include "Utilities.h"
 
+using cv::Scalar;
+
+#include <vector>
+using std::vector;
+
 using namespace Doit::CV::PlateRecogn;
 
 cv::Mat Utilities::IndexTransform(cv::Mat &originalMat) {
@@ -127,3 +132,40 @@ cv::Mat Utilities::HistogramTransform(cv::Mat &originalMat) {
     cv::merge(bgrMats, transMat);
     return transMat;
 }
+
+namespace Doit {
+namespace CV {
+namespace PlateRecogn {
+void drawBoundingRects(Mat &InputOutputMat,
+                       const vector<vector<Point>> &contours, int index,
+                       const Scalar &color) {
+    if (index != -1) {
+        Rect rect = cv::boundingRect(contours[index]);
+        cv::rectangle(InputOutputMat, rect, color);
+    } else {
+        for (auto &contour : contours) {
+            Rect rect = cv::boundingRect(contour);
+            cv::rectangle(InputOutputMat, rect, color);
+        }
+    }
+}
+
+void reserveBoundingRects(Mat &InputOutputMat,
+                       const vector<vector<Point>> &contours, int index,
+                       const Scalar &color) {
+    Mat output = InputOutputMat.clone() = 0;
+    if (index != -1) {
+        Rect rect = cv::boundingRect(contours[index]);
+        output(rect) = InputOutputMat(rect) + 0;
+        InputOutputMat = output;
+    } else {
+        for (auto &contour : contours) {
+            Rect rect = cv::boundingRect(contour);
+            output(rect) = InputOutputMat(rect) + 0;
+        }
+        InputOutputMat = output;
+    }
+}
+} // namespace PlateRecogn
+} // namespace CV
+} // namespace Doit

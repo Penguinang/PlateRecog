@@ -101,17 +101,24 @@ void test_SplitePlateForAutoSample() {
     image = image(rectRoi);
     DebugVisualizeNotWait("Origin", image);
 
-    auto CharInfos = CharSegment_V3::SplitePlateForAutoSample(image);
+    auto ret = CharSegment_V3::SplitePlateForAutoSample(image);
+    auto CharInfos = get<0>(ret[0]);
+    auto Binimage = get<1>(ret[0]);
+    auto Rectimage = get<2>(ret[0]);
     cout << "Recognized rect count " << CharInfos.size() << endl;
 
-    Mat rectedImage = image.clone();
-    rectedImage = 0;
+    DebugVisualize("Rect", Rectimage);
+    DebugVisualize("Binimage", Binimage);
+
+    // Mat rectedImage = image.clone();
+    // rectedImage = 0;
     for (auto charInfo : CharInfos) {
-        // charInfo.PlateChar = PlateChar_t::NonChar;
-        // cout << charInfo.ToString() << charInfo.OriginalRect << endl;
-        rectedImage(charInfo.OriginalRect) = image(charInfo.OriginalRect) + 0;
+
+        charInfo.PlateChar = PlateChar_t::NonChar;
+        cout << charInfo.ToString() << charInfo.OriginalRect << endl;
+        // rectedImage(charInfo.OriginalRect) = image(charInfo.OriginalRect) + 0;
     }
-    DebugVisualize("Rect", rectedImage);
+    // DebugVisualize("Rect", rectedImage);
 
     cout << "Real license " << license << endl;
 }
@@ -158,6 +165,7 @@ void test_GetPlateInfo() {
 int main(int argc, char const *argv[]) {
     InitSvm();
     // test_SplitePlateByGammaTransform();
-    test_GetPlateInfo();
+    // test_GetPlateInfo();
+    test_SplitePlateForAutoSample();
     return 0;
 }
