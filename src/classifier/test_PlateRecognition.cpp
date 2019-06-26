@@ -14,8 +14,8 @@ using cv::imread;
 using cv::imwrite;
 using cv::Mat;
 using cv::Point2i;
-using cv::Size;
 using cv::resize;
+using cv::Size;
 
 #include <iostream>
 using std::cerr;
@@ -66,7 +66,7 @@ load_plates_data_from_directories(const string &name, int count = -1) {
 }
 
 static auto test_set =
-    load_plates_data_from_directories("../../bin/plateSamples", 1000);
+    load_plates_data_from_directories("../../bin/cleanPlateSamples", 1200);
 
 tuple<Mat, string, string> get_test_data(size_t seed) {
     // vector<pair<Mat, string>> test_set = {
@@ -92,7 +92,7 @@ tuple<Mat, string, string> get_test_data(size_t seed) {
 }
 
 void test_Recoginition() {
-    size_t total_test = 100;
+    size_t total_test = 1000;
     size_t correct_test = 0;
 
     Directory::CreateDirectory("../../bin/wrong");
@@ -114,20 +114,26 @@ void test_Recoginition() {
                 Mat rectedImage = plateInfo.OriginalMat.clone();
                 rectedImage = 0;
                 for (auto &charinfo : plateInfo.CharInfos) {
-                    rectedImage(charinfo.OriginalRect) = plateInfo.OriginalMat(charinfo.OriginalRect) + 0;
+                    rectedImage(charinfo.OriginalRect) =
+                        plateInfo.OriginalMat(charinfo.OriginalRect) + 0;
                 }
                 DebugVisualize("rectChars", rectedImage);
 
+#ifdef SAVE_INTERNAL_IMAGE
                 imwrite("../../bin/wrong/" + fileName + "-" + license + "_" +
                             plateInfo.ToString() + ".png",
                         concatenteImags(outImages));
+#endif
             }
         }
         if (plateInfos.size() == 0) {
             DebugVisualize("origin", image);
 
-            imwrite("../../bin/wrong/" + fileName + "-" + license + "_null" + ".png",
+#ifdef SAVE_INTERNAL_IMAGE
+            imwrite("../../bin/wrong/" + fileName + "-" + license + "_null" +
+                        ".png",
                     concatenteImags(outImages));
+#endif
         }
         outImages.clear();
     }

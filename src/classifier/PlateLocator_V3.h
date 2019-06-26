@@ -8,6 +8,7 @@ using cv::equalizeHist;
 using cv::GaussianBlur;
 using cv::Mat;
 using cv::merge;
+using cv::Point;
 using cv::Rect;
 using cv::RotatedRect;
 using cv::Scalar;
@@ -17,6 +18,8 @@ using cv::split;
 using std::vector;
 #include <string>
 using std::string;
+#include <utility>
+using std::tuple;
 
 /*--------  Forward declarations  --------*/
 namespace Doit {
@@ -36,6 +39,7 @@ class PlateLocator_V3 {
                                 int maxWidth = 180, int minHeight = 18,
                                 int maxHeight = 80, float minRatio = 0.15f,
                                 float maxRatio = 0.70f);
+
   public:
     static vector<PlateInfo> LocatePlatesForCameraAdjust(
         const Mat &matSource, Mat &matProcess, int blur_Size = 5,
@@ -46,13 +50,18 @@ class PlateLocator_V3 {
         float maxRatio = 0.70f);
 
   public:
-    static vector<PlateInfo> LocatePlatesForAutoSample(
-        const Mat &matSource, Mat &matProcess, int blur_Size = 5,
-        int sobel_Scale = 1, int sobel_Delta = 0, int sobel_X_Weight = 1,
-        int sobel_Y_Weight = 0, int morph_Size_Width = 17,
-        int morph_Size_Height = 3, int minWidth = 60, int maxWidth = 180,
-        int minHeight = 18, int maxHeight = 80, float minRatio = 0.15f,
-        float maxRatio = 0.70f);
+    // color:  PlateInfos, threshold, after erode and close, contours, rected
+    // sobel(optional): PlateInfos, threshold, after erode and close, contours, rected
+    static vector<
+        tuple<vector<PlateInfo>, Mat, Mat, vector<vector<Point>>, Mat>>
+    LocatePlatesForAutoSample(const Mat &matSource, Mat &matProcess,
+                              int blur_Size = 5, int sobel_Scale = 1,
+                              int sobel_Delta = 0, int sobel_X_Weight = 1,
+                              int sobel_Y_Weight = 0, int morph_Size_Width = 17,
+                              int morph_Size_Height = 3, int minWidth = 60,
+                              int maxWidth = 180, int minHeight = 18,
+                              int maxHeight = 80, float minRatio = 0.15f,
+                              float maxRatio = 0.70f);
 
   public:
     static vector<PlateInfo>

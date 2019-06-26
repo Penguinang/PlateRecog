@@ -26,7 +26,7 @@ set(EXTENSION_NAME )
 endif(UNIX)
 
 # add_compile_definitions(VISUALIZE_DEBUG)
-add_compile_definitions(SAVE_INTERNAL_IMAGE)
+# add_compile_definitions(SAVE_INTERNAL_IMAGE)
 
 
 #########################################################################
