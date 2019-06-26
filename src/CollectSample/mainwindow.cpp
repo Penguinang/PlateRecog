@@ -212,7 +212,12 @@ void MainWindow::on_plateList_itemClicked(QListWidgetItem *item)
     Mat mat;
     platePix = item->icon().pixmap(item->icon().availableSizes().last());
     mat = QPixmapToMat(platePix);
-    string dir = "F:\\test\\pictures\\plates\\";
+    QString qsir = "F:\\test\\车牌-字符样本\\plates\\";
+    QString localsir = item->text();
+    QString fdir = qsir + localsir + "\\";
+
+    string dir = fdir.toLocal8Bit().toStdString();
+
     saveMatPic(mat, dir);
 
 }
@@ -254,7 +259,12 @@ void MainWindow::on_savePlate_clicked()
         item = ui->plateList->item(i);
         platePix = item->icon().pixmap(item->icon().availableSizes().last());
         mat = QPixmapToMat(platePix);
-        string dir = "F:\\test\\pictures\\plates\\";
+
+        QString qsir = "F:\\test\\车牌-字符样本\\plates\\";
+        QString localsir = item->text();
+        QString fdir = qsir + localsir + "\\";
+
+        string dir = fdir.toLocal8Bit().toStdString();
         saveMatPic(mat, dir);
     }
 }
@@ -270,7 +280,13 @@ void MainWindow::on_saveChar_clicked()
         item = ui->charList->item(i);
         charPix = item->icon().pixmap(item->icon().availableSizes().last());
         mat = QPixmapToMat(charPix);
-        string dir = "F:\\test\\pictures\\chars\\";
+
+        QString qsir = "F:\\test\\车牌-字符样本\\chars\\";
+        QString localsir = item->text();
+        QString fdir = qsir + localsir + "\\";
+
+        string dir = fdir.toLocal8Bit().toStdString();
+
         saveMatPic(mat, dir);
     }
 }
@@ -283,6 +299,12 @@ void MainWindow::on_charList_itemClicked(QListWidgetItem *item)
     Mat mat;
     charPix = item->icon().pixmap(item->icon().availableSizes().last());
     mat = QPixmapToMat(charPix);
-    string dir = "F:\\test\\pictures\\chars\\";
+
+    QString qsir = "F:\\test\\车牌-字符样本\\chars\\";
+    QString localsir = item->text();
+    QString fdir = qsir + localsir + "\\";
+
+    string dir = fdir.toLocal8Bit().toStdString();
+
     saveMatPic(mat, dir);
 }
