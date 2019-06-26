@@ -188,6 +188,7 @@ CharSegment_V3::SplitePlateForAutoSample(cv::Mat &plateMat) {
                      {0, 0, 255});
 
     int isCharCount_Blue = 0;
+
     for (auto &charInfo : charInfos_Original_Blue) {
         charInfo.PlateChar = PlateChar_SVM::Test(charInfo.OriginalMat);
         if (charInfo.PlateChar != PlateChar_t::NonChar) {
@@ -259,6 +260,7 @@ CharSegment_V3::SplitePlateForAutoSample(cv::Mat &plateMat) {
 
 
     int isCharCount_Yellow = 0;
+
     for (auto &charInfo : charInfos_Original_Yellow) {
         charInfo.PlateChar = PlateChar_SVM::Test(charInfo.OriginalMat);
         if (charInfo.PlateChar != PlateChar_t::NonChar) {
