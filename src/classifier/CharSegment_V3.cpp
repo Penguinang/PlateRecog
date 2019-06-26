@@ -166,7 +166,7 @@ vector<CharInfo> CharSegment_V3::SplitePlateForAutoSample(cv::Mat &plateMat) {
 
     int isCharCount_Blue = 0;
     for (size_t index = 0; index < charInfos_Blue.size(); index++) {
-        CharInfo charInfo = charInfos_Blue[index];
+        CharInfo &charInfo = charInfos_Blue[index];
         charInfo.PlateChar = PlateChar_SVM::Test(charInfo.OriginalMat);
 
         if (charInfo.PlateChar != PlateChar_t::NonChar) {
@@ -208,7 +208,7 @@ vector<CharInfo> CharSegment_V3::SplitePlateForAutoSample(cv::Mat &plateMat) {
 
     int isCharCount_Yellow = 0;
     for (size_t index = 0; index < charInfos_Yellow.size(); index++) {
-        CharInfo charInfo = charInfos_Yellow[index];
+        CharInfo &charInfo = charInfos_Yellow[index];
         charInfo.PlateChar = PlateChar_SVM::Test(charInfo.OriginalMat);
         if (charInfo.PlateChar != PlateChar_t::NonChar)
             isCharCount_Yellow++;

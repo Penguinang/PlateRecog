@@ -123,6 +123,7 @@ vector<PlateInfo> PlateLocator_V3::LocatePlatesForAutoSample(
         if (VerifyPlateSize(rectROI.size(), minWidth, maxWidth, minHeight,
                             maxHeight, minRatio, maxRatio)) {
             Mat matROI = matSource(rectROI);
+
             PlateCategory_t plateCategory = PlateCategory_SVM::Test(matROI);
             if (plateCategory != PlateCategory_t::NonPlate)
                 isPlateCount++;

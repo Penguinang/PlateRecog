@@ -103,7 +103,7 @@ bool PlateCategory_SVM::IsCorrectTrainngDirectory(const string &path) {
 PlateCategory_t PlateCategory_SVM::Test(Mat &matTest) {
     try {
         if (IsReady == false || svm == null) {
-            throw logic_error("训练数据为空，请重新训练⻋牌类型识别或加载数据");
+            throw logic_error("training data is null, please retrain plate type recognition or load data");
         }
 
         PlateCategory_t result = PlateCategory_t::NonPlate;
