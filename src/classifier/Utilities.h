@@ -7,7 +7,9 @@
 #include <opencv2/ml.hpp>
 #include <opencv2/objdetect.hpp>
 using cv::Mat;
+using cv::Point;
 using cv::Rect;
+using cv::Scalar;
 
 #include <cmath>
 #include <vector>
@@ -31,6 +33,13 @@ class Utilities {
 
     static cv::Mat HistogramTransform(cv::Mat &originalMat);
 };
+
+void drawBoundingRects(Mat &InputOutputMat,
+                       const vector<vector<Point>> &contours, int index,
+                       const Scalar &color);
+void reserveBoundingRects(Mat &InputOutputMat,
+                       const vector<vector<Point>> &contours, int index,
+                       const Scalar &color);
 } // namespace PlateRecogn
 } // namespace CV
 } // namespace Doit

@@ -69,7 +69,7 @@ bool PlateChar_SVM::IsCorrectTrainngDirectory(const string &path) {
 }
 PlateChar_t PlateChar_SVM::Test(Mat &matTest) {
     if (IsReady == false || svm == null) {
-        throw logic_error("训练数据为空，请重新训练⻋牌类型识别或加载数据");
+        throw logic_error("training data is null, please retrain plate type recognition or load data");
     }
     PlateChar_t result = PlateChar_t::NonChar;
 

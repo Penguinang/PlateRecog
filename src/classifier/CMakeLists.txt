@@ -26,6 +26,11 @@ set(EXTENSION_NAME )
 endif(UNIX)
 
 # add_compile_definitions(VISUALIZE_DEBUG)
+<<<<<<< HEAD
+=======
+# add_compile_definitions(SAVE_INTERNAL_IMAGE)
+
+>>>>>>> 0018a01e2e2e58d6124eed1a4f94d536af6deb73
 
 #########################################################################
 ## Opencv
