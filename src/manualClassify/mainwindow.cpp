@@ -6,6 +6,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     //TODO 好像没用到，删了？
+    /*
     plateCategoryPath.append(QDir::currentPath()+tr("/samples/plates/澳门车牌/"));
     plateCategoryPath.append(QDir::currentPath()+tr("/samples/plates/澳门车牌_两行/"));
     plateCategoryPath.append(QDir::currentPath()+tr("/samples/plates/澳门车牌_内/"));
@@ -94,6 +95,14 @@ MainWindow::MainWindow(QWidget *parent) :
     charCategoryPath.append(tr("./chars/_粤"));
     charCategoryPath.append(tr("./chars/_云"));
     charCategoryPath.append(tr("./chars/_浙"));
+
+    */
+
+    this->basePath = QFileDialog::getExistingDirectory(this,
+                                                       ("Please choose base sample file folder"),
+                                                        "D:/Applications/github/GitHub/PlateRecog/bin/");
+    this->plateSamplePath=this->basePath+"/plates/";
+    this->charSamplepath=this->basePath+"/chars/";
 
     ui->setupUi(this);
 }
@@ -197,7 +206,7 @@ void MainWindow::moveFile(QString fullSourceFileName, QString destinationPath)
     }
 }
 
-//显示相关分类文件夹下的图片
+//显示相关分类文件夹下的图片，这个好像也没啥用了
 void MainWindow::showImages(int tag)
 {
     //TODO： 相应文件类的地址
@@ -284,74 +293,6 @@ void MainWindow::showImages(int tag)
     */
 }
 
-//用标记来制定相应的文件夹
-void MainWindow::labelImage(QString imageFilename, int tag)
-{
-    if(imageFilename.isEmpty() || imageFilename==NULL)
-    {
-        qDebug()<< "filename is null";
-        return;
-    }
-
-    //TODO  目的文件地址
-    switch (tag) {
-    case -1 :
-        moveFile(imageFilename,"D:/picture/test/p/");
-    break;
-    case -2 :
-        moveFile(imageFilename,"D:/picture/test/n/");
-        break;
-    case 0:
-        //TODO 加入相关的路径
-        break;
-    default:
-        qDebug() << "no such value";
-    }
-
-    /*
-    //将文件保存到相应文件夹
-    if(tag==1)
-    {
-        QString pfolderPath="D:/picture/test/p/";//要存到的文件夹路径，先写死
-        QFileInfo fileinfo(imageFilename);//原文件
-        QFile file(imageFilename);
-        qDebug()<<"imageFilename: "+imageFilename +" filename: "+fileinfo.fileName();
-        if(!QFile::exists(pfolderPath+fileinfo.fileName()))
-        {
-            if(QFile::copy(imageFilename, pfolderPath+fileinfo.fileName()))
-            {
-                qDebug()<<"copy successful";
-                //删除原文件
-                file.remove();
-            }
-        }
-        else
-        {
-            qDebug()<<"file already exists";
-        }
-    }
-    else
-    {
-        QString pfolderPath="D:/picture/test/n/";//要存到的文件夹路径，先写死
-        QFileInfo fileinfo(imageFilename);//原文件
-        QFile file(imageFilename);
-        if(!QFile::exists(pfolderPath+fileinfo.fileName()))
-        {
-            if(QFile::copy(imageFilename, pfolderPath+fileinfo.fileName()))
-            {
-                qDebug()<<"copy successful";
-                //删除原文件
-                file.remove();
-            }
-        }
-        else
-        {
-            qDebug()<<"file already exists";
-        }
-    }
-    */
-}
-
 void MainWindow::labelImage(QString imageFilename, QString tag)
 {
     if(imageFilename.isEmpty() || imageFilename==NULL)
@@ -383,7 +324,7 @@ void MainWindow::updateWindow()
 
 }
 
-//更新显示数字图片的窗口
+//更新数字
 void MainWindow::updateNumberWindow()
 {
     this->ui->charListWidget->clear();
@@ -391,7 +332,7 @@ void MainWindow::updateNumberWindow()
     showCharImageByPath(charSamplepath+currentNumberName+"/");
 }
 
-//更新显示字母图片的窗口
+//更新字母
 void MainWindow::updateLetterWindow()
 {
     this->ui->charListWidget->clear();
@@ -399,7 +340,7 @@ void MainWindow::updateLetterWindow()
     showCharImageByPath(charSamplepath+currentLetterName+"/");
 }
 
-//更新显示汉字的窗口
+//更新汉字
 void MainWindow::updateHanziWindow()
 {
     this->ui->charListWidget->clear();
@@ -407,6 +348,7 @@ void MainWindow::updateHanziWindow()
     showCharImageByPath(charSamplepath+currentHanziName+"/");
 }
 
+//更新显示字符的区域
 void MainWindow::updateCharWindow()
 {
     //更新
