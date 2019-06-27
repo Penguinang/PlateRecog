@@ -15,4 +15,5 @@ src/*/.vs
 src/*/build
 
 build
+*build*
 bin/*

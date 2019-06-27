@@ -19,9 +19,9 @@
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
 
-#include "platelocator_v3.h"
-#include "charinfo.h"
-#include "charsegment_v3.h"
+#include "PlateLocator_V3.h"
+#include "CharInfo.h"
+#include "CharSegment_V3.h"
 #include "PlateCategory_SVM.h"
 #include "PlateChar_SVM.h"
 
