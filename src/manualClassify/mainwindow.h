@@ -26,7 +26,6 @@ public:
     void showCharImageByPath(QString charImagePath);
     void moveFile(QString fullSourceFileName,QString destinationPath);
     void showImages(int tag);
-    void labelImage(QString imageFilename,int tag);
     void labelImage(QString imageFilename,QString tag);
     void labelCharImage(QString imageFilename,QString tag);
     void updateWindow();
@@ -56,8 +55,9 @@ private:
     Ui::MainWindow *ui;
     QString plateCategoryPath;
     QString charCategoryPath;
-    QString plateSamplePath=QDir::currentPath()+"/samples/plates/";
-    QString charSamplepath=QDir::currentPath()+"/samples/chars/";
+    QString basePath;
+    QString plateSamplePath;
+    QString charSamplepath;
 };
 
 #endif // MAINWINDOW_H
