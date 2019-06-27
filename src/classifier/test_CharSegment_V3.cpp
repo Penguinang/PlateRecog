@@ -120,11 +120,7 @@ void test_SplitePlateForAutoSample() {
         cout << charInfo.ToString() << charInfo.OriginalRect << endl;
         // rectedImage(charInfo.OriginalRect) = image(charInfo.OriginalRect) + 0;
     }
-<<<<<<< HEAD
-    //DebugVisualize("Rect", rectedImage);
-=======
     // DebugVisualize("Rect", rectedImage);
->>>>>>> 0018a01e2e2e58d6124eed1a4f94d536af6deb73
 
     cout << "Real license " << license << endl;
 }
