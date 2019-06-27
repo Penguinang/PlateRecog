@@ -7,6 +7,12 @@ ManualClassifyWindow::ManualClassifyWindow(QWidget *parent):
     QMainWindow(parent),
     ui(new Ui::ManualClassifyWindow)
 {
+    this->basePath = QFileDialog::getExistingDirectory(this,
+                                                           ("Please choose base sample file folder"),
+                                                            "D:/Github/PlateRecog/bin");
+    this->plateSamplePath=this->basePath+"/plates/";
+    this->charSamplepath=this->basePath+"/chars/";
+
     ui->setupUi(this);
 }
 
@@ -31,7 +37,7 @@ void ManualClassifyWindow::showImagesByPath(QString imagePath)
 
         this->ui->imageShowWidget->setIconSize(QSize(200,200));
         this->ui->imageShowWidget->setFlow(QListView::LeftToRight);
-        //this->ui->imageShowWidget->setTextElideMode(Qt::ElideMiddle);
+        this->ui->imageShowWidget->setTextElideMode(Qt::ElideMiddle);
         //this->ui->imageShowWidget->setResizeMode(QListWidget::Adjust);
 
         //读取图片
@@ -197,6 +203,7 @@ void ManualClassifyWindow::showImages(int tag)
     */
 }
 
+//你删了这个
 //用标记来制定相应的文件夹
 void ManualClassifyWindow::labelImage(QString imageFilename, int tag)
 {

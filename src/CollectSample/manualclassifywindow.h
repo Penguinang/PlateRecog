@@ -56,9 +56,12 @@ private slots:
 private:
     Ui::ManualClassifyWindow *ui;
     QString plateCategoryPath;
-       QString charCategoryPath;
-       QString plateSamplePath=QDir::currentPath()+"/samples/plates/";
-       QString charSamplepath=QDir::currentPath()+"/samples/chars/";
+    QString charCategoryPath;
+    //QString plateSamplePath=QDir::currentPath()+"/samples/plates/";
+    //QString charSamplepath=QDir::currentPath()+"/samples/chars/";
+    QString basePath;
+    QString plateSamplePath;
+    QString charSamplepath;
 };
 
 #endif // MANUALCLASSIFYWINDOW_H

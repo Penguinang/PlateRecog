@@ -502,7 +502,7 @@ void MainWindow::on_refresh_clicked()
 
 void MainWindow::on_checkSample_triggered()
 {
-    ManualClassifyWindow wcf;
-    wcf.show();
+    ManualClassifyWindow *mcf = new ManualClassifyWindow ();
+    mcf->show();
 
 }
