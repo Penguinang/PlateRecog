@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
+#include "manualclassifywindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -498,4 +498,11 @@ void MainWindow::on_refresh_clicked()
 {
     QListWidgetItem *item = this->ui->fileList->currentItem();
     showAllPicturesGotten(item);
+}
+
+void MainWindow::on_checkSample_triggered()
+{
+    ManualClassifyWindow wcf;
+    wcf.show();
+
 }

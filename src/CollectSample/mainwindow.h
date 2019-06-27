@@ -77,6 +77,7 @@ private slots:
     void on_openFile_triggered();
     void on_autoCreateSample_triggered();
     void on_refresh_clicked();
+    void on_checkSample_triggered();
 };
 
 #endif // MAINWINDOW_H

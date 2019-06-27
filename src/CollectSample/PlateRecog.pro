@@ -22,7 +22,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-CONFIG += c++17
+CONFIG += c++11
 
 SOURCES += \
         main.cpp \
@@ -31,7 +31,7 @@ SOURCES += \
     ../classifier/PlateChar_SVM.cpp \
     ../classifier/CharSegment_V3.cpp \
     ../classifier/Utilities.cpp \
-    ../classifier/PlateLocator_v3.cpp \
+    ../classifier/PlateLocator_V3.cpp \
     ../classifier/PlateRecognition_V3.cpp \
     manualclassifywindow.cpp
 
@@ -44,7 +44,6 @@ HEADERS += \
     ../classifier/CharSegment_V3.h \
     ../classifier/PlateChar_SVM.h \
     ../classifier/Utilities.h \
-    #../classifier/PlateLocator_V3.h
     ../classifier/PlateRecognition_V3.h \
     manualclassifywindow.h
 
@@ -69,12 +68,3 @@ LIBS += D:/MySoftware/OPENCV/OpenCV-MinGW-Build-OpenCV-4.1.0-x64/x64/mingw/bin/l
 LIBS += D:/MySoftware/OPENCV/OpenCV-MinGW-Build-OpenCV-4.1.0-x64/x64/mingw/bin/libopencv_ml410.dll
 LIBS += D:/MySoftware/OPENCV/OpenCV-MinGW-Build-OpenCV-4.1.0-x64/x64/mingw/bin/libopencv_objdetect410.dll
 
-# For linux
-INCLUDEPATH += /usr/include/opencv4
-LIBS += opencv_highgui \
-opencv_objdetect \
-opencv_ml \
-opencv_imgcodecs  \
-opencv_imgproc \
-opencv_core \
-stdc++fs

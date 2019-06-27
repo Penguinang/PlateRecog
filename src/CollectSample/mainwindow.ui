@@ -474,8 +474,15 @@
     </property>
     <addaction name="autoCreateSample"/>
    </widget>
+   <widget class="QMenu" name="menu_C">
+    <property name="title">
+     <string>检查(&amp;C)</string>
+    </property>
+    <addaction name="checkSample"/>
+   </widget>
    <addaction name="menu"/>
    <addaction name="menu_B"/>
+   <addaction name="menu_C"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -494,6 +501,11 @@
   <action name="autoCreateSample">
    <property name="text">
     <string>自动生成样本</string>
+   </property>
+  </action>
+  <action name="checkSample">
+   <property name="text">
+    <string>检查样本</string>
    </property>
   </action>
  </widget>
