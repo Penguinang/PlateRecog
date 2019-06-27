@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
+#include "manualclassifywindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -8,14 +8,16 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    QAction* actionSelectDir = new QAction(tr("选择路径"),this);
+    //QAction* actionSelectDir = new QAction(tr("选择路径"),this);
 
-    this->connect(actionSelectDir,SIGNAL(triggered()),this,SLOT(selectDir()));
+    //this->connect(actionSelectDir,SIGNAL(triggered()),this,SLOT(selectDir()));
 
-    this->ui->mainToolBar->addAction(actionSelectDir);
+    //this->ui->mainToolBar->addAction(actionSelectDir);
 
     this->setWindowState(Qt::WindowState::WindowMaximized);
 
+    PlateCategory_SVM::Load("CategorySVM.yaml");
+    PlateChar_SVM::Load("CharSVM.yaml");
 }
 
 MainWindow::~MainWindow()
@@ -43,14 +45,35 @@ void MainWindow::selectDir()
 }
 
 
-
-void MainWindow::showMat(cv::Mat mat)
+void MainWindow::showMatForAutoSample(Mat mat)
 {
     this->ui->tabWidget->clear();
     QImage image = Mat2QImage(mat,QImage::Format_RGB888);
     //构建Tab页面
     QWidget* tabOriginal = this->generateImageLabel(mat,QImage::Format_RGB888);
     this->ui->tabWidget->addTab(tabOriginal,tr("原图"));
+}
+
+void MainWindow::showMat(cv::Mat mat,vector<tuple<vector<PlateInfo>, Mat, Mat, vector<vector<Point>>, Mat>> plates)
+{
+    this->ui->tabWidget->clear();
+    QImage image = Mat2QImage(mat,QImage::Format_RGB888);
+    //构建Tab页面
+    QWidget* tabOriginal = this->generateImageLabel(mat,QImage::Format_RGB888);
+    this->ui->tabWidget->addTab(tabOriginal,tr("原图"));
+
+    Mat thremat = get<1>(plates[0]);
+    QWidget* tabthreshold = this->generateImageLabel(thremat,QImage::Format_Grayscale8);
+    this->ui->tabWidget->addTab(tabthreshold,tr("二值化"));
+
+    Mat erode = get<2>(plates[0]);
+    QWidget* taberod = this->generateImageLabel(erode,QImage::Format_Grayscale8);
+    this->ui->tabWidget->addTab(taberod,tr("形态学操作"));
+
+    Mat rected = get<4>(plates[0]);
+    QWidget* tabrect = this->generateImageLabel(rected,QImage::Format_RGB888);
+    this->ui->tabWidget->addTab(tabrect,tr("Rects"));
+
 
 }
 
@@ -167,40 +190,102 @@ QLabel* MainWindow::generateImageLabel(cv::Mat mat,QImage::Format format)
     return lblImage;
 }
 
-void MainWindow::on_fileList_itemClicked(QListWidgetItem *item)
+//对某一张图片图片处理过程，车牌字符分割的显示
+void MainWindow::showAllPicturesGotten(QListWidgetItem *item)
 {
-
     if(item == nullptr) return;
 
     QString imgFileName = item->text();
     imgFileName = this->pathSelected + "/" + imgFileName;
+    string std_filename = imgFileName.toLocal8Bit().toStdString();
+    cv::Mat mat = cv::imread(std_filename);
 
-    cv::Mat mat = cv::imread(imgFileName.toStdString());
-    showMat(mat);
 
     qDebug()<<"locate begin";
-    //vector<PlateInfo> plateInfos = PlateLocator_V3::LocatePlates(mat);
-    Mat matProcess; //记录处理过的矩阵
-    //调用车牌定位函数时注释掉了platlocator_v3里面函数里的svm给车牌分类部分
-    PlateCategory_SVM::Load("CategorySVM.yaml");
-    vector<PlateInfo> plateInfos = PlateLocator_V3::LocatePlatesForAutoSample(mat,matProcess);
+
+    Mat matprocess;//图像处理之后的结果
+    //auto plates = PlateLocator_V3::LocatePlatesForAutoSample(mat, matprocess);
+    auto plates = PlateLocator_V3::LocatePlatesForAutoSample(mat, matprocess,
+                                                             this->ui->blurSizeBox->value(),
+                                                             this->ui->sobelScaleBox->value(),
+                                                             this->ui->sobelDeltaBox->value(),
+                                                             this->ui->sobelXweightBox->value(),
+                                                             this->ui->sobelYweightBox->value(),
+                                                             this->ui->morphSizeWidthBox->value(),
+                                                             this->ui->morphSizeHeightBox->value(),
+                                                             this->ui->minWidthBox->value(),
+                                                             this->ui->maxWidthBox->value(),
+                                                             this->ui->minHeightBox->value(),
+                                                             this->ui->maxHeightBox->value(),
+                                                             this->ui->minRatioBox->value(),
+                                                             this->ui->maxRatioBox->value());
+    int sizeOfPlates = plates.size();
+    //TODO
+    qDebug()<< sizeOfPlates;
+    vector<PlateInfo> plateInfos;
+    if(sizeOfPlates == 1)
+    {
+        plateInfos = get<0>(plates[0]);
+    }
+    else if (sizeOfPlates == 2) {
+        plateInfos = get<0>(plates[1]);
+    }
+
     qDebug()<< "generate platesinfo";
-    qDebug()<< PlateCategory_tToString[(int)plateInfos[0].PlateCategory];
+    //qDebug()<< PlateCategory_tToString[(int)plateInfos[0].PlateCategory];
+
+
+
+    showMat(mat, plates);
+
     showPlateSplit(mat, plateInfos);
+
+
 
     //显示字符分割结果
     this->ui->charList->clear();
     for(int index = 0; index < plateInfos.size();index++)
     {
         Mat plateMat = mat(plateInfos[index].OriginalRect);
-        //注释了charsegment_V3函数里SVM分类
-        PlateChar_SVM::Load("CharSVM.yaml");
-        vector<CharInfo> charInfos = CharSegment_V3::SplitePlateForAutoSample(plateMat);
+        auto chars = CharSegment_V3::SplitePlateForAutoSample(plateMat);
+
+        //比较哪个增强结果好
+        vector<CharInfo> charInfosByOriginal = get<0>(chars[0]);
+        vector<CharInfo> charInfosByIndex = get<0>(chars[1]);
+        vector<CharInfo> charInfosByGamma = get<0>(chars[2]);
+        vector<CharInfo> charInfosByLog = get<0>(chars[3]);
+
+        int sizeO = charInfosByOriginal.size();
+        int sizeI = charInfosByIndex.size();
+        int sizeG = charInfosByGamma.size();
+        int sizeL = charInfosByLog.size();
+
+        vector<CharInfo> charInfos;
+/*
+        //比较哪个字符最多
+        if((sizeO > sizeI)&&(sizeO > sizeG)&&(sizeO > sizeL))
+        {
+            charInfos = charInfosByOriginal;
+        }
+        else if ((sizeI > sizeO)&&(sizeI > sizeG)&&(sizeI > sizeL)) {
+            charInfos = charInfosByIndex;
+        }
+        else if ((sizeG > sizeO)&&(sizeG > sizeI)&&(sizeG > sizeL)) {
+            charInfos = charInfosByGamma;
+        }
+        else if ((sizeL > sizeO)&&(sizeL > sizeI)&&(sizeL > sizeG)) {
+            charInfos = charInfosByLog;
+        }
+*/
+        charInfos= get<0>(chars[0]);
+
         showPlateCharSplit(plateMat, charInfos);
     }
+}
 
-
-
+void MainWindow::on_fileList_itemClicked(QListWidgetItem *item)
+{
+    showAllPicturesGotten(item);
 }
 
 //当车牌list里item被点击
@@ -245,9 +330,10 @@ void MainWindow::saveMatPic(Mat mat,string dir)
 
 
 
-
+//保存所有车牌
 void MainWindow::on_savePlate_clicked()
 {
+ /*
     //保存所有图片
     int num = this->ui->plateList->count();
     QListWidgetItem *item;
@@ -267,9 +353,80 @@ void MainWindow::on_savePlate_clicked()
         string dir = fdir.toLocal8Bit().toStdString();
         saveMatPic(mat, dir);
     }
+ */
+    saveAllPlateLocated();
 }
 
+//保存所有字符
 void MainWindow::on_saveChar_clicked()
+{
+/*
+    int num = this->ui->charList->count();
+    QListWidgetItem *item;
+    QPixmap charPix;
+    Mat mat;
+    for(int i = 0; i < num; i++)
+    {
+        item = ui->charList->item(i);
+        charPix = item->icon().pixmap(item->icon().availableSizes().last());
+        mat = QPixmapToMat(charPix);
+
+        QString qsir = "F:\\test\\车牌-字符样本\\chars\\";
+        QString localsir = item->text();
+        QString fdir = qsir + localsir + "\\";
+
+        string dir = fdir.toLocal8Bit().toStdString();
+
+        saveMatPic(mat, dir);
+    }
+*/
+    saveAllPlateCharSplited();
+}
+
+void MainWindow::on_charList_itemClicked(QListWidgetItem *item)
+{
+    if(item == nullptr) return;
+    int num = this->ui->charList->count();
+    QPixmap charPix;
+    Mat mat;
+    charPix = item->icon().pixmap(item->icon().availableSizes().last());
+    mat = QPixmapToMat(charPix);
+
+    QString qsir = "F:\\test\\车牌-字符样本\\chars\\";
+    QString localsir = item->text();
+    QString fdir = qsir + localsir + "\\";
+
+    string dir = fdir.toLocal8Bit().toStdString();
+
+    saveMatPic(mat, dir);
+}
+
+
+
+//保存所有定位后疑似车牌的图片
+void MainWindow::saveAllPlateLocated()
+{
+    int num = this->ui->plateList->count();
+    QListWidgetItem *item;
+    QPixmap platePix;
+    Mat mat;
+    for(int i = 0; i < num; i++)
+    {
+        item = ui->plateList->item(i);
+        platePix = item->icon().pixmap(item->icon().availableSizes().last());
+        mat = QPixmapToMat(platePix);
+
+        QString qsir = "F:\\test\\车牌-字符样本\\plates\\";
+        QString localsir = item->text();
+        QString fdir = qsir + localsir + "\\";
+
+        string dir = fdir.toLocal8Bit().toStdString();
+        saveMatPic(mat, dir);
+    }
+}
+
+//保存所有分割出来的字符
+void MainWindow::saveAllPlateCharSplited()
 {
     int num = this->ui->charList->count();
     QListWidgetItem *item;
@@ -291,20 +448,61 @@ void MainWindow::on_saveChar_clicked()
     }
 }
 
-void MainWindow::on_charList_itemClicked(QListWidgetItem *item)
+void MainWindow::on_openFile_triggered()
 {
-    if(item == nullptr) return;
-    int num = this->ui->charList->count();
-    QPixmap charPix;
-    Mat mat;
-    charPix = item->icon().pixmap(item->icon().availableSizes().last());
-    mat = QPixmapToMat(charPix);
+    selectDir();
+}
 
-    QString qsir = "F:\\test\\车牌-字符样本\\chars\\";
-    QString localsir = item->text();
-    QString fdir = qsir + localsir + "\\";
+//自动生成样本
+void MainWindow::on_autoCreateSample_triggered()
+{
+    int num = this->ui->fileList->count();
+    QListWidgetItem *item;
+    for (int i = 0;i < num; i++)
+    {
+        item = ui->fileList->item(i);
+        if(item == nullptr) return;
 
-    string dir = fdir.toLocal8Bit().toStdString();
+        QString imgFileName = item->text();
+        imgFileName = this->pathSelected + "/" + imgFileName;
 
-    saveMatPic(mat, dir);
+        cv::Mat mat = cv::imread(imgFileName.toStdString());
+        //显示图片
+        showMatForAutoSample(mat);
+
+        //显示车牌定位结果
+        qDebug()<<"locate begin";
+        //vector<PlateInfo> plateInfos = PlateLocator_V3::LocatePlates(mat);
+
+        //显示车牌
+        vector<PlateInfo> plateInfos = PlateRecognition_V3::Recognite(mat);
+        showPlateSplit(mat, plateInfos);
+        //显示字符
+        this->ui->charList->clear();
+        for(int index = 0; index < plateInfos.size();index++)
+        {
+            Mat plateMat = mat(plateInfos[index].OriginalRect);
+            vector<CharInfo> charInfos = plateInfos[index].CharInfos;
+            showPlateCharSplit(plateMat, charInfos);
+        }
+
+
+        //保存所有分离出的图片
+        saveAllPlateLocated();
+        saveAllPlateCharSplited();
+
+    }
+}
+
+void MainWindow::on_refresh_clicked()
+{
+    QListWidgetItem *item = this->ui->fileList->currentItem();
+    showAllPicturesGotten(item);
+}
+
+void MainWindow::on_checkSample_triggered()
+{
+    ManualClassifyWindow *mcf = new ManualClassifyWindow ();
+    mcf->show();
+
 }
