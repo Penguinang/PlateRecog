@@ -24,7 +24,6 @@
 #include "charsegment_v3.h"
 #include "PlateCategory_SVM.h"
 #include "PlateChar_SVM.h"
-#include "PlateRecognition_V3.h"
 
 #include <QDebug>
 
@@ -32,7 +31,6 @@
 using std::vector;
 #include <string>
 using std::string;
-using std::get;
 
 using namespace Doit::CV::PlateRecogn;
 
@@ -52,7 +50,7 @@ public:
 private:
     Ui::MainWindow *ui;
     QString pathSelected;
-    void showMat(cv::Mat mat,vector<tuple<vector<PlateInfo>, Mat, Mat, vector<vector<Point>>, Mat>> plates);
+    void showMat(cv::Mat mat);
     QImage Mat2QImage(cv::Mat mat, QImage::Format format);
     QLabel* generateImageLabel(cv::Mat mat,QImage::Format format);
     void showPlateSplit(cv::Mat mat, vector<PlateInfo> plateInfos);
@@ -60,10 +58,6 @@ private:
     void saveMatPic(Mat mat,string dir);
     Mat QImageToMat(QImage image);
     Mat QPixmapToMat(QPixmap pixmap);
-    void saveAllPlateLocated();
-    void saveAllPlateCharSplited();
-    void showMatForAutoSample(Mat mat);
-    void showAllPicturesGotten(QListWidgetItem *item);
 
 private slots:
     void selectDir();
@@ -74,9 +68,6 @@ private slots:
     void on_savePlate_clicked();
     void on_saveChar_clicked();
     void on_charList_itemClicked(QListWidgetItem *item);
-    void on_openFile_triggered();
-    void on_autoCreateSample_triggered();
-    void on_refresh_clicked();
 };
 
 #endif // MAINWINDOW_H

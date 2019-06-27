@@ -27,16 +27,17 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
+    picturepreparedia.cpp \
     ../classifier/platecategory_svm.cpp \
     ../classifier/platechar_svm.cpp \
     ../classifier/charsegment_v3.cpp \
     ../classifier/utilities.cpp \
-    ../classifier/platelocator_v3.cpp \
-    ../classifier/PlateRecognition_V3.cpp
+    ../classifier/platelocator_v3.cpp
 
 HEADERS += \
         mainwindow.h \
     ../classifier/charinfo.h \
+    picturepreparedia.h \
     ../classifier/platelocator_v3.h \
     ../classifier/platecategory_svm.h \
     ../classifier/csharpimplementations.h \
@@ -44,10 +45,10 @@ HEADERS += \
     ../classifier/platechar_svm.h \
     ../classifier/utilities.h \
     #../classifier/PlateLocator_V3.h
-    ../classifier/PlateRecognition_V3.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    picturepreparedia.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
