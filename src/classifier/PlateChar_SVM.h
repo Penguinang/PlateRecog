@@ -6,8 +6,8 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/ml.hpp>
 #include <opencv2/objdetect.hpp>
-using cv::Mat;
 using cv::HOGDescriptor;
+using cv::Mat;
 using cv::Ptr;
 using cv::TermCriteria;
 using cv::ml::SampleTypes;
@@ -36,7 +36,6 @@ enum class PlateChar_t;
 } // namespace CV
 } // namespace Doit
 
-
 #include "csharpImplementations.h"
 
 namespace Doit {
@@ -57,7 +56,11 @@ class PlateChar_SVM {
 
   public:
     static vector<float> ComputeHogDescriptors(Mat &image);
-    static bool Train(Mat &samples, Mat &responses);
+    static bool Train(Mat &samples, Mat &responses,
+                      SVM::KernelTypes kernel = SVM::KernelTypes::RBF,
+                      float C = 1, float gamma = 1,
+                      unsigned long IterCount = 10000,
+                      long double epsilon = 1e-10);
     static void Save(const string &fileName);
     static void Load(const string &fileName);
     static bool IsCorrectTrainngDirectory(const string &path);
