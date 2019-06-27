@@ -344,21 +344,42 @@ vector<CharInfo> CharSegment_V3::SplitePlateByOriginal(
     if (rects.size() == 0)
         return result;
 
-    int midHeight = CharSegment_V3::GetRectsMidHeight(rects);
-    int midWidth = CharSegment_V3::GetRectsMidWidth(rects);
+    /*vector<Rect> candidateRects;
+    for (size_t index = 0; index < rects.size(); index++)
+    {
+        Mat matTest;
+        originalMat(rects[index]).convertTo(matTest, cv::ImreadModes::IMREAD_GRAYSCALE);
+        if (PlateChar_SVM::Test(matTest) != PlateChar_t::NonChar)
+        {
+            candidateRects.push_back(rects[index]);
+        }
+    }*/
+    /*int midHeight = CharSegment_V3::GetRectsMaxHeight(rects);
+    int midWidth = CharSegment_V3::GetRectsMidWidth(rects);*/
     for (size_t index = 0; index < rects.size(); index++) {
-        printf("midWidth %d\n", midWidth);
-        printf("rectWidth %d\n", rects[index].width);
+        //printf("midWidth %d\n", midWidth);
+        //printf("rectWidth %d\n", rects[index].width);
         // broaden thin characters
         Rect rect = rects[index];
+       /* midWidth = rect.width * 3 / 2;
         if (rect.height >= midHeight * 2 / 3 && rect.height <= midHeight * 4 / 3 &&
-            rect.width <= midWidth * 3 / 4)
+            rect.width <= midWidth * 2 / 3)
         {
-            Rect processedRect = Rect(rect.x - (midWidth - rect.width) / 2, rect.y, midWidth, rect.height);
-            rects[index] = processedRect;
-            printf("update\n");
-        }
-        printf("%d", rects[index].width);
+            int updateX = rect.x + rect.width/2 - midWidth/2;
+            int updateWidth = midWidth;
+            if (updateX >0 && updateX + updateWidth >= originalMat.cols)
+            {
+                updateWidth = originalMat.cols - rect.x - rect.width / 2;
+                updateX = rect.x + rect.width / 2 - updateWidth / 2;
+                rect.x = updateX;
+                rect.width = updateWidth;
+            }
+            else if (updateX + updateWidth < originalMat.cols && updateX >0)
+            {
+                rect.x = updateX;
+                rect.width = updateWidth;
+            }
+        }*/
         Rect &rectROI = rects[index];
         rectROI = Utilities::GetSafeRect(rects[index], originalMat);
         CharInfo plateCharInfo;

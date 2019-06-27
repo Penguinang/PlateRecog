@@ -106,6 +106,7 @@ void test_Recoginition() {
 
         auto plateInfos = PlateRecognition_V3::Recognite(image);
         for (auto &plateInfo : plateInfos) {
+            cout << "recog: " << plateInfo.ToString() << " | real: " << license << endl;
             if (license == plateInfo.ToString()) {
                 ++correct_test;
             } else {
@@ -201,5 +202,7 @@ int main(int argc, char const *argv[]) {
     test_Recoginition();
     // singleImage_getPlateInfo();
     // view_Image(1);
+    std::cin.get();
+
     return 0;
 }

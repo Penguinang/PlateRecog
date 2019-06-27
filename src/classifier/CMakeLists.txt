@@ -76,7 +76,9 @@ set(Sources
     PlateRecognition_V3.cpp
     Utilities.h
     Utilities.cpp
-)
+	debug.cpp
+	debug.h
+) 
 
 
 if(MSVC)
