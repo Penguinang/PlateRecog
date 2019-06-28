@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/icon">
+        <file>icon/daoru.png</file>
+        <file>icon/icon--tongji.png</file>
+        <file>icon/tableactivation.png</file>
+        <file>icon/wenjian.png</file>
+        <file>icon/cate.png</file>
+        <file>icon/method.png</file>
+        <file>icon/plate.png</file>
+        <file>icon/rect.png</file>
+        <file>icon/gaodu.png</file>
+        <file>icon/kuandu.png</file>
+    </qresource>
+</RCC>

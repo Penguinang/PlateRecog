@@ -103,6 +103,12 @@ class CharSegment_V3 {
 
     static float GetRectsAverageHeight(vector<Rect> &rects);
 
+    static float GetRectsMidHeight(vector<Rect>& rects);
+
+    static float GetRectsMidWidth(vector<Rect>& rects);
+
+    static int GetRectsMaxWidth(vector<Rect> &rects);
+
     static int GetRectsMaxHeight(vector<Rect> &rects);
 
     static int GetMedianRectsTop(vector<Rect> &rects);
@@ -113,6 +119,7 @@ class CharSegment_V3 {
     bool static RectTopComparer(const Rect &x, const Rect &y);
     bool static RectBottomComparer(const Rect &x, const Rect &y);
     bool static RectHeightComparer(const Rect &x, const Rect &y);
+    bool RectWidthComparer(const Rect & x, const Rect & y);
     bool static RectLeftComparer(const Rect &x, const Rect &y);
     bool static CharInfoLeftComparer(const CharInfo &x, const CharInfo &y);
 };
