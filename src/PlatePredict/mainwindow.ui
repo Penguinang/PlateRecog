@@ -32,7 +32,14 @@
          <widget class="QTabWidget" name="tabWidget"/>
         </item>
         <item>
-         <widget class="QTextEdit" name="textEdit"/>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QTextEdit" name="textEdit"/>
+          </item>
+          <item>
+           <widget class="QTableWidget" name="tableWidget"/>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>
