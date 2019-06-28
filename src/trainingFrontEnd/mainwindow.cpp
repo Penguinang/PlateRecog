@@ -6,10 +6,11 @@
 #include <QIcon>
 #include <QImage>
 #include <QListWidgetItem>
+#include <QMessageBox>
 #include <QPixmap>
 #include <QThread>
 #include <QTime>
-#include <QMessageBox>
+#include <QMetaType>
 
 // standard headers
 #include <algorithm>
@@ -37,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
 
-    for(auto &kernelString : kernelStrings){
+    for (auto &kernelString : kernelStrings) {
         ui->kernel_comboBox->addItem(kernelString);
     }
     ui->kernel_comboBox->setCurrentIndex(1);
@@ -55,11 +56,15 @@ MainWindow::MainWindow(QWidget *parent)
     worker->moveToThread(trainingThread);
     connect(trainingThread, SIGNAL(started()), worker, SLOT(process()));
     connect(worker, SIGNAL(finished()), this, SLOT(after_trainingCompleting()));
-    connect(worker, SIGNAL(showOverwriteModel_messageBox()), this, SLOT(showOverwriteModel_messageBox()), Qt::ConnectionType::BlockingQueuedConnection);
+    connect(worker, SIGNAL(showOverwriteModel_messageBox()), this,
+            SLOT(showOverwriteModel_messageBox()),
+            Qt::ConnectionType::BlockingQueuedConnection);
+    connect(worker, SIGNAL(prediction_Completed()),
+            this, SLOT(prediction_Completed()));
 }
 
-MainWindow::~MainWindow() { 
-    delete ui; 
+MainWindow::~MainWindow() {
+    delete ui;
     delete worker;
     delete trainingThread;
 }
@@ -72,6 +77,9 @@ void MainWindow::on_openFolder() {
 
     QString trainingRoot = QFileDialog::getExistingDirectory(
         this, tr("选择训练样本根目录"), "../../../bin/platecharsamples/chars");
+    if (trainingRoot == "") {
+        return;
+    }
     QDir root = QDir(trainingRoot);
     for (auto it = begin(PlateChar_tToString); it < end(PlateChar_tToString);
          ++it) {
@@ -315,16 +323,17 @@ Mat get_hogdescriptor_visu(const Mat &color_origImg,
 void MainWindow::on_startTrainButton_clicked() {
     ui->startTrainButton->setEnabled(false);
     ui->startTrainButton->setText(tr("正在训练..."));
+    splitDataSet();
     trainingThread->start();
 }
 
-void MainWindow::after_trainingCompleting(){
+void MainWindow::after_trainingCompleting() {
     ui->startTrainButton->setText(tr("开始训练"));
     ui->startTrainButton->setEnabled(true);
     trainingThread->exit();
 }
 
-bool MainWindow::showOverwriteModel_messageBox(){
+bool MainWindow::showOverwriteModel_messageBox() {
     QMessageBox *msgBox = new QMessageBox;
     msgBox->setText(tr("模型文件已经存在，是否覆盖？"));
     msgBox->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
@@ -332,26 +341,91 @@ bool MainWindow::showOverwriteModel_messageBox(){
     return ret == QMessageBox::Cancel;
 }
 
+void MainWindow::on_kernel_comboBox_currentIndexChanged(int index) {
+    auto currentKernel = candidateKernels[index];
+    if (currentKernel == SVM::KernelTypes::POLY) {
+        ui->degree_label->setEnabled(true);
+        ui->degree_spinBox->setEnabled(true);
+    } else {
+        ui->degree_label->setEnabled(false);
+        ui->degree_spinBox->setEnabled(false);
+    }
+}
+
+void MainWindow::on_allTestFiles_currentItemChanged(QListWidgetItem *current,
+                                                    QListWidgetItem *previous) {
+    QModelIndex selection = ui->allTestFiles->currentIndex();
+    int vectorIndex = selection.row();
+    Mat image = images[validationIndices[vectorIndex]];
+    QString path = paths[validationIndices[vectorIndex]];
+    PlateChar_t tag = tags[validationIndices[vectorIndex]];
+    int predictedTag = validationPrediction[vectorIndex];
+
+    ui->testOriginalImage->setPixmap(
+        QPixmap::fromImage(Mat2QImage(image, QImage::Format_RGB888))
+            .scaled(50, 100));
+    auto hog = PlateChar_SVM::ComputeHogDescriptors(image);
+    Mat hogMat = get_hogdescriptor_visu(image, hog, Size{16, 32});
+    ui->testHOGImage->setPixmap(
+        QPixmap::fromImage(Mat2QImage(hogMat, QImage::Format_RGB888))
+            .scaled(50, 100));
+    ui->testImageLabel->setText(PlateChar_tToString[static_cast<size_t>(tag)]);
+    ui->predictedTestLabel->setText(PlateChar_tToString[predictedTag]);
+}
+
+void MainWindow::showValidations() {
+    ui->allTestFiles->clear();
+    ui->allTestFiles->setViewMode(QListWidget::IconMode);
+    for (size_t i = 0; i < validationIndices.size(); ++i) {
+        QIcon icon = QIcon(QPixmap::fromImage(
+            Mat2QImage(images[validationIndices[i]], QImage::Format_RGB888)));
+        QListWidgetItem *item =
+            new QListWidgetItem(icon, PlateChar_tToString[static_cast<size_t>(
+                                          tags[validationIndices[i]])]);
+        ui->allTestFiles->addItem(item);
+    }
+}
+
+void MainWindow::prediction_Completed() {
+    showValidations();
+}
+
+void MainWindow::splitDataSet(float trainingRatio) {
+    int sampleCount = images.size();
+    auto randomIndices = std::vector<size_t>(sampleCount);
+    iota(randomIndices.begin(), randomIndices.end(), 0);
+    random_shuffle(randomIndices.begin(), randomIndices.end());
+
+    int trainingCount = sampleCount * trainingRatio;
+    trainingIndices.assign(randomIndices.begin(),
+                           randomIndices.begin() + trainingCount);
+    validationIndices.assign(randomIndices.begin() + trainingCount,
+                             randomIndices.end());
+}
 
 // Training worker
-void TrainWorker::process(){
+void TrainWorker::process() {
     train(mainWindow);
     emit finished();
 }
 
-void TrainWorker::train(MainWindow *mainWindow){
+void TrainWorker::train(MainWindow *mainWindow) {
     mainWindow->C = mainWindow->ui->C_spinBox->value();
     mainWindow->gamma = mainWindow->ui->gamma_spinBox->value();
-    mainWindow->kernel = mainWindow->candidateKernels[mainWindow->ui->kernel_comboBox->currentIndex()];
+    mainWindow->kernel =
+        mainWindow
+            ->candidateKernels[mainWindow->ui->kernel_comboBox->currentIndex()];
+    if (mainWindow->kernel == SVM::KernelTypes::POLY)
+        mainWindow->degree = mainWindow->ui->degree_spinBox->value();
 
-    if(QFile::exists(mainWindow->modelFileName)){
-        if(emit showOverwriteModel_messageBox()){
+    if (QFile::exists(mainWindow->modelFileName)) {
+        if (emit showOverwriteModel_messageBox()) {
             return;
         }
         QFile::remove(mainWindow->modelFileName);
     }
 
-    if(mainWindow->images.size() == 0){
+    if (mainWindow->images.size() == 0) {
         return;
     }
 
@@ -359,7 +433,7 @@ void TrainWorker::train(MainWindow *mainWindow){
     timeCounter.start();
 
     PlateChar_SVM classifier;
-    if(mainWindow->Hogs.size() == 0){
+    if (mainWindow->Hogs.size() == 0) {
         mainWindow->Hogs.clear();
         for (auto &image : mainWindow->images) {
             std::vector<float> Hog = classifier.ComputeHogDescriptors(image);
@@ -367,43 +441,50 @@ void TrainWorker::train(MainWindow *mainWindow){
         }
     }
 
-    int sampleCount = mainWindow->Hogs.size();
-    int trainingCount = sampleCount * 0.9,
-        validationCount = sampleCount - trainingCount;
-    vector<size_t> randomIndices(sampleCount);
-    iota(randomIndices.begin(), randomIndices.end(), 0);
-    random_shuffle(randomIndices.begin(), randomIndices.end());
+    int trainingCount = mainWindow->trainingIndices.size(),
+        validationCount = mainWindow->validationIndices.size();
 
     int hogSize = mainWindow->Hogs[0].size();
     Mat training_data(trainingCount, hogSize, CV_32FC1, Scalar::all(0));
     Mat training_tag(trainingCount, 1, CV_32S);
     for (int i = 0; i < trainingCount; ++i) {
-        Mat(1, hogSize, CV_32FC1, mainWindow->Hogs[randomIndices[i]].data())
+        Mat(1, hogSize, CV_32FC1,
+            mainWindow->Hogs[mainWindow->trainingIndices[i]].data())
             .copyTo(training_data.row(i));
-        training_tag.at<int>(i) = static_cast<int>(mainWindow->tags[randomIndices[i]]);
+        training_tag.at<int>(i) =
+            static_cast<int>(mainWindow->tags[mainWindow->trainingIndices[i]]);
     }
 
-    classifier.Train(training_data, training_tag, mainWindow->kernel, mainWindow->C, mainWindow->gamma);
-    
+    classifier.Train(training_data, training_tag, mainWindow->kernel,
+                     mainWindow->C, mainWindow->gamma, mainWindow->degree);
+
     vector<int> validationPrediction = {};
     int trueCount = 0;
-    for (int i = trainingCount; i < trainingCount + validationCount; ++i) {
-        Mat image = mainWindow->images[randomIndices[i]];
+    for (int i = 0; i < validationCount; ++i) {
+        Mat image = mainWindow->images[mainWindow->validationIndices[i]];
         int prediction = static_cast<int>(classifier.Test(image));
         validationPrediction.push_back(prediction);
-        if (prediction == static_cast<int>(mainWindow->tags[randomIndices[i]])) {
+        if (prediction ==
+            static_cast<int>(
+                mainWindow->tags[mainWindow->validationIndices[i]])) {
             ++trueCount;
         }
     }
 
-    float accuracy = float(trueCount) /  validationCount;
+    float accuracy = float(trueCount) / validationCount;
 
     int mss = timeCounter.elapsed();
 
-    mainWindow->ui->trainingCount_label->setText(QString::number(trainingCount));
-    mainWindow->ui->validationCount_label->setText(QString::number(validationCount));
-    mainWindow->ui->validationAccuracy_label->setText(QString::number(accuracy * 100) + " %");
+    mainWindow->ui->trainingCount_label->setText(
+        QString::number(trainingCount));
+    mainWindow->ui->validationCount_label->setText(
+        QString::number(validationCount));
+    mainWindow->ui->validationAccuracy_label->setText(
+        QString::number(accuracy * 100) + " %");
     mainWindow->ui->timeCounter_label->setText(QString::number(mss));
 
     classifier.Save(MainWindow::modelFileName.toStdString());
+    mainWindow->
+    validationPrediction = validationPrediction;
+    emit prediction_Completed();
 }

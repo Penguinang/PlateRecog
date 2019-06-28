@@ -4,8 +4,8 @@
 #include <QListWidgetItem>
 #include <QMainWindow>
 
-#include <vector>
 #include <memory>
+#include <vector>
 
 #include <opencv2/core.hpp>
 using cv::Mat;
@@ -41,10 +41,16 @@ class MainWindow : public QMainWindow {
                                         QListWidgetItem *previous);
 
     void on_startTrainButton_clicked();
-	void after_trainingCompleting();
-	bool showOverwriteModel_messageBox();
+    void after_trainingCompleting();
+    bool showOverwriteModel_messageBox();
 
-  private:
+    void on_kernel_comboBox_currentIndexChanged(int index);
+	void showValidations();
+	void prediction_Completed();
+
+    void on_allTestFiles_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
+
+private:
     Ui::MainWindow *ui;
 
     // images data
@@ -62,6 +68,8 @@ class MainWindow : public QMainWindow {
     double C = 1;
     double gamma = 1;
     SVM::KernelTypes kernel = SVM::KernelTypes::RBF;
+    float degree = 1;
+
     std::vector<SVM::KernelTypes> candidateKernels = {
         SVM::KernelTypes::LINEAR, SVM::KernelTypes::RBF,
         SVM::KernelTypes::POLY,   SVM::KernelTypes::CHI2,
@@ -71,27 +79,35 @@ class MainWindow : public QMainWindow {
     };
 
     static QString modelFileName;
-	friend class TrainWorker;
-	TrainWorker *worker = nullptr;
-	QThread *trainingThread = nullptr;
+    friend class TrainWorker;
+    TrainWorker *worker = nullptr;
+    QThread *trainingThread = nullptr;
+
+	void splitDataSet(float trainingRatio = 0.9);
+	std::vector<size_t> trainingIndices;
+	std::vector<size_t> validationIndices;
+	std::vector<int> validationPrediction;
 };
 
-// auto friend 	
-class TrainWorker : public QObject{
-	Q_OBJECT
-public:
-	TrainWorker(MainWindow *mainWindow) : mainWindow(mainWindow) {};
-private:
-	MainWindow *mainWindow = nullptr;
+// auto friend
+class TrainWorker : public QObject {
+    Q_OBJECT
+  public:
+    TrainWorker(MainWindow *mainWindow) : mainWindow(mainWindow){};
 
-public slots:
-	void process();
-signals:
-	void finished();
-	void error(QString err);
-	bool showOverwriteModel_messageBox();
-private:
-	void train(MainWindow *mainWindow);
+  private:
+    MainWindow *mainWindow = nullptr;
+
+  public slots:
+    void process();
+  signals:
+    void finished();
+    void error(QString err);
+    bool showOverwriteModel_messageBox();
+	void prediction_Completed();
+
+  private:
+    void train(MainWindow *mainWindow);
 };
 
 #endif // MAINWINDOW_H

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>821</width>
-    <height>475</height>
+    <width>1122</width>
+    <height>514</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -38,7 +38,7 @@
      <property name="title">
       <string>训练结果</string>
      </property>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>20</x>
@@ -210,16 +210,6 @@
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QLabel" name="time_label">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>训练/预计总时间： 1.2s / 100s</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
     <widget class="QWidget" name="layoutWidget_2">
@@ -233,7 +223,7 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_7">
       <item>
-       <widget class="QLabel" name="poly_label">
+       <widget class="QLabel" name="degree_label">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -243,7 +233,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QDoubleSpinBox" name="poly_spinBox">
+       <widget class="QDoubleSpinBox" name="degree_spinBox">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -324,13 +314,100 @@
      </item>
     </layout>
    </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>741</x>
+      <y>31</y>
+      <width>371</width>
+      <height>361</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_6">
+     <item>
+      <widget class="QListWidget" name="allTestFiles"/>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_8">
+       <item>
+        <widget class="QLabel" name="testOriginalImage">
+         <property name="frameShape">
+          <enum>QFrame::Box</enum>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="pixmap">
+          <pixmap>../../bin/platecharsamples/chars/_3/00800_颜色法_5_指数_13.jpg</pixmap>
+         </property>
+         <property name="margin">
+          <number>15</number>
+         </property>
+         <property name="indent">
+          <number>-1</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="testHOGImage">
+         <property name="frameShape">
+          <enum>QFrame::Box</enum>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="pixmap">
+          <pixmap>../../bin/platecharsamples/chars/_3/00800_颜色法_5_指数_13.jpg</pixmap>
+         </property>
+         <property name="margin">
+          <number>15</number>
+         </property>
+         <property name="indent">
+          <number>-1</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="testImageLabel">
+         <property name="font">
+          <font>
+           <pointsize>24</pointsize>
+          </font>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::Box</enum>
+         </property>
+         <property name="text">
+          <string>3</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="predictedTestLabel">
+         <property name="font">
+          <font>
+           <pointsize>24</pointsize>
+          </font>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::Box</enum>
+         </property>
+         <property name="text">
+          <string>3</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>821</width>
+     <width>1122</width>
      <height>30</height>
     </rect>
    </property>
