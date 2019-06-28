@@ -5,7 +5,7 @@
 #include "PlateLocator_V3.h"
 #include "PlateRecognition_V3.h"
 #include "PlateChar_SVM.h"
-
+#include <numeric>
 
 using namespace Doit::CV::PlateRecogn;
 
@@ -41,7 +41,8 @@ PlateRecognition_V3::GetPlateInfoByMutilMethodAndMutilColor(
     if (GetCharCount(plateInfo_Blue) > GetCharCount(plateInfo_Yello)) {
         plateInfo_Blue.PlateColor = PlateColor_t::BluePlate;
         return shared_ptr<PlateInfo>(new PlateInfo(plateInfo_Blue));
-    } else {
+    }
+    else {
         plateInfo_Yello.PlateColor = PlateColor_t::YellowPlate;
         return shared_ptr<PlateInfo>(new PlateInfo(plateInfo_Yello));
     }
@@ -77,7 +78,7 @@ int PlateRecognition_V3::GetCharCount(const PlateInfo &plateInfo) {
 
 PlateInfo
 PlateRecognition_V3::GetPlateInfoByMutilMethod(PlateInfo &plateInfo,
-                                               PlateColor_t plateColor) {
+    PlateColor_t plateColor) {
     PlateInfo plateInfoByOriginal =
         GetPlateInfo(plateInfo, plateColor, CharSplitMethod_t::Origin);
     PlateInfo plateInfoByGamma =
@@ -108,8 +109,8 @@ PlateRecognition_V3::GetPlateInfoByMutilMethod(PlateInfo &plateInfo,
 }
 
 PlateInfo PlateRecognition_V3::GetPlateInfo(PlateInfo &plateInfo,
-                                            PlateColor_t plateColor,
-                                            CharSplitMethod_t splitMethod) {
+    PlateColor_t plateColor,
+    CharSplitMethod_t splitMethod) {
     PlateInfo result = PlateInfo();
     result.PlateCategory = plateInfo.PlateCategory;
     result.OriginalMat = plateInfo.OriginalMat;
@@ -141,8 +142,8 @@ PlateInfo PlateRecognition_V3::GetPlateInfo(PlateInfo &plateInfo,
     }
 
     auto combineVerticalOrigin = [](vector<CharInfo> &charInfos,
-                                    PlateInfo &plateInfo) {
-        for (size_t index = 1; index < min((unsigned long)charInfos.size(), 3ul); ++index) {
+        PlateInfo &plateInfo) {
+        for (size_t index = 1; index < min(charInfos.size(), (size_t)3); ++index) {
             CharInfo &lastCharInfo = charInfos[index - 1];
             Rect &lastRect = charInfos[index - 1].OriginalRect;
             Rect &rect = charInfos[index].OriginalRect;
@@ -155,9 +156,9 @@ PlateInfo PlateRecognition_V3::GetPlateInfo(PlateInfo &plateInfo,
                 if (p1 > 0.5 || p2 > 0.5) {
                     int t1 = rect.y, b1 = rect.y + rect.height, t2 = lastRect.y,
                         b2 = lastRect.y + lastRect.height;
-                    lastRect = {min(l1, l2), min(t1, t2),
+                    lastRect = { min(l1, l2), min(t1, t2),
                                 max(r1, r2) - min(l1, l2),
-                                max(b1, b2) - min(t1, t2)};
+                                max(b1, b2) - min(t1, t2) };
                     lastCharInfo.OriginalMat = plateInfo.OriginalMat(lastRect);
 
                     charInfos.erase(charInfos.begin() + index);
@@ -179,12 +180,13 @@ PlateInfo PlateRecognition_V3::GetPlateInfo(PlateInfo &plateInfo,
     // DebugVisualize("combined Rects ", combinedMat);
 
     for (size_t index = charInfos.size() - 1; index < charInfos.size();
-         index--) {
+        index--) {
         CharInfo &charInfo = charInfos[index];
         PlateChar_t plateChar = PlateChar_SVM::Test(charInfo.OriginalMat);
         if (plateChar == PlateChar_t::NonChar) {
             charInfos.erase(index + charInfos.begin());
-        } else
+        }
+        else
             charInfo.PlateChar = plateChar;
     }
     result.CharInfos = charInfos;
@@ -193,7 +195,76 @@ PlateInfo PlateRecognition_V3::GetPlateInfo(PlateInfo &plateInfo,
     CheckPlateColor(result);
 
     auto rectCenter = [](const Rect &rect) {
-        return cv::Point2i{rect.x + rect.width / 2, rect.y + rect.height / 2};
+        return cv::Point2i{ rect.x + rect.width / 2, rect.y + rect.height / 2 };
+    };
+
+    // improve 0.05...
+    auto checkEdgeNoise = [&](PlateInfo &result) {
+        const vector<CharInfo> &charInfos = result.CharInfos;
+        if (charInfos.size() == 0) {
+            return;
+        }
+        if (charInfos.size() == 9) {
+            if (charInfos[0].PlateChar != PlateChar_t::GuangDong) {
+                result.CharInfos.erase(result.CharInfos.begin() + 8);
+                result.CharInfos.erase(result.CharInfos.begin());
+            }
+            else {
+                result.CharInfos.erase(result.CharInfos.begin() + 7, result.CharInfos.begin() + 8);
+            }
+        }
+        if (charInfos.size() == 8) {
+            if (charInfos[0].PlateChar != PlateChar_t::GuangDong) {
+                result.CharInfos.erase(result.CharInfos.begin());
+            }
+            else {
+                result.CharInfos.erase(result.CharInfos.begin() + 7);
+            }
+        }
+    };
+
+    auto checkThinChar = [&](PlateInfo &result) {
+        const vector<CharInfo> &charInfos = result.CharInfos;
+        if (charInfos.size() == 0) {
+            return;
+        }
+        vector<Rect> resultRects;
+        if (charInfos.size() == 7) {
+            for (int i = 0; i < charInfos.size(); i++)
+            {
+                resultRects.push_back(charInfos[i].OriginalRect);
+            }
+            int midWidth = CharSegment_V3::GetRectsMidWidth(resultRects);
+ 
+            for (int i = 0; i < resultRects.size(); i++)
+            {
+                Rect rect = resultRects[i];
+                // broaden thin characters
+                if (rect.width <= midWidth * 2 / 3)
+                {
+                    int updateX = rect.x + rect.width / 2 - midWidth / 2;
+                    int updateWidth = midWidth;
+                    if (updateX > 0 && updateX + updateWidth >= plateInfo.OriginalMat.cols)
+                    {
+                        updateWidth = plateInfo.OriginalMat.cols - rect.x - rect.width / 2;
+                        updateX = rect.x + rect.width / 2 - updateWidth / 2;
+                        rect.x = updateX;
+                        rect.width = updateWidth;
+                    }
+                    else if (updateX + updateWidth < result.OriginalMat.cols && updateX >0)
+                    {
+                        rect.x = updateX;
+                        rect.width = updateWidth;
+                    }
+                }
+                result.CharInfos.erase(result.CharInfos.begin() + i);
+                Mat thinMat = plateInfo.OriginalMat(rect);
+                PlateChar_t thinChar = PlateChar_SVM::Test(thinMat);
+                result.CharInfos.insert(result.CharInfos.begin() + i,
+                { thinChar, plateInfo.OriginalMat(rect),
+                    rect, PlateLocateMethod_t::Unknown, splitMethod });
+            }
+        }
     };
     auto checkStartChineseCharacter = [&](PlateInfo &result) {
         const vector<CharInfo> &charInfos = result.CharInfos;
@@ -208,34 +279,34 @@ PlateInfo PlateRecognition_V3::GetPlateInfo(PlateInfo &plateInfo,
 
         if (charInfos.size() == 6) {
             float xInterval = (rectCenter(charInfos[5].OriginalRect).x -
-                               rectCenter(charInfos[1].OriginalRect).x) /
-                              4.f;
+                rectCenter(charInfos[1].OriginalRect).x) /
+                4.f;
             int xFirst = charInfos[0].OriginalRect.x - xInterval;
             float meanHeight =
                 std::accumulate(charInfos.begin(), charInfos.end(), 0.f,
-                                [](float init, const CharInfo &next) -> float {
-                                    return init += next.OriginalRect.height;
-                                });
+                    [](float init, const CharInfo &next) -> float {
+                return init += next.OriginalRect.height;
+            });
             meanHeight /= charInfos.size();
             float meanWidth =
                 std::accumulate(charInfos.begin(), charInfos.end(), 0.f,
-                                [](float init, const CharInfo &next) -> float {
-                                    return init += next.OriginalRect.width;
-                                });
+                    [](float init, const CharInfo &next) -> float {
+                return init += next.OriginalRect.width;
+            });
             meanWidth /= charInfos.size();
             float meanY =
                 std::accumulate(charInfos.begin(), charInfos.end(), 0.f,
-                                [](float init, const CharInfo &next) -> float {
-                                    return init += next.OriginalRect.y +
-                                                   next.OriginalRect.height / 2;
-                                });
+                    [](float init, const CharInfo &next) -> float {
+                return init += next.OriginalRect.y +
+                    next.OriginalRect.height / 2;
+            });
             meanY /= charInfos.size();
 
             Rect first = Rect(cv::Point2i(xFirst, meanY - meanHeight / 2),
-                              cv::Size(meanWidth, meanHeight));
+                cv::Size(meanWidth, meanHeight));
             Rect firstOutLimit =
                 Rect(cv::Point2i(xFirst - 5, meanY - meanHeight / 2 - 5),
-                     cv::Size(meanWidth + 5 * 2, meanHeight + 5 * 2));
+                    cv::Size(meanWidth + 5 * 2, meanHeight + 5 * 2));
             vector<CharInfo> intersected = {};
             Rect firstCharRect;
             for (auto &ct : contours) {
@@ -246,12 +317,12 @@ PlateInfo PlateRecognition_V3::GetPlateInfo(PlateInfo &plateInfo,
                     firstCharRect |= bRect;
                 }
             }
-            if(firstCharRect.area() == 0)
+            if (firstCharRect.area() == 0)
                 return;
 
             Mat fistInner = plateInfo.OriginalMat.clone();
-            cv::rectangle(fistInner, first, {0, 0, 255});
-            cv::rectangle(fistInner, firstOutLimit, {0, 255, 0});
+            cv::rectangle(fistInner, first, { 0, 0, 255 });
+            cv::rectangle(fistInner, firstOutLimit, { 0, 255, 0 });
             DebugVisualize("fistInner", fistInner);
 
             Mat firstMat = plateInfo.OriginalMat(firstCharRect);
@@ -260,12 +331,16 @@ PlateInfo PlateRecognition_V3::GetPlateInfo(PlateInfo &plateInfo,
                 firstRecoginzedChar <= PlateChar_t::JingChe) {
                 result.CharInfos.insert(
                     result.CharInfos.begin(),
-                    {firstRecoginzedChar, plateInfo.OriginalMat(firstCharRect),
-                     firstCharRect, PlateLocateMethod_t::Unknown, splitMethod});
+                    { firstRecoginzedChar, plateInfo.OriginalMat(firstCharRect),
+                     firstCharRect, PlateLocateMethod_t::Unknown, splitMethod });
             }
         }
     };
+
+
     checkStartChineseCharacter(result);
+    //checkEdgeNoise(result);
+    //checkThinChar(result);
 
     return result;
 }
@@ -304,13 +379,13 @@ void PlateRecognition_V3::CheckLeftAndRightToRemove(PlateInfo &plateInfo) {
             secondValue <= (int)PlateChar_t::JingChe) {
             plateInfo.CharInfos.erase(
                 plateInfo.CharInfos
-                    .begin()); //如果第⼆个是汉字，那就去掉第⼀个字符
+                .begin()); //如果第⼆个是汉字，那就去掉第⼀个字符
         }
         charCount = plateInfo.CharInfos.size();
 
         if (charCount > 7)
             plateInfo.CharInfos.erase(plateInfo.CharInfos.begin() + charCount -
-                                      1);
+                1);
         break;
     case PlateCategory_t::MacaoPlate:
         break;
@@ -344,7 +419,7 @@ void PlateRecognition_V3::CheckLeftAndRightToRemove(PlateInfo &plateInfo) {
         if (lastFirstValue >= (int)PlateChar_t::BeiJing &&
             lastFirstValue <= (int)PlateChar_t::JingChe) {
             plateInfo.CharInfos.erase(plateInfo.CharInfos.begin() + charCount -
-                                      1); //去掉最后⼀位汉字
+                1); //去掉最后⼀位汉字
         }
         if (firstValue <= (int)PlateChar_t::Point) {
             plateInfo.CharInfos.erase(
@@ -353,7 +428,7 @@ void PlateRecognition_V3::CheckLeftAndRightToRemove(PlateInfo &plateInfo) {
         if (secondValue2 >= (int)PlateChar_t::_0 &&
             secondValue2 <= (int)PlateChar_t::_9) {
             plateInfo.CharInfos.erase(plateInfo.CharInfos.begin() +
-                                      1); //如果第⼆位为数字，删除
+                1); //如果第⼆位为数字，删除
         }
         break;
     default:

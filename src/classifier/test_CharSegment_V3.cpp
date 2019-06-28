@@ -15,6 +15,8 @@ using std::string;
 using std::tuple;
 using std::get;
 
+
+
 #include "CharInfo.h"
 #include "CharSegment_V3.h"
 #include "PlateCategory_SVM.h"
@@ -74,7 +76,7 @@ void test_SplitePlateByGammaTransform() {
     Rect rectRoi = get<2>(data);
 
     image = image(rectRoi);
-    DebugVisualize("Origin", image);
+    //DebugVisualize("Origin", image);
     PlateColor_t color = PlateColor_t::YellowPlate;
     std::vector<std::vector<cv::Point>> contours;
     auto charInfos =
@@ -84,7 +86,7 @@ void test_SplitePlateByGammaTransform() {
     for (auto charInfo : charInfos) {
         charInfo.PlateChar = PlateChar_t::NonChar;
         cout << charInfo.ToString() << charInfo.OriginalRect << endl;
-        DebugVisualize("Rect", image(charInfo.OriginalRect));
+        //DebugVisualize("Rect", image(charInfo.OriginalRect));
     }
 
     cout << "Real license " << license << endl;
@@ -99,7 +101,7 @@ void test_SplitePlateForAutoSample() {
     PlateColor_t color = get<3>(data);
 
     image = image(rectRoi);
-    DebugVisualizeNotWait("Origin", image);
+    //DebugVisualizeNotWait("Origin", image);
 
     auto ret = CharSegment_V3::SplitePlateForAutoSample(image);
     auto CharInfos = get<0>(ret[0]);
@@ -134,7 +136,7 @@ void test_GetPlateInfo() {
     PlateColor_t color = get<3>(data);
 
     image = image(rectRoi);
-    DebugVisualizeNotWait("Origin", image);
+    //DebugVisualizeNotWait("Origin", image);
     // Mat expImage = Utilities::GammaTransform(image, 0.4);
     // Mat expImage = Utilities::HistogramTransform(image);
     // DebugVisualize("Exponential", expImage);
@@ -145,7 +147,7 @@ void test_GetPlateInfo() {
                            {},
                            PlateLocateMethod_t::Color};
     PlateInfo recognizedPlateInfo = PlateRecognition_V3::GetPlateInfo(
-        plateInfo, color, CharSplitMethod_t::Gamma);
+        plateInfo, color, CharSplitMethod_t::Origin);
 
     auto recognizedCharInfos = recognizedPlateInfo.CharInfos;
     cout << "Recognized rect count " << recognizedCharInfos.size() << endl;
@@ -157,7 +159,7 @@ void test_GetPlateInfo() {
         cout << charInfo.ToString() << charInfo.OriginalRect << endl;
         rectedImage(charInfo.OriginalRect) = image(charInfo.OriginalRect) + 0;
     }
-    DebugVisualize("Rect", rectedImage);
+    //DebugVisualize("Rect", rectedImage);
 
     cout << "Real license " << license << endl;
 }
