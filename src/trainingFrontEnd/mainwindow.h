@@ -45,10 +45,12 @@ class MainWindow : public QMainWindow {
     bool showOverwriteModel_messageBox();
 
     void on_kernel_comboBox_currentIndexChanged(int index);
-	void showValidations();
+	// void showValidations();
 	void prediction_Completed();
 
-    void on_allTestFiles_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
+    // void on_allTestFiles_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
+
+    void on_filesSelection_comboBox_currentIndexChanged(int index);
 
 private:
     Ui::MainWindow *ui;
@@ -62,6 +64,26 @@ private:
 
     void showLoadedImages();
     QImage Mat2QImage(const cv::Mat &mat, QImage::Format format);
+    enum DisplayContent{
+        ALL_IMAGES,
+        TRAINING_IMAGES,
+        VALIDATION_IMAGES,
+        CORRETC_PREDICTED_IMAGES,
+        WRONG_PREDICTED_IMAGES
+    };
+    void showAllImages();
+    void showTrainingImages();
+    void showValidationImages();
+    void showCorrectValidationImages();
+    void showWrongValidationImages();
+
+    void showAllImagesDetail(int index);
+    void showTrainingImagesDetail(int index);
+    void showValidationImagesDetail(int index);
+    void showCorrectValidationImagesDetail(int index);
+    void showWrongValidationImagesDetail(int index);
+
+
 
     // SVM parameters
   private:
@@ -87,6 +109,8 @@ private:
 	std::vector<size_t> trainingIndices;
 	std::vector<size_t> validationIndices;
 	std::vector<int> validationPrediction;
+    std::vector<int> correctValidationIndices;
+    std::vector<int> wrongValidationIndices;
 };
 
 // auto friend

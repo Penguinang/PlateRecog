@@ -17,8 +17,8 @@
    <widget class="QGroupBox" name="SVMParameters">
     <property name="geometry">
      <rect>
-      <x>390</x>
-      <y>40</y>
+      <x>460</x>
+      <y>20</y>
       <width>341</width>
       <height>351</height>
      </rect>
@@ -242,18 +242,25 @@
      </layout>
     </widget>
    </widget>
-   <widget class="QWidget" name="layoutWidget">
+   <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>12</x>
-      <y>22</y>
-      <width>341</width>
-      <height>361</height>
+      <x>80</x>
+      <y>40</y>
+      <width>371</width>
+      <height>341</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QListWidget" name="allFiles"/>
+      <layout class="QVBoxLayout" name="verticalLayout_8">
+       <item>
+        <widget class="QComboBox" name="filesSelection_comboBox"/>
+       </item>
+       <item>
+        <widget class="QListWidget" name="allFiles"/>
+       </item>
+      </layout>
      </item>
      <item>
       <layout class="QVBoxLayout" name="verticalLayout">
@@ -310,80 +317,8 @@
          </property>
         </widget>
        </item>
-      </layout>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="">
-    <property name="geometry">
-     <rect>
-      <x>741</x>
-      <y>31</y>
-      <width>371</width>
-      <height>361</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_6">
-     <item>
-      <widget class="QListWidget" name="allTestFiles"/>
-     </item>
-     <item>
-      <layout class="QVBoxLayout" name="verticalLayout_8">
        <item>
-        <widget class="QLabel" name="testOriginalImage">
-         <property name="frameShape">
-          <enum>QFrame::Box</enum>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="pixmap">
-          <pixmap>../../bin/platecharsamples/chars/_3/00800_颜色法_5_指数_13.jpg</pixmap>
-         </property>
-         <property name="margin">
-          <number>15</number>
-         </property>
-         <property name="indent">
-          <number>-1</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="testHOGImage">
-         <property name="frameShape">
-          <enum>QFrame::Box</enum>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="pixmap">
-          <pixmap>../../bin/platecharsamples/chars/_3/00800_颜色法_5_指数_13.jpg</pixmap>
-         </property>
-         <property name="margin">
-          <number>15</number>
-         </property>
-         <property name="indent">
-          <number>-1</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="testImageLabel">
-         <property name="font">
-          <font>
-           <pointsize>24</pointsize>
-          </font>
-         </property>
-         <property name="frameShape">
-          <enum>QFrame::Box</enum>
-         </property>
-         <property name="text">
-          <string>3</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="predictedTestLabel">
+        <widget class="QLabel" name="predictedImageLabel">
          <property name="font">
           <font>
            <pointsize>24</pointsize>

@@ -49,6 +49,16 @@ MainWindow::MainWindow(QWidget *parent)
     ui->validationCount_label->setText("");
     ui->validationAccuracy_label->setText("");
     ui->timeCounter_label->setText("");
+    ui->imageLabel->setText("");
+    ui->predictedImageLabel->setText("");
+
+    ui->filesSelection_comboBox->addItem("ALL_IMAGES");
+    ui->filesSelection_comboBox->addItem("TRAINING_IMAGES");
+    ui->filesSelection_comboBox->addItem("VALIDATION_IMAGES");
+    ui->filesSelection_comboBox->addItem("CORRETC_PREDICTED_IMAGES");
+    ui->filesSelection_comboBox->addItem("WRONG_PREDICTED_IMAGES");
+
+    ui->allFiles->setViewMode(QListWidget::IconMode);
 
     worker = new TrainWorker(this);
     trainingThread = new QThread;
@@ -103,18 +113,104 @@ void MainWindow::on_openFolder() {
                  << ", count:" << charImagePaths.size();
     }
 
+    splitDataSet();
     showLoadedImages();
+}
+
+void MainWindow::on_filesSelection_comboBox_currentIndexChanged(int index){
+    showLoadedImages();
+}
+
+void MainWindow::splitDataSet(float trainingRatio) {
+    int sampleCount = images.size();
+    auto randomIndices = std::vector<size_t>(sampleCount);
+    iota(randomIndices.begin(), randomIndices.end(), 0);
+    random_shuffle(randomIndices.begin(), randomIndices.end());
+
+    int trainingCount = sampleCount * trainingRatio;
+    trainingIndices.clear();
+    validationIndices.clear();
+    trainingIndices.assign(randomIndices.begin(),
+                           randomIndices.begin() + trainingCount);
+    validationIndices.assign(randomIndices.begin() + trainingCount,
+                             randomIndices.end());
 }
 
 void MainWindow::showLoadedImages() {
     ui->allFiles->clear();
-    ui->allFiles->setViewMode(QListWidget::IconMode);
+    int currentMode = ui->filesSelection_comboBox->currentIndex();
+    switch(currentMode){
+        case 0: 
+            showAllImages();
+            break;
+        case 1:
+            showTrainingImages();
+            break;
+        case 2:
+            showValidationImages();
+            break;
+        case 3:
+            showCorrectValidationImages();
+            break;
+        case 4:
+            showWrongValidationImages();
+            break;
+        default:
+            qDebug() << "not recognized mode";
+    }
+}
+
+void MainWindow::showAllImages(){
     for (size_t i = 0; i < images.size(); ++i) {
         QIcon icon = QIcon(
             QPixmap::fromImage(Mat2QImage(images[i], QImage::Format_RGB888)));
         QListWidgetItem *item = new QListWidgetItem(
             icon, PlateChar_tToString[static_cast<size_t>(tags[i])]);
         ui->allFiles->addItem(item);
+    }
+}
+void MainWindow::showTrainingImages(){
+    for (auto i : trainingIndices) {
+        QIcon icon = QIcon(
+            QPixmap::fromImage(Mat2QImage(images[i], QImage::Format_RGB888)));
+        QListWidgetItem *item = new QListWidgetItem(
+            icon, PlateChar_tToString[static_cast<size_t>(tags[i])]);
+        ui->allFiles->addItem(item);
+    }
+}
+void MainWindow::showValidationImages(){
+    for (auto i : validationIndices) {
+        QIcon icon = QIcon(
+            QPixmap::fromImage(Mat2QImage(images[i], QImage::Format_RGB888)));
+        QListWidgetItem *item = new QListWidgetItem(
+            icon, PlateChar_tToString[static_cast<size_t>(tags[i])]);
+        ui->allFiles->addItem(item);
+    }
+}
+void MainWindow::showCorrectValidationImages(){
+    if(validationPrediction.size() == 0){
+        return;
+    }
+    for(size_t i = 0; i < correctValidationIndices.size(); ++ i){
+        int imageIndex = validationIndices[correctValidationIndices[i]];
+        QIcon icon = QIcon(
+        QPixmap::fromImage(Mat2QImage(images[imageIndex], QImage::Format_RGB888)));
+            QListWidgetItem *item = new QListWidgetItem(
+        icon, PlateChar_tToString[static_cast<size_t>(tags[imageIndex])]);
+            ui->allFiles->addItem(item);
+    }
+}
+void MainWindow::showWrongValidationImages(){
+    if(validationPrediction.size() == 0){
+        return;
+    }
+    for(size_t i = 0; i < wrongValidationIndices.size(); ++ i){
+        int imageIndex = validationIndices[wrongValidationIndices[i]];
+        QIcon icon = QIcon(
+        QPixmap::fromImage(Mat2QImage(images[imageIndex], QImage::Format_RGB888)));
+            QListWidgetItem *item = new QListWidgetItem(
+        icon, PlateChar_tToString[static_cast<size_t>(tags[imageIndex])]);
+            ui->allFiles->addItem(item);
     }
 }
 
@@ -142,9 +238,33 @@ void MainWindow::on_allFiles_currentItemChanged(QListWidgetItem *current,
                                                 QListWidgetItem *previous) {
     QModelIndex selection = ui->allFiles->currentIndex();
     int vectorIndex = selection.row();
-    Mat image = images[vectorIndex];
-    QString path = paths[vectorIndex];
-    PlateChar_t tag = tags[vectorIndex];
+
+    int currentMode = ui->filesSelection_comboBox->currentIndex();
+    switch(currentMode){
+        case 0: 
+            showAllImagesDetail(vectorIndex);
+            break;
+        case 1:
+            showTrainingImagesDetail(vectorIndex);
+            break;
+        case 2:
+            showValidationImagesDetail(vectorIndex);
+            break;
+        case 3:
+            showCorrectValidationImagesDetail(vectorIndex);
+            break;
+        case 4:
+            showWrongValidationImagesDetail(vectorIndex);
+            break;
+        default:
+            qDebug() << "not recognized mode";
+    }
+}
+
+void MainWindow::showAllImagesDetail(int index){
+    Mat image = images[index];
+    QString path = paths[index];
+    PlateChar_t tag = tags[index];
 
     ui->originalImage->setPixmap(
         QPixmap::fromImage(Mat2QImage(image, QImage::Format_RGB888))
@@ -155,6 +275,83 @@ void MainWindow::on_allFiles_currentItemChanged(QListWidgetItem *current,
         QPixmap::fromImage(Mat2QImage(hogMat, QImage::Format_RGB888))
             .scaled(50, 100));
     ui->imageLabel->setText(PlateChar_tToString[static_cast<size_t>(tag)]);
+    ui->predictedImageLabel->setText("");
+    ui->predictedImageLabel->setEnabled(false);
+}
+void MainWindow::showTrainingImagesDetail(int index){
+    index = trainingIndices[index];
+    Mat image = images[index];
+    QString path = paths[index];
+    PlateChar_t tag = tags[index];
+
+    ui->originalImage->setPixmap(
+        QPixmap::fromImage(Mat2QImage(image, QImage::Format_RGB888))
+            .scaled(50, 100));
+    auto hog = PlateChar_SVM::ComputeHogDescriptors(image);
+    Mat hogMat = get_hogdescriptor_visu(image, hog, Size{16, 32});
+    ui->HOGImage->setPixmap(
+        QPixmap::fromImage(Mat2QImage(hogMat, QImage::Format_RGB888))
+            .scaled(50, 100));
+    ui->imageLabel->setText(PlateChar_tToString[static_cast<size_t>(tag)]);
+    ui->predictedImageLabel->setText("");
+    ui->predictedImageLabel->setEnabled(false);
+}
+void MainWindow::showValidationImagesDetail(int index){
+    int imageIndex = validationIndices[index];
+    Mat image = images[imageIndex];
+    QString path = paths[imageIndex];
+    PlateChar_t tag = tags[imageIndex];
+    int predictedTag = validationPrediction[index];
+
+    ui->originalImage->setPixmap(
+        QPixmap::fromImage(Mat2QImage(image, QImage::Format_RGB888))
+            .scaled(50, 100));
+    auto hog = PlateChar_SVM::ComputeHogDescriptors(image);
+    Mat hogMat = get_hogdescriptor_visu(image, hog, Size{16, 32});
+    ui->HOGImage->setPixmap(
+        QPixmap::fromImage(Mat2QImage(hogMat, QImage::Format_RGB888))
+            .scaled(50, 100));
+    ui->imageLabel->setText(PlateChar_tToString[static_cast<size_t>(tag)]);
+    ui->predictedImageLabel->setText(PlateChar_tToString[predictedTag]);
+    ui->predictedImageLabel->setEnabled(true);
+}
+void MainWindow::showCorrectValidationImagesDetail(int index){
+    int imageIndex = validationIndices[correctValidationIndices[index]];
+    Mat image = images[imageIndex];
+    QString path = paths[imageIndex];
+    PlateChar_t tag = tags[imageIndex];
+    int predictedTag = validationPrediction[correctValidationIndices[index]];
+
+    ui->originalImage->setPixmap(
+        QPixmap::fromImage(Mat2QImage(image, QImage::Format_RGB888))
+            .scaled(50, 100));
+    auto hog = PlateChar_SVM::ComputeHogDescriptors(image);
+    Mat hogMat = get_hogdescriptor_visu(image, hog, Size{16, 32});
+    ui->HOGImage->setPixmap(
+        QPixmap::fromImage(Mat2QImage(hogMat, QImage::Format_RGB888))
+            .scaled(50, 100));
+    ui->imageLabel->setText(PlateChar_tToString[static_cast<size_t>(tag)]);
+    ui->predictedImageLabel->setText(PlateChar_tToString[predictedTag]);
+    ui->predictedImageLabel->setEnabled(true);
+}
+void MainWindow::showWrongValidationImagesDetail(int index){
+    int imageIndex = validationIndices[wrongValidationIndices[index]];
+    Mat image = images[imageIndex];
+    QString path = paths[imageIndex];
+    PlateChar_t tag = tags[imageIndex];
+    int predictedTag = validationPrediction[wrongValidationIndices[index]];
+
+    ui->originalImage->setPixmap(
+        QPixmap::fromImage(Mat2QImage(image, QImage::Format_RGB888))
+            .scaled(50, 100));
+    auto hog = PlateChar_SVM::ComputeHogDescriptors(image);
+    Mat hogMat = get_hogdescriptor_visu(image, hog, Size{16, 32});
+    ui->HOGImage->setPixmap(
+        QPixmap::fromImage(Mat2QImage(hogMat, QImage::Format_RGB888))
+            .scaled(50, 100));
+    ui->imageLabel->setText(PlateChar_tToString[static_cast<size_t>(tag)]);
+    ui->predictedImageLabel->setText(PlateChar_tToString[predictedTag]);
+    ui->predictedImageLabel->setEnabled(true);
 }
 
 // following code is from
@@ -323,7 +520,6 @@ Mat get_hogdescriptor_visu(const Mat &color_origImg,
 void MainWindow::on_startTrainButton_clicked() {
     ui->startTrainButton->setEnabled(false);
     ui->startTrainButton->setText(tr("正在训练..."));
-    splitDataSet();
     trainingThread->start();
 }
 
@@ -352,55 +548,42 @@ void MainWindow::on_kernel_comboBox_currentIndexChanged(int index) {
     }
 }
 
-void MainWindow::on_allTestFiles_currentItemChanged(QListWidgetItem *current,
-                                                    QListWidgetItem *previous) {
-    QModelIndex selection = ui->allTestFiles->currentIndex();
-    int vectorIndex = selection.row();
-    Mat image = images[validationIndices[vectorIndex]];
-    QString path = paths[validationIndices[vectorIndex]];
-    PlateChar_t tag = tags[validationIndices[vectorIndex]];
-    int predictedTag = validationPrediction[vectorIndex];
+// void MainWindow::on_allTestFiles_currentItemChanged(QListWidgetItem *current,
+//                                                     QListWidgetItem *previous) {
+//     QModelIndex selection = ui->allTestFiles->currentIndex();
+//     int vectorIndex = selection.row();
+//     Mat image = images[validationIndices[vectorIndex]];
+//     QString path = paths[validationIndices[vectorIndex]];
+//     PlateChar_t tag = tags[validationIndices[vectorIndex]];
+//     int predictedTag = validationPrediction[vectorIndex];
 
-    ui->testOriginalImage->setPixmap(
-        QPixmap::fromImage(Mat2QImage(image, QImage::Format_RGB888))
-            .scaled(50, 100));
-    auto hog = PlateChar_SVM::ComputeHogDescriptors(image);
-    Mat hogMat = get_hogdescriptor_visu(image, hog, Size{16, 32});
-    ui->testHOGImage->setPixmap(
-        QPixmap::fromImage(Mat2QImage(hogMat, QImage::Format_RGB888))
-            .scaled(50, 100));
-    ui->testImageLabel->setText(PlateChar_tToString[static_cast<size_t>(tag)]);
-    ui->predictedTestLabel->setText(PlateChar_tToString[predictedTag]);
-}
+//     ui->testOriginalImage->setPixmap(
+//         QPixmap::fromImage(Mat2QImage(image, QImage::Format_RGB888))
+//             .scaled(50, 100));
+//     auto hog = PlateChar_SVM::ComputeHogDescriptors(image);
+//     Mat hogMat = get_hogdescriptor_visu(image, hog, Size{16, 32});
+//     ui->testHOGImage->setPixmap(
+//         QPixmap::fromImage(Mat2QImage(hogMat, QImage::Format_RGB888))
+//             .scaled(50, 100));
+//     ui->testImageLabel->setText(PlateChar_tToString[static_cast<size_t>(tag)]);
+//     ui->predictedTestLabel->setText(PlateChar_tToString[predictedTag]);
+// }
 
-void MainWindow::showValidations() {
-    ui->allTestFiles->clear();
-    ui->allTestFiles->setViewMode(QListWidget::IconMode);
-    for (size_t i = 0; i < validationIndices.size(); ++i) {
-        QIcon icon = QIcon(QPixmap::fromImage(
-            Mat2QImage(images[validationIndices[i]], QImage::Format_RGB888)));
-        QListWidgetItem *item =
-            new QListWidgetItem(icon, PlateChar_tToString[static_cast<size_t>(
-                                          tags[validationIndices[i]])]);
-        ui->allTestFiles->addItem(item);
-    }
-}
+// void MainWindow::showValidations() {
+//     ui->allTestFiles->clear();
+//     ui->allTestFiles->setViewMode(QListWidget::IconMode);
+//     for (size_t i = 0; i < validationIndices.size(); ++i) {
+//         QIcon icon = QIcon(QPixmap::fromImage(
+//             Mat2QImage(images[validationIndices[i]], QImage::Format_RGB888)));
+//         QListWidgetItem *item =
+//             new QListWidgetItem(icon, PlateChar_tToString[static_cast<size_t>(
+//                                           tags[validationIndices[i]])]);
+//         ui->allTestFiles->addItem(item);
+//     }
+// }
 
 void MainWindow::prediction_Completed() {
-    showValidations();
-}
-
-void MainWindow::splitDataSet(float trainingRatio) {
-    int sampleCount = images.size();
-    auto randomIndices = std::vector<size_t>(sampleCount);
-    iota(randomIndices.begin(), randomIndices.end(), 0);
-    random_shuffle(randomIndices.begin(), randomIndices.end());
-
-    int trainingCount = sampleCount * trainingRatio;
-    trainingIndices.assign(randomIndices.begin(),
-                           randomIndices.begin() + trainingCount);
-    validationIndices.assign(randomIndices.begin() + trainingCount,
-                             randomIndices.end());
+    // showValidations();
 }
 
 // Training worker
@@ -459,6 +642,8 @@ void TrainWorker::train(MainWindow *mainWindow) {
                      mainWindow->C, mainWindow->gamma, mainWindow->degree);
 
     vector<int> validationPrediction = {};
+    mainWindow->correctValidationIndices.clear();
+    mainWindow->wrongValidationIndices.clear();
     int trueCount = 0;
     for (int i = 0; i < validationCount; ++i) {
         Mat image = mainWindow->images[mainWindow->validationIndices[i]];
@@ -468,6 +653,9 @@ void TrainWorker::train(MainWindow *mainWindow) {
             static_cast<int>(
                 mainWindow->tags[mainWindow->validationIndices[i]])) {
             ++trueCount;
+            mainWindow->correctValidationIndices.push_back(i);
+        } else{
+            mainWindow->wrongValidationIndices.push_back(i);
         }
     }
 
