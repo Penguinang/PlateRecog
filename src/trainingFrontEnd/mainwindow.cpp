@@ -104,6 +104,9 @@ void MainWindow::reset(){
 
 void MainWindow::on_openCharFolder() {
     mode = PLATE_CHAR;
+    iconSize = {50, 50};
+    detailSize = {100, 100};
+    HOGWinsize = cv::Size(16, 32);
     reset();
 
     QString trainingRoot = QFileDialog::getExistingDirectory(
@@ -139,6 +142,9 @@ void MainWindow::on_openCharFolder() {
 
 void MainWindow::on_openCategoryFolder() {
     mode = PLATE_CATEGORY;
+    iconSize = {100, 50};
+    detailSize = {250, 100};
+    HOGWinsize = cv::Size(96, 32);
     reset();
 
 
@@ -220,7 +226,8 @@ void MainWindow::showLoadedImages() {
 void MainWindow::showAllImages() {
     for (size_t i = 0; i < images.size(); ++i) {
         QIcon icon = QIcon(
-            QPixmap::fromImage(Mat2QImage(images[i], QImage::Format_RGB888)));
+            QPixmap::fromImage(Mat2QImage(images[i], QImage::Format_RGB888)).scaled(iconSize));
+        
         QString tagString = mode == PLATE_CHAR
                                 ? PlateChar_tToString[tags[i]]
                                 : PlateCategory_tToString[tags[i]];
@@ -231,7 +238,7 @@ void MainWindow::showAllImages() {
 void MainWindow::showTrainingImages() {
     for (auto i : trainingIndices) {
         QIcon icon = QIcon(
-            QPixmap::fromImage(Mat2QImage(images[i], QImage::Format_RGB888)));
+            QPixmap::fromImage(Mat2QImage(images[i], QImage::Format_RGB888)).scaled(iconSize));
         QString tagString = mode == PLATE_CHAR
                                 ? PlateChar_tToString[tags[i]]
                                 : PlateCategory_tToString[tags[i]];
@@ -242,7 +249,7 @@ void MainWindow::showTrainingImages() {
 void MainWindow::showValidationImages() {
     for (auto i : validationIndices) {
         QIcon icon = QIcon(
-            QPixmap::fromImage(Mat2QImage(images[i], QImage::Format_RGB888)));
+            QPixmap::fromImage(Mat2QImage(images[i], QImage::Format_RGB888)).scaled(iconSize));
         QString tagString = mode == PLATE_CHAR
                                 ? PlateChar_tToString[tags[i]]
                                 : PlateCategory_tToString[tags[i]];
@@ -257,7 +264,7 @@ void MainWindow::showCorrectValidationImages() {
     for (size_t i = 0; i < correctValidationIndices.size(); ++i) {
         int imageIndex = validationIndices[correctValidationIndices[i]];
         QIcon icon = QIcon(QPixmap::fromImage(
-            Mat2QImage(images[imageIndex], QImage::Format_RGB888)));
+            Mat2QImage(images[imageIndex], QImage::Format_RGB888)).scaled(iconSize));
         QString tagString = mode == PLATE_CHAR
                                 ? PlateChar_tToString[tags[imageIndex]]
                                 : PlateCategory_tToString[tags[imageIndex]];
@@ -273,7 +280,7 @@ void MainWindow::showWrongValidationImages() {
     for (size_t i = 0; i < wrongValidationIndices.size(); ++i) {
         int imageIndex = validationIndices[wrongValidationIndices[i]];
         QIcon icon = QIcon(QPixmap::fromImage(
-            Mat2QImage(images[imageIndex], QImage::Format_RGB888)));
+            Mat2QImage(images[imageIndex], QImage::Format_RGB888)).scaled(iconSize));
         QString tagString = mode == PLATE_CHAR
                                 ? PlateChar_tToString[tags[imageIndex]]
                                 : PlateCategory_tToString[tags[imageIndex]];
@@ -338,7 +345,7 @@ void MainWindow::showAllImagesDetail(int index) {
 
     ui->originalImage->setPixmap(
         QPixmap::fromImage(Mat2QImage(image, QImage::Format_RGB888))
-            .scaled(50, 100));
+            .scaled(detailSize));
 
     std::vector<float> hog;
     if(mode == PLATE_CHAR)
@@ -346,10 +353,10 @@ void MainWindow::showAllImagesDetail(int index) {
     else
         hog = PlateCategory_SVM::ComputeHogDescriptors(image);
 
-    Mat hogMat = get_hogdescriptor_visu(image, hog, Size{16, 32});
+    Mat hogMat = get_hogdescriptor_visu(image, hog, HOGWinsize);
     ui->HOGImage->setPixmap(
         QPixmap::fromImage(Mat2QImage(hogMat, QImage::Format_RGB888))
-            .scaled(50, 100));
+            .scaled(detailSize));
     QString tagString = mode == PLATE_CHAR ? PlateChar_tToString[tag] : PlateCategory_tToString[tag];
     ui->imageLabel->setText(tagString);
     ui->predictedImageLabel->setText("");
@@ -363,7 +370,7 @@ void MainWindow::showTrainingImagesDetail(int index) {
 
     ui->originalImage->setPixmap(
         QPixmap::fromImage(Mat2QImage(image, QImage::Format_RGB888))
-            .scaled(50, 100));
+            .scaled(detailSize));
 
     std::vector<float> hog;
     if(mode == PLATE_CHAR)
@@ -371,10 +378,10 @@ void MainWindow::showTrainingImagesDetail(int index) {
     else
         hog = PlateCategory_SVM::ComputeHogDescriptors(image);
 
-    Mat hogMat = get_hogdescriptor_visu(image, hog, Size{16, 32});
+    Mat hogMat = get_hogdescriptor_visu(image, hog, HOGWinsize);
     ui->HOGImage->setPixmap(
         QPixmap::fromImage(Mat2QImage(hogMat, QImage::Format_RGB888))
-            .scaled(50, 100));
+            .scaled(detailSize));
     QString tagString = mode == PLATE_CHAR ? PlateChar_tToString[tag] : PlateCategory_tToString[tag];            
     ui->imageLabel->setText(tagString);
     ui->predictedImageLabel->setText("");
@@ -389,7 +396,7 @@ void MainWindow::showValidationImagesDetail(int index) {
 
     ui->originalImage->setPixmap(
         QPixmap::fromImage(Mat2QImage(image, QImage::Format_RGB888))
-            .scaled(50, 100));
+            .scaled(detailSize));
 
     std::vector<float> hog;
     if(mode == PLATE_CHAR)
@@ -397,10 +404,10 @@ void MainWindow::showValidationImagesDetail(int index) {
     else
         hog = PlateCategory_SVM::ComputeHogDescriptors(image);
 
-    Mat hogMat = get_hogdescriptor_visu(image, hog, Size{16, 32});
+    Mat hogMat = get_hogdescriptor_visu(image, hog, HOGWinsize);
     ui->HOGImage->setPixmap(
         QPixmap::fromImage(Mat2QImage(hogMat, QImage::Format_RGB888))
-            .scaled(50, 100));
+            .scaled(detailSize));
     QString tagString = mode == PLATE_CHAR ? PlateChar_tToString[tag] : PlateCategory_tToString[tag];      
     QString predictedTagString;
     if(predictedTag == -1)
@@ -420,7 +427,7 @@ void MainWindow::showCorrectValidationImagesDetail(int index) {
 
     ui->originalImage->setPixmap(
         QPixmap::fromImage(Mat2QImage(image, QImage::Format_RGB888))
-            .scaled(50, 100));
+            .scaled(detailSize));
 
     std::vector<float> hog;
     if(mode == PLATE_CHAR)
@@ -428,10 +435,10 @@ void MainWindow::showCorrectValidationImagesDetail(int index) {
     else
         hog = PlateCategory_SVM::ComputeHogDescriptors(image);
 
-    Mat hogMat = get_hogdescriptor_visu(image, hog, Size{16, 32});
+    Mat hogMat = get_hogdescriptor_visu(image, hog, HOGWinsize);
     ui->HOGImage->setPixmap(
         QPixmap::fromImage(Mat2QImage(hogMat, QImage::Format_RGB888))
-            .scaled(50, 100));
+            .scaled(detailSize));
     QString tagString = mode == PLATE_CHAR ? PlateChar_tToString[tag] : PlateCategory_tToString[tag];            
     QString predictedTagString = mode == PLATE_CHAR ? PlateChar_tToString[predictedTag] : PlateCategory_tToString[predictedTag];          
     ui->imageLabel->setText(tagString);
@@ -447,7 +454,7 @@ void MainWindow::showWrongValidationImagesDetail(int index) {
 
     ui->originalImage->setPixmap(
         QPixmap::fromImage(Mat2QImage(image, QImage::Format_RGB888))
-            .scaled(50, 100));
+            .scaled(detailSize));
 
     std::vector<float> hog;
     if(mode == PLATE_CHAR)
@@ -455,10 +462,10 @@ void MainWindow::showWrongValidationImagesDetail(int index) {
     else
         hog = PlateCategory_SVM::ComputeHogDescriptors(image);
 
-    Mat hogMat = get_hogdescriptor_visu(image, hog, Size{16, 32});
+    Mat hogMat = get_hogdescriptor_visu(image, hog, HOGWinsize);
     ui->HOGImage->setPixmap(
         QPixmap::fromImage(Mat2QImage(hogMat, QImage::Format_RGB888))
-            .scaled(50, 100));
+            .scaled(detailSize));
     QString tagString = mode == PLATE_CHAR ? PlateChar_tToString[tag] : PlateCategory_tToString[tag];            
     QString predictedTagString = mode == PLATE_CHAR ? PlateChar_tToString[predictedTag] : PlateCategory_tToString[predictedTag];          
     ui->imageLabel->setText(tagString);

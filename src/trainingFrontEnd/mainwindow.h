@@ -56,6 +56,9 @@ class MainWindow : public QMainWindow {
     std::vector<int> tags;
     std::vector<std::vector<float>> Hogs;
     void reset();
+    QSize iconSize;
+    QSize detailSize;
+    cv::Size HOGWinsize;
 
 public:
     enum TrainingMode{

@@ -17,11 +17,17 @@
    <widget class="QGroupBox" name="SVMParameters">
     <property name="geometry">
      <rect>
-      <x>460</x>
-      <y>20</y>
+      <x>680</x>
+      <y>10</y>
       <width>341</width>
       <height>351</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
     </property>
     <property name="title">
      <string>SVM参数</string>
@@ -245,11 +251,17 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>40</y>
-      <width>371</width>
+      <x>10</x>
+      <y>10</y>
+      <width>651</width>
       <height>341</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
