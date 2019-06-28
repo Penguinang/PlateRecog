@@ -143,7 +143,7 @@ PlateInfo PlateRecognition_V3::GetPlateInfo(PlateInfo &plateInfo,
 
     auto combineVerticalOrigin = [](vector<CharInfo> &charInfos,
         PlateInfo &plateInfo) {
-        for (size_t index = 1; index < min((unsigned long)charInfos.size(), 3ul); ++index) {
+        for (size_t index = 1; index < min(charInfos.size(), (size_t)3); ++index) {
             CharInfo &lastCharInfo = charInfos[index - 1];
             Rect &lastRect = charInfos[index - 1].OriginalRect;
             Rect &rect = charInfos[index].OriginalRect;
