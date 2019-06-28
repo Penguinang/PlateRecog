@@ -35,36 +35,37 @@ class MainWindow : public QMainWindow {
     ~MainWindow();
 
   private slots:
-    void on_openFolder();
-
+    void on_openCharFolder();
+    void on_openCategoryFolder();
     void on_allFiles_currentItemChanged(QListWidgetItem *current,
                                         QListWidgetItem *previous);
-
     void on_startTrainButton_clicked();
     void after_trainingCompleting();
     bool showOverwriteModel_messageBox();
-
     void on_kernel_comboBox_currentIndexChanged(int index);
-	// void showValidations();
-	void prediction_Completed();
-
-    // void on_allTestFiles_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
-
+    void prediction_Completed();
     void on_filesSelection_comboBox_currentIndexChanged(int index);
 
-private:
+  private:
     Ui::MainWindow *ui;
 
     // images data
   private:
     std::vector<Mat> images;
     std::vector<QString> paths;
-    std::vector<PlateChar_t> tags;
+    std::vector<int> tags;
     std::vector<std::vector<float>> Hogs;
+    void reset();
 
+public:
+    enum TrainingMode{
+        PLATE_CATEGORY,
+        PLATE_CHAR
+    } mode;
+private:
     void showLoadedImages();
     QImage Mat2QImage(const cv::Mat &mat, QImage::Format format);
-    enum DisplayContent{
+    enum DisplayContent {
         ALL_IMAGES,
         TRAINING_IMAGES,
         VALIDATION_IMAGES,
@@ -83,8 +84,6 @@ private:
     void showCorrectValidationImagesDetail(int index);
     void showWrongValidationImagesDetail(int index);
 
-
-
     // SVM parameters
   private:
     double C = 1;
@@ -100,15 +99,16 @@ private:
         "LINEAR", "RBF", "POLY", "CHI2", "INTER", "SIGMOID",
     };
 
-    static QString modelFileName;
+    static QString CharModelFileName;
+    static QString CategoryModelFileName;
     friend class TrainWorker;
     TrainWorker *worker = nullptr;
     QThread *trainingThread = nullptr;
 
-	void splitDataSet(float trainingRatio = 0.9);
-	std::vector<size_t> trainingIndices;
-	std::vector<size_t> validationIndices;
-	std::vector<int> validationPrediction;
+    void splitDataSet(float trainingRatio = 0.9);
+    std::vector<size_t> trainingIndices;
+    std::vector<size_t> validationIndices;
+    std::vector<int> validationPrediction;
     std::vector<int> correctValidationIndices;
     std::vector<int> wrongValidationIndices;
 };
@@ -128,7 +128,7 @@ class TrainWorker : public QObject {
     void finished();
     void error(QString err);
     bool showOverwriteModel_messageBox();
-	void prediction_Completed();
+    void prediction_Completed();
 
   private:
     void train(MainWindow *mainWindow);

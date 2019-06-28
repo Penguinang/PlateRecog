@@ -242,7 +242,7 @@
      </layout>
     </widget>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>80</x>
@@ -350,7 +350,14 @@
     <property name="title">
      <string>文件</string>
     </property>
-    <addaction name="openFolder"/>
+    <widget class="QMenu" name="openFolder_2">
+     <property name="title">
+      <string>打开训练文件夹</string>
+     </property>
+     <addaction name="openPlateChar"/>
+     <addaction name="openPlateCategory"/>
+    </widget>
+    <addaction name="openFolder_2"/>
     <addaction name="closeFolder"/>
    </widget>
    <addaction name="menu"/>
@@ -364,37 +371,25 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="openFolder">
-   <property name="text">
-    <string>打开训练文件夹</string>
-   </property>
-  </action>
   <action name="closeFolder">
    <property name="text">
     <string>关闭文件夹</string>
    </property>
   </action>
+  <action name="openPlateChar">
+   <property name="text">
+    <string>训练车牌字符</string>
+   </property>
+  </action>
+  <action name="openPlateCategory">
+   <property name="text">
+    <string>训练车牌类型</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections>
-  <connection>
-   <sender>openFolder</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>on_openFolder()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>410</x>
-     <y>237</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
  <slots>
   <slot>on_openFolder()</slot>
   <slot>on_currentFilesItemChanged()</slot>
