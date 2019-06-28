@@ -29,13 +29,15 @@ SOURCES += \
         mainwindow.cpp \
 # for classifier
         ../classifier/CharInfo.cpp \
-        ../classifier/PlateChar_SVM.cpp
+        ../classifier/PlateChar_SVM.cpp \
+        ../classifier/PlateCategory_SVM.cpp
 
 HEADERS += \
         mainwindow.h \
 # for classifier
         ../classifier/CharInfo.h \
-        ../classifier/PlateChar_SVM.h
+        ../classifier/PlateChar_SVM.h \
+        ../classifier/PlateCategory_SVM.h
 
 FORMS += \
         mainwindow.ui

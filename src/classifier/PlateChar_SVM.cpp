@@ -23,13 +23,14 @@ vector<float> PlateChar_SVM::ComputeHogDescriptors(Mat &image) {
 }
 bool PlateChar_SVM::PlateChar_SVM::Train(Mat &samples, Mat &responses,
                                          SVM::KernelTypes kernel, float C,
-                                         float gamma, unsigned long IterCount,
+                                         float gamma, float polyDegree, unsigned long IterCount,
                                          long double epsilon) {
     svm = SVM::create();
     svm->setType(SVM::Types::C_SVC);
     svm->setKernel(kernel);
     svm->setC(C);
     svm->setGamma(gamma);
+    svm->setDegree(polyDegree);
 
     svm->setTermCriteria(
         TermCriteria(TermCriteria::Type::MAX_ITER, IterCount, epsilon));

@@ -14,10 +14,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //this->ui->mainToolBar->addAction(actionSelectDir);
 
-    this->setWindowState(Qt::WindowState::WindowMaximized);
+    //this->setWindowState(Qt::WindowState::WindowMaximized);
 
     PlateCategory_SVM::Load("CategorySVM.yaml");
     PlateChar_SVM::Load("CharSVM.yaml");
+    //设置收集样本界面的icon
+    this->setWindowIcon(QIcon("plateUI03.png"));
 }
 
 MainWindow::~MainWindow()
@@ -59,18 +61,66 @@ void MainWindow::showMat(cv::Mat mat,vector<tuple<vector<PlateInfo>, Mat, Mat, v
     this->ui->tabWidget->clear();
     QImage image = Mat2QImage(mat,QImage::Format_RGB888);
     //构建Tab页面
+
+    //调整显示的图片size，并未改变原图，只在显示时改变size
+    if(mat.cols > 1000)
+    {
+        float rate = 1000/(float)mat.cols;
+        int height = mat.rows* rate;
+
+        cv::resize(mat,mat,cv::Size(1000,height));
+    }
+
+    /*
+    //根据tabwidge调整显示的图片大小，但是当窗口大小改变后会出问题
+    int widthTab = this->ui->tabWidget->width();
+    if(mat.cols > widthTab)
+        {
+            float rate = widthTab/(float)mat.cols;
+            int height = mat.rows* rate;
+
+            cv::resize(mat,mat,cv::Size(widthTab,height));
+        }
+    */
     QWidget* tabOriginal = this->generateImageLabel(mat,QImage::Format_RGB888);
     this->ui->tabWidget->addTab(tabOriginal,tr("原图"));
 
+
     Mat thremat = get<1>(plates[0]);
+    //调整显示的图片size，并未改变原图，只在显示时改变size
+    if(thremat.cols > 1000)
+    {
+        float rate = 1000/(float)thremat.cols;
+        int height = thremat.rows* rate;
+
+        cv::resize(thremat,thremat,cv::Size(1000,height));
+    }
     QWidget* tabthreshold = this->generateImageLabel(thremat,QImage::Format_Grayscale8);
     this->ui->tabWidget->addTab(tabthreshold,tr("二值化"));
 
+
     Mat erode = get<2>(plates[0]);
+    //调整显示的图片size，并未改变原图，只在显示时改变size
+    if(erode.cols > 1000)
+    {
+        float rate = 1000/(float)erode.cols;
+        int height = erode.rows* rate;
+
+        cv::resize(erode,erode,cv::Size(1000,height));
+    }
     QWidget* taberod = this->generateImageLabel(erode,QImage::Format_Grayscale8);
     this->ui->tabWidget->addTab(taberod,tr("形态学操作"));
 
+
     Mat rected = get<4>(plates[0]);
+    //调整显示的图片size，并未改变原图，只在显示时改变size
+    if(rected.cols > 1000)
+    {
+        float rate = 1000/(float)rected.cols;
+        int height = rected.rows* rate;
+
+        cv::resize(rected,rected,cv::Size(1000,height));
+    }
     QWidget* tabrect = this->generateImageLabel(rected,QImage::Format_RGB888);
     this->ui->tabWidget->addTab(tabrect,tr("Rects"));
 
@@ -231,7 +281,7 @@ void MainWindow::showAllPicturesGotten(QListWidgetItem *item)
         plateInfos = get<0>(plates[1]);
     }
 
-    qDebug()<< "generate platesinfo";
+    //qDebug()<< "generate platesinfo";
     //qDebug()<< PlateCategory_tToString[(int)plateInfos[0].PlateCategory];
 
 

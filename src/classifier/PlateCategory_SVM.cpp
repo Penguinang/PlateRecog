@@ -60,12 +60,20 @@ vector<float> PlateCategory_SVM::ComputeHogDescriptors(Mat &image) {
     hog.compute(matToHog, ret, cv::Size(1, 1), cv::Size(0, 0));
     return ret;
 }
-bool PlateCategory_SVM::Train(Mat &samples, Mat &responses) {
+bool PlateCategory_SVM::Train(Mat &samples, Mat &responses,
+                      SVM::KernelTypes kernel,
+                      float C, float gamma, float polyDegree,
+                      unsigned long IterCount,
+                      long double epsilon) {
     svm = SVM::create();
     svm->setType(SVM::Types::C_SVC);
-    svm->setKernel(SVM::KernelTypes::LINEAR);
+
+    svm->setKernel(kernel);
     svm->setTermCriteria(
-        TermCriteria(TermCriteria::Type::MAX_ITER, 10000, 1e-10));
+        TermCriteria(TermCriteria::Type::MAX_ITER, IterCount, epsilon));
+    svm->setC(C);
+    svm->setDegree(polyDegree);
+    svm->setGamma(gamma);
     IsReady = true;
     return svm->train(samples, SampleTypes::ROW_SAMPLE, responses);
 }

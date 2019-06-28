@@ -78,9 +78,10 @@ set(Sources
     PlateRecognition_V3.cpp
     Utilities.h
     Utilities.cpp
-    debug.h
-    debug.cpp
-)
+	debug.cpp
+	debug.h
+) 
+
 
 if(MSVC)
 add_definitions(/source-charset:utf-8)

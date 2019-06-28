@@ -56,9 +56,11 @@ class PlateChar_SVM {
 
   public:
     static vector<float> ComputeHogDescriptors(Mat &image);
+
+    // polyDegree 参数只在核函数是多项式时候其作用
     static bool Train(Mat &samples, Mat &responses,
                       SVM::KernelTypes kernel = SVM::KernelTypes::RBF,
-                      float C = 1, float gamma = 1,
+                      float C = 1, float gamma = 1, float polyDegree = 1,
                       unsigned long IterCount = 10000,
                       long double epsilon = 1e-10);
     static void Save(const string &fileName);
