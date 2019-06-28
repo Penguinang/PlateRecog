@@ -6,15 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1294</width>
-    <height>800</height>
+    <width>1383</width>
+    <height>881</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>收集车牌及字符样本</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout_9">
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
     <item>
      <widget class="QSplitter" name="splitter">
       <property name="orientation">
@@ -34,7 +34,7 @@
          <widget class="QTabWidget" name="tabWidget">
           <property name="minimumSize">
            <size>
-            <width>0</width>
+            <width>900</width>
             <height>0</height>
            </size>
           </property>
@@ -68,6 +68,12 @@
              <layout class="QHBoxLayout" name="horizontalLayout_3">
               <item>
                <widget class="QLabel" name="blurSizeLabel">
+                <property name="maximumSize">
+                 <size>
+                  <width>120</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
                 <property name="text">
                  <string>blur_size:</string>
                 </property>
@@ -75,6 +81,12 @@
               </item>
               <item>
                <widget class="QSpinBox" name="blurSizeBox">
+                <property name="maximumSize">
+                 <size>
+                  <width>100</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
                 <property name="value">
                  <number>5</number>
                 </property>
@@ -95,13 +107,32 @@
                <layout class="QHBoxLayout" name="horizontalLayout_7">
                 <item>
                  <widget class="QLabel" name="sobelYweightLabel">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
                   <property name="text">
                    <string>Sobel_y_weight:</string>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QSpinBox" name="sobelYweightBox"/>
+                 <widget class="QSpinBox" name="sobelYweightBox">
+                  <property name="maximumSize">
+                   <size>
+                    <width>100</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -109,6 +140,12 @@
                <layout class="QHBoxLayout" name="horizontalLayout_6">
                 <item>
                  <widget class="QLabel" name="sobelXweightLabel">
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
                   <property name="text">
                    <string>Sobel_x_weight:</string>
                   </property>
@@ -116,6 +153,12 @@
                 </item>
                 <item>
                  <widget class="QSpinBox" name="sobelXweightBox">
+                  <property name="maximumSize">
+                   <size>
+                    <width>100</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
                   <property name="value">
                    <number>1</number>
                   </property>
@@ -127,6 +170,12 @@
                <layout class="QHBoxLayout" name="horizontalLayout_4">
                 <item>
                  <widget class="QLabel" name="sobelScaleLabel">
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
                   <property name="text">
                    <string>Sobel_scale:</string>
                   </property>
@@ -134,6 +183,12 @@
                 </item>
                 <item>
                  <widget class="QSpinBox" name="sobelScaleBox">
+                  <property name="maximumSize">
+                   <size>
+                    <width>100</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
                   <property name="value">
                    <number>1</number>
                   </property>
@@ -145,13 +200,26 @@
                <layout class="QHBoxLayout" name="horizontalLayout_5">
                 <item>
                  <widget class="QLabel" name="sobelDeltaLabel">
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
                   <property name="text">
                    <string>Sobel_delta:</string>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QSpinBox" name="sobelDeltaBox"/>
+                 <widget class="QSpinBox" name="sobelDeltaBox">
+                  <property name="maximumSize">
+                   <size>
+                    <width>100</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -172,6 +240,12 @@
              <layout class="QHBoxLayout" name="horizontalLayout_12">
               <item>
                <widget class="QLabel" name="minHeightLabel">
+                <property name="maximumSize">
+                 <size>
+                  <width>80</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
                 <property name="text">
                  <string>minHeight:</string>
                 </property>
@@ -179,6 +253,12 @@
               </item>
               <item>
                <widget class="QSpinBox" name="minHeightBox">
+                <property name="maximumSize">
+                 <size>
+                  <width>100</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
                 <property name="maximum">
                  <number>500</number>
                 </property>
@@ -195,6 +275,12 @@
                <layout class="QHBoxLayout" name="horizontalLayout_13">
                 <item>
                  <widget class="QLabel" name="maxHeightLabel">
+                  <property name="maximumSize">
+                   <size>
+                    <width>80</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
                   <property name="text">
                    <string>maxHeight:</string>
                   </property>
@@ -202,6 +288,12 @@
                 </item>
                 <item>
                  <widget class="QSpinBox" name="maxHeightBox">
+                  <property name="maximumSize">
+                   <size>
+                    <width>100</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
                   <property name="maximum">
                    <number>500</number>
                   </property>
@@ -216,6 +308,12 @@
                <layout class="QHBoxLayout" name="horizontalLayout_10">
                 <item>
                  <widget class="QLabel" name="minWidthLabel">
+                  <property name="maximumSize">
+                   <size>
+                    <width>80</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
                   <property name="text">
                    <string>minWidth:</string>
                   </property>
@@ -223,6 +321,12 @@
                 </item>
                 <item>
                  <widget class="QSpinBox" name="minWidthBox">
+                  <property name="maximumSize">
+                   <size>
+                    <width>100</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
                   <property name="maximum">
                    <number>500</number>
                   </property>
@@ -237,6 +341,12 @@
                <layout class="QHBoxLayout" name="horizontalLayout_11">
                 <item>
                  <widget class="QLabel" name="maxWidthLabel">
+                  <property name="maximumSize">
+                   <size>
+                    <width>80</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
                   <property name="text">
                    <string>maxWidth:</string>
                   </property>
@@ -244,6 +354,12 @@
                 </item>
                 <item>
                  <widget class="QSpinBox" name="maxWidthBox">
+                  <property name="maximumSize">
+                   <size>
+                    <width>100</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
                   <property name="maximum">
                    <number>500</number>
                   </property>
@@ -258,6 +374,12 @@
                <layout class="QHBoxLayout" name="horizontalLayout_14">
                 <item>
                  <widget class="QLabel" name="minRatioLabel">
+                  <property name="maximumSize">
+                   <size>
+                    <width>80</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
                   <property name="text">
                    <string>minRatio:</string>
                   </property>
@@ -265,6 +387,12 @@
                 </item>
                 <item>
                  <widget class="QDoubleSpinBox" name="minRatioBox">
+                  <property name="maximumSize">
+                   <size>
+                    <width>100</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
                   <property name="maximum">
                    <double>1.000000000000000</double>
                   </property>
@@ -282,6 +410,12 @@
                <layout class="QHBoxLayout" name="horizontalLayout_15">
                 <item>
                  <widget class="QLabel" name="maxRatioLabel">
+                  <property name="maximumSize">
+                   <size>
+                    <width>80</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
                   <property name="text">
                    <string>maxRatio:</string>
                   </property>
@@ -289,6 +423,12 @@
                 </item>
                 <item>
                  <widget class="QDoubleSpinBox" name="maxRatioBox">
+                  <property name="maximumSize">
+                   <size>
+                    <width>100</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
                   <property name="maximum">
                    <double>1.000000000000000</double>
                   </property>
@@ -316,6 +456,9 @@
                 <height>16777215</height>
                </size>
               </property>
+              <property name="layoutDirection">
+               <enum>Qt::RightToLeft</enum>
+              </property>
               <property name="text">
                <string>刷新</string>
               </property>
@@ -326,6 +469,12 @@
             </item>
             <item>
              <widget class="QLabel" name="morphLabel">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>21</height>
+               </size>
+              </property>
               <property name="text">
                <string>闭操作：</string>
               </property>
@@ -337,6 +486,12 @@
                <layout class="QHBoxLayout" name="horizontalLayout_9">
                 <item>
                  <widget class="QLabel" name="morphSizeHeightLabel">
+                  <property name="maximumSize">
+                   <size>
+                    <width>150</width>
+                    <height>21</height>
+                   </size>
+                  </property>
                   <property name="text">
                    <string>morph_size_height:</string>
                   </property>
@@ -344,6 +499,12 @@
                 </item>
                 <item>
                  <widget class="QSpinBox" name="morphSizeHeightBox">
+                  <property name="maximumSize">
+                   <size>
+                    <width>100</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
                   <property name="value">
                    <number>3</number>
                   </property>
@@ -355,6 +516,12 @@
                <layout class="QHBoxLayout" name="horizontalLayout_8">
                 <item>
                  <widget class="QLabel" name="morphSizeWidthLabel">
+                  <property name="maximumSize">
+                   <size>
+                    <width>150</width>
+                    <height>21</height>
+                   </size>
+                  </property>
                   <property name="text">
                    <string>morph_size_width:</string>
                   </property>
@@ -362,6 +529,12 @@
                 </item>
                 <item>
                  <widget class="QSpinBox" name="morphSizeWidthBox">
+                  <property name="maximumSize">
+                   <size>
+                    <width>100</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
                   <property name="value">
                    <number>17</number>
                   </property>
@@ -377,7 +550,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="layoutWidget">
+      <widget class="QWidget" name="">
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <widget class="QListWidget" name="plateList">
@@ -458,7 +631,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1294</width>
+     <width>1383</width>
      <height>26</height>
     </rect>
    </property>
