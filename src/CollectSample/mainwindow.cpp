@@ -18,6 +18,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     PlateCategory_SVM::Load("CategorySVM.yaml");
     PlateChar_SVM::Load("CharSVM.yaml");
+    //设置收集样本界面的icon
+    this->setWindowIcon(QIcon("plateUI03.png"));
 }
 
 MainWindow::~MainWindow()

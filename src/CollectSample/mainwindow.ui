@@ -38,6 +38,12 @@
             <height>0</height>
            </size>
           </property>
+          <property name="maximumSize">
+           <size>
+            <width>1400</width>
+            <height>16777215</height>
+           </size>
+          </property>
           <property name="currentIndex">
            <number>1</number>
           </property>
@@ -550,7 +556,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <widget class="QListWidget" name="plateList">
@@ -562,7 +568,7 @@
           </property>
           <property name="maximumSize">
            <size>
-            <width>300</width>
+            <width>500</width>
             <height>10000000</height>
            </size>
           </property>
@@ -614,7 +620,7 @@
          <widget class="QListWidget" name="charList">
           <property name="maximumSize">
            <size>
-            <width>300</width>
+            <width>500</width>
             <height>16777215</height>
            </size>
           </property>
@@ -643,7 +649,7 @@
    </widget>
    <widget class="QMenu" name="menu_B">
     <property name="title">
-     <string>生成（&amp;B)</string>
+     <string>生成(&amp;B)</string>
     </property>
     <addaction name="autoCreateSample"/>
    </widget>
