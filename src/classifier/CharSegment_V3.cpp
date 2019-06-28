@@ -406,6 +406,9 @@ vector<CharInfo> CharSegment_V3::SplitePlateByOriginal(
         }
     }
 
+    rects = RejectInnerRectFromRects(rects);
+
+    rects = AdjustRects(rects);
     // DEBUG
     Mat rejectedRect = matOfClearMaodingAndBorder.clone();
     cv::cvtColor(rejectedRect, rejectedRect, cv::COLOR_GRAY2BGR);
@@ -413,14 +416,45 @@ vector<CharInfo> CharSegment_V3::SplitePlateByOriginal(
         cv::rectangle(rejectedRect, rect, {0, 0, 255});
     }
     DebugVisualize("AfterClipBorder ", rejectedRect);
-
-    rects = RejectInnerRectFromRects(rects);
-    rects = AdjustRects(rects);
-
     if (rects.size() == 0)
         return result;
 
+    /*vector<Rect> candidateRects;
+    for (size_t index = 0; index < rects.size(); index++)
+    {
+        Mat matTest;
+        originalMat(rects[index]).convertTo(matTest, cv::ImreadModes::IMREAD_GRAYSCALE);
+        if (PlateChar_SVM::Test(matTest) != PlateChar_t::NonChar)
+        {
+            candidateRects.push_back(rects[index]);
+        }
+    }*/
+    /*int midHeight = CharSegment_V3::GetRectsMaxHeight(rects);
+    int midWidth = CharSegment_V3::GetRectsMidWidth(rects);*/
     for (size_t index = 0; index < rects.size(); index++) {
+        //printf("midWidth %d\n", midWidth);
+        //printf("rectWidth %d\n", rects[index].width);
+        // broaden thin characters
+        Rect rect = rects[index];
+       /* midWidth = rect.width * 3 / 2;
+        if (rect.height >= midHeight * 2 / 3 && rect.height <= midHeight * 4 / 3 &&
+            rect.width <= midWidth * 2 / 3)
+        {
+            int updateX = rect.x + rect.width/2 - midWidth/2;
+            int updateWidth = midWidth;
+            if (updateX >0 && updateX + updateWidth >= originalMat.cols)
+            {
+                updateWidth = originalMat.cols - rect.x - rect.width / 2;
+                updateX = rect.x + rect.width / 2 - updateWidth / 2;
+                rect.x = updateX;
+                rect.width = updateWidth;
+            }
+            else if (updateX + updateWidth < originalMat.cols && updateX >0)
+            {
+                rect.x = updateX;
+                rect.width = updateWidth;
+            }
+        }*/
         Rect &rectROI = rects[index];
         rectROI = Utilities::GetSafeRect(rects[index], originalMat);
         CharInfo plateCharInfo;
@@ -469,19 +503,16 @@ bool CharSegment_V3::NotOnBorder(Rect &rectToJudge, cv::Size borderSize,
     Rect rectLimit;
     rectLimit.x = xLimit;
     rectLimit.y = yLimit;
-    rectLimit.width = widthLimit + 1;
-    rectLimit.height = heightLimit + 1;
+    rectLimit.width = widthLimit;
+    rectLimit.height = heightLimit;
 
-    // contains 左闭右开，上闭下开
-    bool ret =
-        rectLimit.contains(cv::Point(rectToJudge.x, rectToJudge.y)) &&
-        rectLimit.contains(
-            cv::Point(rectToJudge.x, rectToJudge.y + rectToJudge.height)) &&
-        rectLimit.contains(
-            cv::Point(rectToJudge.x + rectToJudge.width, rectToJudge.y)) &&
-        rectLimit.contains(cv::Point(rectToJudge.x + rectToJudge.width,
-                                     rectToJudge.y + rectToJudge.height));
-    return ret;
+    return rectLimit.contains(cv::Point(rectToJudge.x, rectToJudge.y)) &&
+           rectLimit.contains(
+               cv::Point(rectToJudge.x, rectToJudge.y + rectToJudge.height-1)) &&
+           rectLimit.contains(
+               cv::Point(rectToJudge.x + rectToJudge.width-1, rectToJudge.y)) &&
+           rectLimit.contains(cv::Point(rectToJudge.x + rectToJudge.width-1,
+                                        rectToJudge.y + rectToJudge.height-1));
 }
 
 Rect CharSegment_V3::MergeRect(Rect &A, Rect &B) {
@@ -513,7 +544,7 @@ vector<Rect> CharSegment_V3::AdjustRects(vector<Rect> &rects) {
     for (size_t index = rects.size() - 1; index < rects.size(); index--) {
         Rect rect = rects[index];
         if (rect.height >= heightLimit && rect.height < averageHeight) {
-            int offsetTop = (rect.y - medianTop);
+            int offsetTop = std::abs(rect.y - medianTop);
             int offsetBottom = std::abs(rect.y + rect.height - medianBottom);
             if (offsetTop > offsetBottom) {
                 rect.y = (int)(rect.y + rect.height - averageHeight);
@@ -598,6 +629,42 @@ float CharSegment_V3::GetRectsAverageHeight(vector<Rect> &rects) {
     return heightTotal / (float)rects.size();
 }
 
+float CharSegment_V3::GetRectsMidHeight(vector<Rect> &rects) {
+    if (rects.size() == 0)
+    {
+        return 0;
+    }
+    vector<Rect> tempRects;
+    tempRects.assign(rects.begin(), rects.end());
+    std::sort(tempRects.begin(), tempRects.end(), RectHeightComparer);
+    return tempRects[int(tempRects.size() / 2)].height;
+}
+
+float CharSegment_V3::GetRectsMidWidth(vector<Rect> &rects) {
+    if (rects.size() == 0)
+    {
+        return 0;
+    }
+    vector<Rect> tempRects;
+    tempRects.assign(rects.begin(), rects.end());
+    std::sort(tempRects.begin(), tempRects.end(), RectHeightComparer);
+    return tempRects[int(tempRects.size() / 2)].width;
+}
+
+int CharSegment_V3::GetRectsMaxWidth(vector<Rect>& rects)
+{
+    int maxWidth = 0;
+    if (rects.size() == 0)
+        return maxWidth;
+    for (Rect rect : rects) {
+        for (Rect rect : rects) {
+            if (maxWidth < rect.width)
+                maxWidth = rect.width;
+        }
+        return maxWidth;
+    }
+}
+
 int CharSegment_V3::GetRectsMaxHeight(vector<Rect> &rects) {
     int maxHeight = 0;
     if (rects.size() == 0)
@@ -633,6 +700,9 @@ bool CharSegment_V3::RectBottomComparer(const Rect &x, const Rect &y) {
 }
 bool CharSegment_V3::RectHeightComparer(const Rect &x, const Rect &y) {
     return x.height < y.height;
+}
+bool CharSegment_V3::RectWidthComparer(const Rect&x, const Rect &y) {
+    return x.width < y.width;
 }
 bool CharSegment_V3::RectLeftComparer(const Rect &x, const Rect &y) {
     return x.x < y.x;

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>821</width>
-    <height>475</height>
+    <width>1122</width>
+    <height>514</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,11 +17,17 @@
    <widget class="QGroupBox" name="SVMParameters">
     <property name="geometry">
      <rect>
-      <x>390</x>
-      <y>40</y>
+      <x>680</x>
+      <y>10</y>
       <width>341</width>
       <height>351</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
     </property>
     <property name="title">
      <string>SVM参数</string>
@@ -38,7 +44,7 @@
      <property name="title">
       <string>训练结果</string>
      </property>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>20</x>
@@ -210,16 +216,6 @@
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QLabel" name="time_label">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>训练/预计总时间： 1.2s / 100s</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
     <widget class="QWidget" name="layoutWidget_2">
@@ -233,7 +229,7 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_7">
       <item>
-       <widget class="QLabel" name="poly_label">
+       <widget class="QLabel" name="degree_label">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -243,7 +239,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QDoubleSpinBox" name="poly_spinBox">
+       <widget class="QDoubleSpinBox" name="degree_spinBox">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -255,15 +251,28 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>12</x>
-      <y>22</y>
-      <width>341</width>
-      <height>361</height>
+      <x>10</x>
+      <y>10</y>
+      <width>651</width>
+      <height>341</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QListWidget" name="allFiles"/>
+      <layout class="QVBoxLayout" name="verticalLayout_8">
+       <item>
+        <widget class="QComboBox" name="filesSelection_comboBox"/>
+       </item>
+       <item>
+        <widget class="QListWidget" name="allFiles"/>
+       </item>
+      </layout>
      </item>
      <item>
       <layout class="QVBoxLayout" name="verticalLayout">
@@ -320,6 +329,21 @@
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="QLabel" name="predictedImageLabel">
+         <property name="font">
+          <font>
+           <pointsize>24</pointsize>
+          </font>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::Box</enum>
+         </property>
+         <property name="text">
+          <string>3</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </item>
     </layout>
@@ -330,7 +354,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>821</width>
+     <width>1122</width>
      <height>30</height>
     </rect>
    </property>
@@ -338,7 +362,14 @@
     <property name="title">
      <string>文件</string>
     </property>
-    <addaction name="openFolder"/>
+    <widget class="QMenu" name="openFolder_2">
+     <property name="title">
+      <string>打开训练文件夹</string>
+     </property>
+     <addaction name="openPlateChar"/>
+     <addaction name="openPlateCategory"/>
+    </widget>
+    <addaction name="openFolder_2"/>
     <addaction name="closeFolder"/>
    </widget>
    <addaction name="menu"/>
@@ -352,37 +383,25 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="openFolder">
-   <property name="text">
-    <string>打开训练文件夹</string>
-   </property>
-  </action>
   <action name="closeFolder">
    <property name="text">
     <string>关闭文件夹</string>
    </property>
   </action>
+  <action name="openPlateChar">
+   <property name="text">
+    <string>训练车牌字符</string>
+   </property>
+  </action>
+  <action name="openPlateCategory">
+   <property name="text">
+    <string>训练车牌类型</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections>
-  <connection>
-   <sender>openFolder</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>on_openFolder()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>410</x>
-     <y>237</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
  <slots>
   <slot>on_openFolder()</slot>
   <slot>on_currentFilesItemChanged()</slot>

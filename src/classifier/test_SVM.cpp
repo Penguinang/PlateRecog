@@ -297,8 +297,8 @@ void grid_search() {
         validation_data = sample.second.first,
         validation_tag = sample.second.second;
 
-    vector<float> C_candidate = {5, 10, 15};
-    vector<float> gamma_candidate = {0.9, 1.4, 2};
+    vector<float> C_candidate = {5.0f, 10.0f, 15.f};
+    vector<float> gamma_candidate = {0.9f, 1.4f, 2.f};
     vector<SVM::KernelTypes> kernel_candidate = {SVM::KernelTypes::RBF};
     float best_accuracy = -1;
     float best_C = C_candidate[0], best_gamma = gamma_candidate[0];
@@ -338,9 +338,9 @@ int main(int argc, char const *argv[]) {
     // test_charinfo();
     // test_plateinfo();
     test_Char_SVM();
-    test_Category_SVM();
+    //test_Category_SVM();
 
     // grid_search();
-
+    std::cin.get();
     return 0;
 }

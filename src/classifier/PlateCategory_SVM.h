@@ -69,7 +69,11 @@ class PlateCategory_SVM {
 
     // use vector to replace array
     static vector<float> ComputeHogDescriptors(Mat &image);
-    static bool Train(Mat &samples, Mat &responses);
+    static bool Train(Mat &samples, Mat &responses,
+                      SVM::KernelTypes kernel = SVM::KernelTypes::LINEAR,
+                      float C = 1, float gamma = 1, float polyDegree = 1,
+                      unsigned long IterCount = 10000,
+                      long double epsilon = 1e-10);
     static void Save(const string &fileName);
     static void Load(const string &fileName);
     static bool IsCorrectTrainngDirectory(const string &path);

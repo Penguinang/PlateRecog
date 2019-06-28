@@ -73,7 +73,7 @@ class Directory {
         FindClose(hFind);
         return FALSE;
     }
-    static void CreateDirectory(const string &path) { CreateDirectory(path); }
+    static void CreateDirectory(const string &path) { ::CreateDirectory(path.c_str(),0); }
     static vector<string> GetFiles(const string &path) {
         HANDLE hFind;
         WIN32_FIND_DATAA findData;
@@ -98,7 +98,7 @@ class Directory {
 #define DIRECTORY_DELIMITER "/"
 #else
 #ifdef _WIN32
-#define DIRECTORY_DELIMITER "\\\\"
+#define DIRECTORY_DELIMITER "\\"
 #else error("无法识别的系统，自己设置文件分隔符")
 #endif
 #endif
