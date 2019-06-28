@@ -1,118 +1,28 @@
-﻿#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "manualclassifywindow.h"
+#include "ui_manualclassifywindow.h"
 
-MainWindow::MainWindow(QWidget *parent) :
+
+
+ManualClassifyWindow::ManualClassifyWindow(QWidget *parent):
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::ManualClassifyWindow)
 {
-    //TODO 好像没用到，删了？
-    /*
-    plateCategoryPath.append(QDir::currentPath()+tr("/samples/plates/澳门车牌/"));
-    plateCategoryPath.append(QDir::currentPath()+tr("/samples/plates/澳门车牌_两行/"));
-    plateCategoryPath.append(QDir::currentPath()+tr("/samples/plates/澳门车牌_内/"));
-    plateCategoryPath.append(QDir::currentPath()+tr("/samples/plates/非车牌/"));
-    plateCategoryPath.append(QDir::currentPath()+tr("/samples/plates/警牌/"));
-    plateCategoryPath.append(QDir::currentPath()+tr("/samples/plates/军牌/"));
-    plateCategoryPath.append(QDir::currentPath()+tr("/samples/plates/军牌_两行/"));
-    plateCategoryPath.append(QDir::currentPath()+tr("/samples/plates/内集车牌/"));
-    plateCategoryPath.append(QDir::currentPath()+tr("/samples/plates/普通车牌/"));
-    plateCategoryPath.append(QDir::currentPath()+tr("/samples/plates/普通车牌_两行/"));
-    plateCategoryPath.append(QDir::currentPath()+tr("/samples/plates/香港车牌/"));
-    plateCategoryPath.append(QDir::currentPath()+tr("/samples/plates/香港车牌_两行/"));
-    plateCategoryPath.append(QDir::currentPath()+tr("/samples/plates/香港车牌_内/"));
-    plateCategoryPath.append(QDir::currentPath()+tr("/samples/plates/新能源/"));
-
-    charCategoryPath.append(tr("./chars/_0"));
-    charCategoryPath.append(tr("./chars/_1"));
-    charCategoryPath.append(tr("./chars/_2"));
-    charCategoryPath.append(tr("./chars/_3"));
-    charCategoryPath.append(tr("./chars/_4"));
-    charCategoryPath.append(tr("./chars/_5"));
-    charCategoryPath.append(tr("./chars/_6"));
-    charCategoryPath.append(tr("./chars/_7"));
-    charCategoryPath.append(tr("./chars/_8"));
-    charCategoryPath.append(tr("./chars/_9"));
-    charCategoryPath.append(tr("./chars/_A"));
-    charCategoryPath.append(tr("./chars/_B"));
-    charCategoryPath.append(tr("./chars/_C"));
-    charCategoryPath.append(tr("./chars/_D"));
-    charCategoryPath.append(tr("./chars/_E"));
-    charCategoryPath.append(tr("./chars/_F"));
-    charCategoryPath.append(tr("./chars/_G"));
-    charCategoryPath.append(tr("./chars/_H"));
-    charCategoryPath.append(tr("./chars/_I"));
-    charCategoryPath.append(tr("./chars/_J"));
-    charCategoryPath.append(tr("./chars/_K"));
-    charCategoryPath.append(tr("./chars/_L"));
-    charCategoryPath.append(tr("./chars/_M"));
-    charCategoryPath.append(tr("./chars/_N"));
-    charCategoryPath.append(tr("./chars/_O"));
-    charCategoryPath.append(tr("./chars/_P"));
-    charCategoryPath.append(tr("./chars/_Q"));
-    charCategoryPath.append(tr("./chars/_R"));
-    charCategoryPath.append(tr("./chars/_S"));
-    charCategoryPath.append(tr("./chars/_T"));
-    charCategoryPath.append(tr("./chars/_U"));
-    charCategoryPath.append(tr("./chars/_V"));
-    charCategoryPath.append(tr("./chars/_W"));
-    charCategoryPath.append(tr("./chars/_X"));
-    charCategoryPath.append(tr("./chars/_Y"));
-    charCategoryPath.append(tr("./chars/_Z"));
-    charCategoryPath.append(tr("./chars/_澳"));
-    charCategoryPath.append(tr("./chars/_藏"));
-    charCategoryPath.append(tr("./chars/_川"));
-    charCategoryPath.append(tr("./chars/_点"));
-    charCategoryPath.append(tr("./chars/_鄂"));
-    charCategoryPath.append(tr("./chars/_非字符"));
-    charCategoryPath.append(tr("./chars/_甘"));
-    charCategoryPath.append(tr("./chars/_赣"));
-    charCategoryPath.append(tr("./chars/_港"));
-    charCategoryPath.append(tr("./chars/_贵"));
-    charCategoryPath.append(tr("./chars/_桂"));
-    charCategoryPath.append(tr("./chars/_黑"));
-    charCategoryPath.append(tr("./chars/_沪"));
-    charCategoryPath.append(tr("./chars/_吉"));
-    charCategoryPath.append(tr("./chars/_冀"));
-    charCategoryPath.append(tr("./chars/_津"));
-    charCategoryPath.append(tr("./chars/_晋"));
-    charCategoryPath.append(tr("./chars/_京"));
-    charCategoryPath.append(tr("./chars/_警"));
-    charCategoryPath.append(tr("./chars/_辽"));
-    charCategoryPath.append(tr("./chars/_鲁"));
-    charCategoryPath.append(tr("./chars/_蒙"));
-    charCategoryPath.append(tr("./chars/_闽"));
-    charCategoryPath.append(tr("./chars/_宁"));
-    charCategoryPath.append(tr("./chars/_青"));
-    charCategoryPath.append(tr("./chars/_琼"));
-    charCategoryPath.append(tr("./chars/_陕"));
-    charCategoryPath.append(tr("./chars/_苏"));
-    charCategoryPath.append(tr("./chars/_穗"));
-    charCategoryPath.append(tr("./chars/_皖"));
-    charCategoryPath.append(tr("./chars/_湘"));
-    charCategoryPath.append(tr("./chars/_新"));
-    charCategoryPath.append(tr("./chars/_渝"));
-    charCategoryPath.append(tr("./chars/_豫"));
-    charCategoryPath.append(tr("./chars/_粤"));
-    charCategoryPath.append(tr("./chars/_云"));
-    charCategoryPath.append(tr("./chars/_浙"));
-
-    */
-
     this->basePath = QFileDialog::getExistingDirectory(this,
-                                                       ("Please choose base sample file folder"),
-                                                        "D:/Applications/github/GitHub/PlateRecog/bin/");
+                                                           ("Please choose base sample file folder"),
+                                                            "D:/Github/PlateRecog/bin");
     this->plateSamplePath=this->basePath+"/plates/";
     this->charSamplepath=this->basePath+"/chars/";
 
     ui->setupUi(this);
 }
 
-MainWindow::~MainWindow()
+
+ManualClassifyWindow::~ManualClassifyWindow()
 {
     delete ui;
 }
 
-void MainWindow::showImagesByPath(QString imagePath)
+void ManualClassifyWindow::showImagesByPath(QString imagePath)
 {
     QDir* dir = new QDir(imagePath);
     QStringList nameFilters;
@@ -148,7 +58,7 @@ void MainWindow::showImagesByPath(QString imagePath)
     }
 }
 
-void MainWindow::showCharImageByPath(QString charImagePath)
+void ManualClassifyWindow::showCharImageByPath(QString charImagePath)
 {
     QDir* dir = new QDir(charImagePath);
     QStringList nameFilters;
@@ -170,7 +80,7 @@ void MainWindow::showCharImageByPath(QString charImagePath)
         QString fullImagePath=charImagePath+imgFilename;//文件全路径
         //重新设置图片大小
         pixmap.load(fullImagePath);
-        pixmap = pixmap.scaled(20,40);
+        pixmap = pixmap.scaled(15,40);
         //定义QListWidgetItem对象
         QListWidgetItem *imageItem = new QListWidgetItem(QIcon(pixmap),"");
         imageItem->setWhatsThis(fullImagePath);
@@ -180,7 +90,7 @@ void MainWindow::showCharImageByPath(QString charImagePath)
     }
 }
 
-void MainWindow::moveFile(QString fullSourceFileName, QString destinationPath)
+void ManualClassifyWindow::moveFile(QString fullSourceFileName, QString destinationPath)
 {
     QFileInfo fileinfo(fullSourceFileName);//原文件
     QFile file(fullSourceFileName);
@@ -206,8 +116,8 @@ void MainWindow::moveFile(QString fullSourceFileName, QString destinationPath)
     }
 }
 
-//显示相关分类文件夹下的图片，这个好像也没啥用了
-void MainWindow::showImages(int tag)
+//显示相关分类文件夹下的图片
+void ManualClassifyWindow::showImages(int tag)
 {
     //TODO： 相应文件类的地址
     switch (tag) {
@@ -293,7 +203,76 @@ void MainWindow::showImages(int tag)
     */
 }
 
-void MainWindow::labelImage(QString imageFilename, QString tag)
+//你删了这个
+//用标记来制定相应的文件夹
+void ManualClassifyWindow::labelImage(QString imageFilename, int tag)
+{
+    if(imageFilename.isEmpty() || imageFilename==NULL)
+    {
+        qDebug()<< "filename is null";
+        return;
+    }
+
+    //TODO  目的文件地址
+    switch (tag) {
+    case -1 :
+        moveFile(imageFilename,"D:/picture/test/p/");
+    break;
+    case -2 :
+        moveFile(imageFilename,"D:/picture/test/n/");
+        break;
+    case 0:
+        //TODO 加入相关的路径
+        break;
+    default:
+        qDebug() << "no such value";
+    }
+
+    /*
+    //将文件保存到相应文件夹
+    if(tag==1)
+    {
+        QString pfolderPath="D:/picture/test/p/";//要存到的文件夹路径，先写死
+        QFileInfo fileinfo(imageFilename);//原文件
+        QFile file(imageFilename);
+        qDebug()<<"imageFilename: "+imageFilename +" filename: "+fileinfo.fileName();
+        if(!QFile::exists(pfolderPath+fileinfo.fileName()))
+        {
+            if(QFile::copy(imageFilename, pfolderPath+fileinfo.fileName()))
+            {
+                qDebug()<<"copy successful";
+                //删除原文件
+                file.remove();
+            }
+        }
+        else
+        {
+            qDebug()<<"file already exists";
+        }
+    }
+    else
+    {
+        QString pfolderPath="D:/picture/test/n/";//要存到的文件夹路径，先写死
+        QFileInfo fileinfo(imageFilename);//原文件
+        QFile file(imageFilename);
+        if(!QFile::exists(pfolderPath+fileinfo.fileName()))
+        {
+            if(QFile::copy(imageFilename, pfolderPath+fileinfo.fileName()))
+            {
+                qDebug()<<"copy successful";
+                //删除原文件
+                file.remove();
+            }
+        }
+        else
+        {
+            qDebug()<<"file already exists";
+        }
+    }
+    */
+}
+
+void ManualClassifyWindow::labelImage(QString imageFilename, QString tag)
 {
     if(imageFilename.isEmpty() || imageFilename==NULL)
     {
@@ -303,7 +282,7 @@ void MainWindow::labelImage(QString imageFilename, QString tag)
     moveFile(imageFilename,plateSamplePath+tag+"/");
 }
 
-void MainWindow::labelCharImage(QString imageFilename, QString tag)
+void ManualClassifyWindow::labelCharImage(QString imageFilename, QString tag)
 {
     if(imageFilename.isEmpty() || imageFilename==NULL)
     {
@@ -313,7 +292,7 @@ void MainWindow::labelCharImage(QString imageFilename, QString tag)
     moveFile(imageFilename,this->charSamplepath+tag+"/");
 }
 
-void MainWindow::updateWindow()
+void ManualClassifyWindow::updateWindow()
 {
     this->ui->imageShowWidget->clear();
 
@@ -324,32 +303,31 @@ void MainWindow::updateWindow()
 
 }
 
-//更新数字
-void MainWindow::updateNumberWindow()
+//更新显示数字图片的窗口
+void ManualClassifyWindow::updateNumberWindow()
 {
     this->ui->charListWidget->clear();
     QString currentNumberName=this->ui->comboBox_number->currentText();
     showCharImageByPath(charSamplepath+currentNumberName+"/");
 }
 
-//更新字母
-void MainWindow::updateLetterWindow()
+//更新显示字母图片的窗口
+void ManualClassifyWindow::updateLetterWindow()
 {
     this->ui->charListWidget->clear();
     QString currentLetterName=this->ui->comboBox_char->currentText();
     showCharImageByPath(charSamplepath+currentLetterName+"/");
 }
 
-//更新汉字
-void MainWindow::updateHanziWindow()
+//更新显示汉字的窗口
+void ManualClassifyWindow::updateHanziWindow()
 {
     this->ui->charListWidget->clear();
     QString currentHanziName=this->ui->comboBox_chineseChar->currentText();
     showCharImageByPath(charSamplepath+currentHanziName+"/");
 }
 
-//更新显示字符的区域
-void MainWindow::updateCharWindow()
+void ManualClassifyWindow::updateCharWindow()
 {
     //更新
     qDebug()<<this->ui->tabWidget_allchars->currentIndex();
@@ -370,12 +348,12 @@ void MainWindow::updateCharWindow()
 }
 
 //根据Comobox中的信息显示车牌的图片
-void MainWindow::on_comboBox_currentTextChanged(const QString &arg1)
+void ManualClassifyWindow::on_comboBox_currentTextChanged(const QString &arg1)
 {
     this->updateWindow();
 }
 
-void MainWindow::on_imageShowWidget_itemDoubleClicked(QListWidgetItem *item)
+void ManualClassifyWindow::on_imageShowWidget_itemDoubleClicked(QListWidgetItem *item)
 {
     QString imgName;
     imgName=item->whatsThis();
@@ -462,7 +440,7 @@ void MainWindow::on_imageShowWidget_itemDoubleClicked(QListWidgetItem *item)
     this->updateWindow();
 }
 
-void MainWindow::on_actionopenFolder_triggered()
+void ManualClassifyWindow::on_actionopenFolder_triggered()
 {
     QString pathSelected = QFileDialog::getExistingDirectory(this,                                                           ("choose file folder"),
                                                             "D:/picture/test/");
@@ -475,22 +453,22 @@ void MainWindow::on_actionopenFolder_triggered()
     showImagesByPath(pathSelected+"/");
 }
 
-void MainWindow::on_comboBox_number_currentTextChanged(const QString &arg1)
+void ManualClassifyWindow::on_comboBox_number_currentTextChanged(const QString &arg1)
 {
     this->updateCharWindow();
 }
 
-void MainWindow::on_comboBox_char_currentTextChanged(const QString &arg1)
+void ManualClassifyWindow::on_comboBox_char_currentTextChanged(const QString &arg1)
 {
     this->updateCharWindow();
 }
 
-void MainWindow::on_comboBox_chineseChar_currentTextChanged(const QString &arg1)
+void ManualClassifyWindow::on_comboBox_chineseChar_currentTextChanged(const QString &arg1)
 {
     this->updateCharWindow();
 }
 
-void MainWindow::on_charListWidget_itemDoubleClicked(QListWidgetItem *item)
+void ManualClassifyWindow::on_charListWidget_itemDoubleClicked(QListWidgetItem *item)
 {
     QString imgName;
     imgName=item->whatsThis();

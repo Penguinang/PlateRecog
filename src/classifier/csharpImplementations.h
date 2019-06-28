@@ -5,6 +5,8 @@
 #include <string>
 using std::basic_ostream;
 using std::string;
+#include <time.h>
+using std::vector;
 
 #if __cplusplus >= 201703L
 #include <filesystem>

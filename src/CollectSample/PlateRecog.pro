@@ -27,28 +27,29 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    picturepreparedia.cpp \
-    ../classifier/platecategory_svm.cpp \
-    ../classifier/platechar_svm.cpp \
-    ../classifier/charsegment_v3.cpp \
-    ../classifier/utilities.cpp \
-    ../classifier/platelocator_v3.cpp
+    ../classifier/PlateCategory_SVM.cpp \
+    ../classifier/PlateChar_SVM.cpp \
+    ../classifier/CharSegment_V3.cpp \
+    ../classifier/Utilities.cpp \
+    ../classifier/PlateLocator_V3.cpp \
+    ../classifier/PlateRecognition_V3.cpp \
+    manualclassifywindow.cpp
 
 HEADERS += \
         mainwindow.h \
-    ../classifier/charinfo.h \
-    picturepreparedia.h \
-    ../classifier/platelocator_v3.h \
-    ../classifier/platecategory_svm.h \
-    ../classifier/csharpimplementations.h \
-    ../classifier/charsegment_v3.h \
-    ../classifier/platechar_svm.h \
-    ../classifier/utilities.h \
-    #../classifier/PlateLocator_V3.h
+    ../classifier/CharInfo.h \
+    ../classifier/PlateLocator_V3.h \
+    ../classifier/PlateCategory_SVM.h \
+    ../classifier/csharpImplementations.h \
+    ../classifier/CharSegment_V3.h \
+    ../classifier/PlateChar_SVM.h \
+    ../classifier/Utilities.h \
+    ../classifier/PlateRecognition_V3.h \
+    manualclassifywindow.h
 
 FORMS += \
         mainwindow.ui \
-    picturepreparedia.ui
+    manualClassifyWindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -66,3 +67,4 @@ LIBS += D:/MySoftware/OPENCV/OpenCV-MinGW-Build-OpenCV-4.1.0-x64/x64/mingw/bin/l
 LIBS += D:/MySoftware/OPENCV/OpenCV-MinGW-Build-OpenCV-4.1.0-x64/x64/mingw/bin/libopencv_videoio410.dll
 LIBS += D:/MySoftware/OPENCV/OpenCV-MinGW-Build-OpenCV-4.1.0-x64/x64/mingw/bin/libopencv_ml410.dll
 LIBS += D:/MySoftware/OPENCV/OpenCV-MinGW-Build-OpenCV-4.1.0-x64/x64/mingw/bin/libopencv_objdetect410.dll
+

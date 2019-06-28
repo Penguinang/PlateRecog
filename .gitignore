@@ -6,6 +6,7 @@
 *.dll
 *.ilk
 *.pdb
+*.pro.user
 
 .vscode
 .vs
@@ -15,4 +16,5 @@ src/*/.vs
 src/*/build
 
 build
+*build*
 bin/*

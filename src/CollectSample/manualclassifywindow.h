@@ -1,5 +1,7 @@
-﻿#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef MANUALCLASSIFYWINDOW_H
+#define MANUALCLASSIFYWINDOW_H
+
+#include <QMainWindow>
 
 #include <QMainWindow>
 #include <QListWidget>
@@ -10,22 +12,23 @@
 #include <QDir>
 #include <QFileDialog>
 
-namespace Ui {
-class MainWindow;
+namespace  Ui{
+    class ManualClassifyWindow;
 }
 
-class MainWindow : public QMainWindow
+class ManualClassifyWindow: public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    explicit ManualClassifyWindow(QWidget *parent = nullptr);
+    ~ManualClassifyWindow();
 
     void showImagesByPath(QString imagePath);
     void showCharImageByPath(QString charImagePath);
     void moveFile(QString fullSourceFileName,QString destinationPath);
     void showImages(int tag);
+    void labelImage(QString imageFilename,int tag);
     void labelImage(QString imageFilename,QString tag);
     void labelCharImage(QString imageFilename,QString tag);
     void updateWindow();
@@ -33,7 +36,6 @@ public:
     void updateLetterWindow();
     void updateHanziWindow();
     void updateCharWindow();
-
 
 private slots:
 
@@ -52,12 +54,14 @@ private slots:
     void on_charListWidget_itemDoubleClicked(QListWidgetItem *item);
 
 private:
-    Ui::MainWindow *ui;
+    Ui::ManualClassifyWindow *ui;
     QString plateCategoryPath;
     QString charCategoryPath;
+    //QString plateSamplePath=QDir::currentPath()+"/samples/plates/";
+    //QString charSamplepath=QDir::currentPath()+"/samples/chars/";
     QString basePath;
     QString plateSamplePath;
     QString charSamplepath;
 };
 
-#endif // MAINWINDOW_H
+#endif // MANUALCLASSIFYWINDOW_H
