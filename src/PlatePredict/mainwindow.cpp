@@ -29,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    this->setWindowIcon(QIcon(":/icon/icon/head.png"));
+    this->setWindowIcon(QIcon(":/icon/icon/plateUI03.png"));
     this->setWindowTitle(tr("Plate Recognition [User Version]"));
 
     this->state = false;
