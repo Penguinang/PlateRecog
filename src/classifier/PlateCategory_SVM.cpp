@@ -1,4 +1,4 @@
-#include "PlateCategory_SVM.h"
+﻿#include "PlateCategory_SVM.h"
 #include "CharInfo.h"
 
 
@@ -87,7 +87,7 @@ void PlateCategory_SVM::Load(const string &fileName) {
         svm = SVM::load(fileName);
         IsReady = true;
     } catch (exception &) {
-        throw logic_error("字符识别库加载异常，请检查存放路径");
+        throw logic_error("char lib load exceptional, please check path");
     }
 }
 bool PlateCategory_SVM::IsCorrectTrainngDirectory(const string &path) {

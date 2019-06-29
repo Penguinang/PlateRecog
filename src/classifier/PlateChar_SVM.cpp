@@ -1,4 +1,4 @@
-#include "CharInfo.h"
+﻿#include "CharInfo.h"
 #include "PlateChar_SVM.h"
 
 using namespace Doit::CV::PlateRecogn;
