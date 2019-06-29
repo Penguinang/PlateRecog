@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "manualclassifywindow.h"
+#include "trainingfrontend.h"
 #include <QApplication>
 #include <QtGui>
 #include <QSplashScreen>
@@ -9,6 +10,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
+    //trainingFrontEnd tfe;
 
     QPixmap pixmap("start.jpg");
     QSplashScreen splash(pixmap);
@@ -22,6 +24,6 @@ int main(int argc, char *argv[])
     //QApplication::setStyle("macintosh");
    // ManualClassifyWindow w;
    // w.show();
-
+    //tfe.show();
     return a.exec();
 }

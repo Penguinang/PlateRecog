@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "manualclassifywindow.h"
+#include "trainingfrontend.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -271,7 +272,7 @@ void MainWindow::showAllPicturesGotten(QListWidgetItem *item)
                                                              this->ui->maxRatioBox->value());
     int sizeOfPlates = plates.size();
     //TODO
-    qDebug()<< sizeOfPlates;
+    qDebug()<< "num of plateLocator methods used is " + (QString)sizeOfPlates;
     vector<PlateInfo> plateInfos;
     if(sizeOfPlates == 1)
     {
@@ -311,23 +312,27 @@ void MainWindow::showAllPicturesGotten(QListWidgetItem *item)
         int sizeL = charInfosByLog.size();
 
         vector<CharInfo> charInfos;
-/*
+
         //比较哪个字符最多
-        if((sizeO > sizeI)&&(sizeO > sizeG)&&(sizeO > sizeL))
+        if((sizeO >= sizeI)&&(sizeO >= sizeG)&&(sizeO >= sizeL))
         {
             charInfos = charInfosByOriginal;
+            qDebug() << "charSegement by original";
         }
-        else if ((sizeI > sizeO)&&(sizeI > sizeG)&&(sizeI > sizeL)) {
+        else if ((sizeI >= sizeO)&&(sizeI >= sizeG)&&(sizeI >= sizeL)) {
             charInfos = charInfosByIndex;
+            qDebug() << "charSegement by index";
         }
-        else if ((sizeG > sizeO)&&(sizeG > sizeI)&&(sizeG > sizeL)) {
+        else if ((sizeG >= sizeO)&&(sizeG >= sizeI)&&(sizeG >= sizeL)) {
             charInfos = charInfosByGamma;
+            qDebug() << "charSegement by gamma";
         }
-        else if ((sizeL > sizeO)&&(sizeL > sizeI)&&(sizeL > sizeG)) {
+        else if ((sizeL >= sizeO)&&(sizeL >= sizeI)&&(sizeL >= sizeG)) {
             charInfos = charInfosByLog;
+            qDebug() << "charSegement by log";
         }
-*/
-        charInfos= get<0>(chars[0]);
+
+ //       charInfos= get<0>(chars[0]);
 
         showPlateCharSplit(plateMat, charInfos);
     }
@@ -347,9 +352,9 @@ void MainWindow::on_plateList_itemClicked(QListWidgetItem *item)
     Mat mat;
     platePix = item->icon().pixmap(item->icon().availableSizes().last());
     mat = QPixmapToMat(platePix);
-    QString qsir = "F:\\test\\车牌-字符样本\\plates\\";
+    QString qsir = "../../../bin/车牌-字符样本/plates/";
     QString localsir = item->text();
-    QString fdir = qsir + localsir + "\\";
+    QString fdir = qsir + localsir + "/";
 
     string dir = fdir.toLocal8Bit().toStdString();
 
@@ -363,8 +368,6 @@ void MainWindow::saveMatPic(Mat mat,string dir)
     QString ctime = currentTime.toString("yyyyMMddhhmmsszzz");
     cv::String stime = ctime.toStdString();
 
-    //想要存放的文件夹路径
-    //cv::String dir = "E:\\test\\pictures_split\\";
     cv::String imgName = dir + stime.append( ".png");
     try {
 
@@ -383,53 +386,12 @@ void MainWindow::saveMatPic(Mat mat,string dir)
 //保存所有车牌
 void MainWindow::on_savePlate_clicked()
 {
- /*
-    //保存所有图片
-    int num = this->ui->plateList->count();
-    QListWidgetItem *item;
-    QPixmap platePix;
-    Mat mat;
-    for(int i = 0; i < num; i++)
-    {
-        //item = ui->plateList->takeItem(i);
-        item = ui->plateList->item(i);
-        platePix = item->icon().pixmap(item->icon().availableSizes().last());
-        mat = QPixmapToMat(platePix);
-
-        QString qsir = "F:\\test\\车牌-字符样本\\plates\\";
-        QString localsir = item->text();
-        QString fdir = qsir + localsir + "\\";
-
-        string dir = fdir.toLocal8Bit().toStdString();
-        saveMatPic(mat, dir);
-    }
- */
     saveAllPlateLocated();
 }
 
 //保存所有字符
 void MainWindow::on_saveChar_clicked()
 {
-/*
-    int num = this->ui->charList->count();
-    QListWidgetItem *item;
-    QPixmap charPix;
-    Mat mat;
-    for(int i = 0; i < num; i++)
-    {
-        item = ui->charList->item(i);
-        charPix = item->icon().pixmap(item->icon().availableSizes().last());
-        mat = QPixmapToMat(charPix);
-
-        QString qsir = "F:\\test\\车牌-字符样本\\chars\\";
-        QString localsir = item->text();
-        QString fdir = qsir + localsir + "\\";
-
-        string dir = fdir.toLocal8Bit().toStdString();
-
-        saveMatPic(mat, dir);
-    }
-*/
     saveAllPlateCharSplited();
 }
 
@@ -442,9 +404,9 @@ void MainWindow::on_charList_itemClicked(QListWidgetItem *item)
     charPix = item->icon().pixmap(item->icon().availableSizes().last());
     mat = QPixmapToMat(charPix);
 
-    QString qsir = "F:\\test\\车牌-字符样本\\chars\\";
+    QString qsir = "../../../bin/车牌-字符样本/chars/";
     QString localsir = item->text();
-    QString fdir = qsir + localsir + "\\";
+    QString fdir = qsir + localsir + "/";
 
     string dir = fdir.toLocal8Bit().toStdString();
 
@@ -466,9 +428,9 @@ void MainWindow::saveAllPlateLocated()
         platePix = item->icon().pixmap(item->icon().availableSizes().last());
         mat = QPixmapToMat(platePix);
 
-        QString qsir = "F:\\test\\车牌-字符样本\\plates\\";
+        QString qsir = "../../../bin/车牌-字符样本/plates/";
         QString localsir = item->text();
-        QString fdir = qsir + localsir + "\\";
+        QString fdir = qsir + localsir + "/";
 
         string dir = fdir.toLocal8Bit().toStdString();
         saveMatPic(mat, dir);
@@ -488,9 +450,9 @@ void MainWindow::saveAllPlateCharSplited()
         charPix = item->icon().pixmap(item->icon().availableSizes().last());
         mat = QPixmapToMat(charPix);
 
-        QString qsir = "F:\\test\\车牌-字符样本\\chars\\";
+        QString qsir = "../../../bin/车牌-字符样本/chars/";
         QString localsir = item->text();
-        QString fdir = qsir + localsir + "\\";
+        QString fdir = qsir + localsir + "/";
 
         string dir = fdir.toLocal8Bit().toStdString();
 
@@ -555,4 +517,10 @@ void MainWindow::on_checkSample_triggered()
     ManualClassifyWindow *mcf = new ManualClassifyWindow ();
     mcf->show();
 
+}
+
+void MainWindow::on_actionTrain_triggered()
+{
+    trainingFrontEnd *tfe = new trainingFrontEnd();
+    tfe->show();
 }
