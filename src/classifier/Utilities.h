@@ -1,4 +1,4 @@
-#ifndef UTILITIES_H
+﻿#ifndef UTILITIES_H
 #define UTILITIES_H
 
 #include <opencv2/core.hpp>
@@ -32,6 +32,11 @@ class Utilities {
     static Rect GetSafeRect(const Rect &rect, const Mat &mat);
 
     static cv::Mat HistogramTransform(cv::Mat &originalMat);
+
+    // following code is from
+    // http://www.juergenbrauer.org/old_wiki/doku.php?id=public:hog_descriptor_computation_and_visualization
+    static cv::Mat get_hogdescriptor_visu(const Mat &color_origImg,
+                                          vector<float> &descriptorValues, const cv::Size &size);
 };
 
 void drawBoundingRects(Mat &InputOutputMat,

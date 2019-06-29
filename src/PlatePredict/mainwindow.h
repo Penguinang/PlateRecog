@@ -27,6 +27,7 @@ public:
     void initSvm(QString plateModelPath,QString charModelPath);
     void generatePlateRegion(PlateInfo plateInfo,int index);
     void generateCharRegion(PlateInfo plateInfo,int index);
+    void generateProcessRegion(PlateInfo plateInfo, Mat originImage);
 
 private:
     Ui::MainWindow *ui;
