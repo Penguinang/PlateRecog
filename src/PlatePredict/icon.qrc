@@ -10,5 +10,6 @@
         <file>icon/rect.png</file>
         <file>icon/gaodu.png</file>
         <file>icon/kuandu.png</file>
+        <file>icon/head.png</file>
     </qresource>
 </RCC>
