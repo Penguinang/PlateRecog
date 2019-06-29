@@ -1,4 +1,4 @@
-#include "debug.h"
+﻿#include "debug.h"
 
 #include "CharInfo.h"
 #include "CharSegment_V3.h"

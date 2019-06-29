@@ -18,6 +18,7 @@
 #include "../classifier/PlateCategory_SVM.h"
 #include "../classifier/PlateChar_SVM.h"
 #include "../classifier/PlateRecognition_V3.h"
+#include "../classifier/Utilities.h"
 
 using namespace Doit::CV::PlateRecogn;
 
@@ -26,6 +27,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    this->setWindowIcon(QIcon(":/icon/icon/head.png"));
+    this->setWindowTitle(tr("Plate Recognition [User Version]"));
 
     this->state = false;
     this->currentImagePath = tr("");
@@ -121,7 +125,63 @@ void MainWindow::recog()
     {
         PlateInfo plateInfo = plateInfos[i-1];
         this->generatePlateRegion(plateInfo,i);
+        generateProcessRegion(plateInfo,image);
     }
+}
+
+void MainWindow::generateProcessRegion(PlateInfo plateInfo, Mat originImage)
+{
+    this->ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    this->ui->tableWidget->setSelectionMode(QAbstractItemView::NoSelection);
+    this->ui->tableWidget->verticalHeader()->setVisible(false);
+    this->ui->tableWidget->horizontalHeader()->setVisible(false);
+
+    this->ui->tableWidget->setRowCount(2);
+    this->ui->tableWidget->setColumnCount(2);
+
+    QTableWidgetItem* plateItem = new QTableWidgetItem(tr("Plate_Gray"));
+    plateItem->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    this->ui->tableWidget->setItem(0,0,plateItem);
+
+    cv::Mat matGrayClone = plateInfo.OriginalMat.clone();
+    cv::Mat matColorClone = plateInfo.OriginalMat.clone();
+    if(plateInfo.OriginalMat.channels()==3)
+    {
+        cv::cvtColor(matColorClone,matColorClone,cv::COLOR_BGR2RGB);
+        cv::cvtColor(matGrayClone,matGrayClone,cv::COLOR_BGR2GRAY);
+    }
+    QImage plateImage = QImage((const unsigned char*)(matGrayClone.data),
+                          matGrayClone.cols,
+                          matGrayClone.rows,
+                          matGrayClone.cols*matGrayClone.channels(),
+                          QImage::Format_Grayscale8);
+
+    plateImage = plateImage.scaled(plateImage.width()*3,plateImage.height()*3,Qt::IgnoreAspectRatio);
+    QPixmap platePixmap = QPixmap::fromImage(plateImage);
+    QIcon plateIcon(platePixmap);
+    this->ui->tableWidget->setItem(1,0,new QTableWidgetItem(plateIcon,tr("")));
+
+    QTableWidgetItem* hogItem = new QTableWidgetItem(tr("Plate_Hog"));
+    hogItem->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    this->ui->tableWidget->setItem(0,1,hogItem);
+
+    auto hog = PlateCategory_SVM::ComputeHogDescriptors(matColorClone);
+    cv::resize(matColorClone,matColorClone,cv::Size(96,32));
+    cv::Mat hogMatClone = Utilities::get_hogdescriptor_visu(matColorClone,hog,cv::Size{96,32});
+    QImage hogImage = QImage((const unsigned char*)(hogMatClone.data),
+                          hogMatClone.cols,
+                          hogMatClone.rows,
+                          hogMatClone.cols*hogMatClone.channels(),
+                          QImage::Format_RGB888);
+    hogImage = hogImage.scaled(hogImage.width()*3,hogImage.height()*3,Qt::IgnoreAspectRatio);
+    QPixmap hogPixmap = QPixmap::fromImage(hogImage);
+    QIcon hogIcon(hogPixmap);
+    this->ui->tableWidget->setItem(1,1,new QTableWidgetItem(hogIcon,tr("")));
+
+    this->ui->tableWidget->setIconSize(QSize(300,plateImage.height()*300/plateImage.width()));
+    this->ui->tableWidget->setRowHeight(1,185);
+    this->ui->tableWidget->setColumnWidth(0,300);
+    this->ui->tableWidget->setColumnWidth(1,300);
 }
 void MainWindow::generateCharRegion(PlateInfo plateInfo,int index)
 {
@@ -160,7 +220,7 @@ void MainWindow::generateCharRegion(PlateInfo plateInfo,int index)
                               charMatClone.cols * charMatClone.channels(),
                               QImage::Format_RGB888);
         qDebug()<<"image " << image.size();
-        image = image.scaled(image.width()*3,image.height()*3,Qt::IgnoreAspectRatio);
+        image = image.scaled(image.width()*2,image.height()*2,Qt::IgnoreAspectRatio);
         QPixmap pixmap = QPixmap::fromImage(image);
         QIcon charIcon(pixmap);
         tableCharInfo->setIconSize(QSize(image.width()*3/2,image.height()*3/2));
