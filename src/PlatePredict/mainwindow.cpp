@@ -228,7 +228,7 @@ void MainWindow::generateCharRegion(PlateInfo plateInfo,int index)
         tableCharInfo->setIconSize(QSize(image.width()*3/2,image.height()*3/2));
         tableCharInfo->setItem(i,0,new QTableWidgetItem(charIcon,tr("")));
 
-        tableCharInfo->setItem(i,1,new QTableWidgetItem(charInfo.ToString().c_str()));
+        tableCharInfo->setItem(i,1,new QTableWidgetItem(QString::fromLocal8Bit(charInfo.ToString().c_str())));
 
         tableCharInfo->setItem(i,2,new QTableWidgetItem(QString::number(charInfo.OriginalRect.width)));
         tableCharInfo->setItem(i,3,new QTableWidgetItem(QString::number(charInfo.OriginalRect.height)));
@@ -296,7 +296,7 @@ void MainWindow::generatePlateRegion(PlateInfo plateInfo,int index,int duration)
 
     QIcon recog(":/icon/icon/plate.png");
     tablePlateInfo->setItem(0,0,new QTableWidgetItem(recog,QString::fromLocal8Bit("车牌号")));
-    tablePlateInfo->setItem(0,1,new QTableWidgetItem(tr(plateInfo.ToString().c_str())));
+    tablePlateInfo->setItem(0,1,new QTableWidgetItem(QString::fromLocal8Bit(plateInfo.ToString().c_str())));
 
     QIcon cate(":/icon/icon/cate.png");
     tablePlateInfo->setItem(1,0,new QTableWidgetItem(cate,QString::fromLocal8Bit("车牌类别")));
