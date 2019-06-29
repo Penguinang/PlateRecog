@@ -9,6 +9,8 @@
 #include <QLabel>
 
 #include "../classifier/CharInfo.h"
+#include "../classifier/PlateCategory_SVM.h"
+#include "../classifier/PlateChar_SVM.h"
 
 using namespace Doit::CV::PlateRecogn;
 namespace Ui {
@@ -24,8 +26,7 @@ public:
     ~MainWindow();
     QLabel* generateImageLabel(cv::Mat mat, QImage::Format format);
     void imageArea(cv::Mat mat);
-    void initSvm(QString plateModelPath,QString charModelPath);
-    void generatePlateRegion(PlateInfo plateInfo,int index);
+    void generatePlateRegion(PlateInfo plateInfo,int index,int duration);
     void generateCharRegion(PlateInfo plateInfo,int index);
     void generateProcessRegion(PlateInfo plateInfo, Mat originImage);
 
@@ -33,8 +34,10 @@ private:
     Ui::MainWindow *ui;
     QString pathSelected;
     QString currentImagePath;
-    QString plateModelPath = tr("C:/Users/rx/Desktop/PlateRecog/src/classifier/CategorySVM.yaml");
-    QString charModelPath=tr("C:/Users/rx/Desktop/PlateRecog/src/classifier/CharSVM.yaml");
+    QString plateModelPath;
+    QString charModelPath;
+    PlateCategory_SVM plateClassifier;
+    PlateChar_SVM charClassifier;
     bool state;
 
 
