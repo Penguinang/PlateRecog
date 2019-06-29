@@ -133,6 +133,9 @@ cv::Mat Utilities::HistogramTransform(cv::Mat &originalMat) {
     cv::merge(bgrMats, transMat);
     return transMat;
 }
+
+// following code is from
+// http://www.juergenbrauer.org/old_wiki/doku.php?id=public:hog_descriptor_computation_and_visualization
 cv::Mat Utilities::get_hogdescriptor_visu(const Mat &color_origImg,
                                vector<float> &descriptorValues, const cv::Size &size) {
     const int DIMX = size.width;

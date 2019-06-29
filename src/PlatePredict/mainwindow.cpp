@@ -38,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->charModelPath = tr("");
 
     QIcon selectDir(":/icon/icon/wenjian.png");
-    QPushButton* buttonSelectDir = new QPushButton(selectDir,tr("选择测试图像"));
+    QPushButton* buttonSelectDir = new QPushButton(selectDir,QString::fromLocal8Bit("选择测试图像"));
     buttonSelectDir->setStyleSheet( "QPushButton{background: transparent;}"
                                     "QPushButton:hover{background:gray;}");
     this->ui->toolBar->addWidget(buttonSelectDir);
@@ -48,7 +48,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QIcon selectModel(":/icon/icon/daoru.png");
 
-    QPushButton* buttonSelecPlatetModel = new QPushButton(selectModel,tr("导入车牌识别模型"));
+    QPushButton* buttonSelecPlatetModel = new QPushButton(selectModel,QString::fromLocal8Bit("导入车牌识别模型"));
     buttonSelecPlatetModel->setStyleSheet( "QPushButton{background: transparent;}"
                                       "QPushButton:hover{background:gray;}");
     this->connect(buttonSelecPlatetModel,SIGNAL(clicked()),this,SLOT(selectPlateModel()));
@@ -56,7 +56,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->ui->toolBar->addSeparator();
 
-    QPushButton* buttonSelectCharModel = new QPushButton(selectModel,tr("导入字符识别模型"));
+    QPushButton* buttonSelectCharModel = new QPushButton(selectModel,QString::fromLocal8Bit("导入字符识别模型"));
     buttonSelectCharModel->setStyleSheet( "QPushButton{background: transparent;}"
                                       "QPushButton:hover{background:gray;}");
     this->connect(buttonSelectCharModel,SIGNAL(clicked()),this,SLOT(selectCharModel()));
@@ -65,7 +65,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->ui->toolBar->addSeparator();
 
     QIcon recog(":/icon/icon/tableactivation.png");
-    QPushButton* buttonRecog = new QPushButton(recog,tr("识别"));
+    QPushButton* buttonRecog = new QPushButton(recog,QString::fromLocal8Bit("识别"));
     buttonRecog->setStyleSheet( "QPushButton{background: transparent;}"
                                       "QPushButton:hover{background:gray;}");
     this->connect(buttonRecog,SIGNAL(clicked()),this,SLOT(recog()));
@@ -87,13 +87,13 @@ void MainWindow::recog()
 {
     if(this->plateModelPath == "")
     {
-        QMessageBox::information(NULL, "提示", "请先导入车牌识别模型",
+        QMessageBox::information(NULL, QString::fromLocal8Bit("提示"), QString::fromLocal8Bit("请先导入车牌识别模型"),
                                  QMessageBox::Yes, QMessageBox::Yes);
         return;
     }
     if(this->charModelPath == "")
     {
-        QMessageBox::information(NULL, "提示", "请先导入字符识别模型",
+        QMessageBox::information(NULL, QString::fromLocal8Bit("提示"), QString::fromLocal8Bit("请先导入字符识别模型"),
                                  QMessageBox::Yes, QMessageBox::Yes);
         return;
     }
@@ -102,19 +102,19 @@ void MainWindow::recog()
     QFileInfo charModel(this->charModelPath);
     if(imageInfo.exists() == false)
     {
-        QMessageBox::information(NULL, "提示", "无效的图像",
+        QMessageBox::information(NULL,QString::fromLocal8Bit("提示"), QString::fromLocal8Bit("无效的图像"),
                                  QMessageBox::Yes, QMessageBox::Yes);
         return;
     }
     if(plateModel.exists() == false)
     {
-        QMessageBox::information(NULL, "提示", "无效的车牌识别模型",
+        QMessageBox::information(NULL, QString::fromLocal8Bit("提示"), QString::fromLocal8Bit("无效的车牌识别模型"),
                                  QMessageBox::Yes, QMessageBox::Yes);
         return;
     }
     if(charModel.exists() == false)
     {
-        QMessageBox::information(NULL, "提示", "无效的字符识别模型",
+        QMessageBox::information(NULL, QString::fromLocal8Bit("提示"), QString::fromLocal8Bit("无效的字符识别模型"),
                                  QMessageBox::Yes, QMessageBox::Yes);
         return;
     }
@@ -203,11 +203,11 @@ void MainWindow::generateCharRegion(PlateInfo plateInfo,int index)
     tableCharInfo->setColumnCount(6);
 
     // verticalHeader
-    tableCharInfo->setItem(0,1,new QTableWidgetItem(tr("字符")));
-    tableCharInfo->setItem(0,2,new QTableWidgetItem(tr("宽度")));
-    tableCharInfo->setItem(0,3,new QTableWidgetItem(tr("高度")));
-    tableCharInfo->setItem(0,4,new QTableWidgetItem(tr("宽高比")));
-    tableCharInfo->setItem(0,5,new QTableWidgetItem(tr("切分方法")));
+    tableCharInfo->setItem(0,1,new QTableWidgetItem(QString::fromLocal8Bit("字符")));
+    tableCharInfo->setItem(0,2,new QTableWidgetItem(QString::fromLocal8Bit("宽度")));
+    tableCharInfo->setItem(0,3,new QTableWidgetItem(QString::fromLocal8Bit("高度")));
+    tableCharInfo->setItem(0,4,new QTableWidgetItem(QString::fromLocal8Bit("宽高比")));
+    tableCharInfo->setItem(0,5,new QTableWidgetItem(QString::fromLocal8Bit("切分方法")));
 
     for(int i=1;i <= charInfos.size();i++)
     {
@@ -238,11 +238,11 @@ void MainWindow::generateCharRegion(PlateInfo plateInfo,int index)
         buffer << std::setiosflags(ios::fixed)
                << std::setprecision(2)
                << float(charInfo.OriginalRect.width) / charInfo.OriginalRect.height;
-        tableCharInfo->setItem(i,4,new QTableWidgetItem(tr(buffer.str().c_str())));
+        tableCharInfo->setItem(i,4,new QTableWidgetItem(QString::fromLocal8Bit(buffer.str().c_str())));
 
         buffer.str("");
         buffer << charInfo.CharSplitMethod;
-        tableCharInfo->setItem(i,5,new QTableWidgetItem(tr(buffer.str().c_str())));
+        tableCharInfo->setItem(i,5,new QTableWidgetItem(QString::fromLocal8Bit(buffer.str().c_str())));
     }
 
 
@@ -258,7 +258,7 @@ void MainWindow::generateCharRegion(PlateInfo plateInfo,int index)
         tableCharInfo->setRowHeight(k,65);
     }
     this->ui->charWidget->clear();
-    this->ui->charWidget->addTab(tableCharInfo,tr("字符信息")+QString::number(index));
+    this->ui->charWidget->addTab(tableCharInfo,QString::fromLocal8Bit("字符信息")+QString::number(index));
 }
 void MainWindow::generatePlateRegion(PlateInfo plateInfo,int index,int duration)
 {
@@ -295,41 +295,41 @@ void MainWindow::generatePlateRegion(PlateInfo plateInfo,int index,int duration)
     tablePlateInfo->setColumnCount(2);
 
     QIcon recog(":/icon/icon/plate.png");
-    tablePlateInfo->setItem(0,0,new QTableWidgetItem(recog,tr("车牌号")));
+    tablePlateInfo->setItem(0,0,new QTableWidgetItem(recog,QString::fromLocal8Bit("车牌号")));
     tablePlateInfo->setItem(0,1,new QTableWidgetItem(tr(plateInfo.ToString().c_str())));
 
     QIcon cate(":/icon/icon/cate.png");
-    tablePlateInfo->setItem(1,0,new QTableWidgetItem(cate,tr("车牌类别")));
+    tablePlateInfo->setItem(1,0,new QTableWidgetItem(cate,QString::fromLocal8Bit("车牌类别")));
     ostringstream buffer;
     buffer << plateInfo.PlateCategory;
-    tablePlateInfo->setItem(1,1,new QTableWidgetItem(tr(buffer.str().c_str())));
+    tablePlateInfo->setItem(1,1,new QTableWidgetItem(QString::fromLocal8Bit(buffer.str().c_str())));
 
     QIcon iconWidth(":/icon/icon/kuandu.png");
-    tablePlateInfo->setItem(2,0,new QTableWidgetItem(iconWidth,tr("宽度")));
+    tablePlateInfo->setItem(2,0,new QTableWidgetItem(iconWidth,QString::fromLocal8Bit("宽度")));
     tablePlateInfo->setItem(2,1,new QTableWidgetItem(QString::number(plateInfo.OriginalRect.width)));
 
     QIcon iconHeight(":/icon/icon/gaodu.png");
-    tablePlateInfo->setItem(3,0,new QTableWidgetItem(iconHeight,tr("宽度")));
+    tablePlateInfo->setItem(3,0,new QTableWidgetItem(iconHeight,QString::fromLocal8Bit("宽度")));
     tablePlateInfo->setItem(3,1,new QTableWidgetItem(QString::number(plateInfo.OriginalRect.height)));
 
     QIcon originalRect(":/icon/icon/rect.png");
-    tablePlateInfo->setItem(4,0,new QTableWidgetItem(originalRect,tr("长宽比")));
+    tablePlateInfo->setItem(4,0,new QTableWidgetItem(originalRect,QString::fromLocal8Bit("长宽比")));
     buffer.str("");
     buffer << std::setiosflags(ios::fixed)
            << std::setprecision(2)
            << float(plateInfo.OriginalRect.width) / plateInfo.OriginalRect.height;
-    tablePlateInfo->setItem(4,1,new QTableWidgetItem(tr(buffer.str().c_str())));
+    tablePlateInfo->setItem(4,1,new QTableWidgetItem(QString::fromLocal8Bit(buffer.str().c_str())));
 
     QIcon method(":/icon/icon/method.png");
-    tablePlateInfo->setItem(5,0,new QTableWidgetItem(method,tr("定位方法")));
+    tablePlateInfo->setItem(5,0,new QTableWidgetItem(method,QString::fromLocal8Bit("定位方法")));
     buffer.str("");
     buffer << plateInfo.PlateLocateMethod;
-    tablePlateInfo->setItem(5,1,new QTableWidgetItem(tr(buffer.str().c_str())));
+    tablePlateInfo->setItem(5,1,new QTableWidgetItem(QString::fromLocal8Bit(buffer.str().c_str())));
 
     vLayout->addWidget(tablePlateInfo);
     plateRegion->setLayout(vLayout);
 
-    this->ui->plateWidget->addTab(plateRegion,tr("车牌信息")+QString::number(index));
+    this->ui->plateWidget->addTab(plateRegion,QString::fromLocal8Bit("车牌信息")+QString::number(index));
 
     this->generateCharRegion(plateInfo,index);
 
@@ -340,7 +340,7 @@ void MainWindow::generatePlateRegion(PlateInfo plateInfo,int index,int duration)
 void MainWindow::selectDir()
 {
     this->pathSelected = QFileDialog::getExistingDirectory(this,
-                                                           tr("选择测试图像文件夹"),
+                                                           QString::fromLocal8Bit("选择测试图像文件夹"),
                                                            this->pathSelected.isEmpty()?tr("D:/download"):this->pathSelected);
     if(this->pathSelected.isEmpty()) return;
 
@@ -389,14 +389,14 @@ void MainWindow::imageArea(cv::Mat mat)
     this->ui->textEdit->clear();
 
     QWidget* tabOriginal = this->generateImageLabel(mat,QImage::Format_RGB888);
-    this->ui->tabWidget->addTab(tabOriginal,tr("测试图像"));
+    this->ui->tabWidget->addTab(tabOriginal,QString::fromLocal8Bit("测试图像"));
 
     this->ui->textEdit->clear();
     QFileInfo file(this->currentImagePath);
 
-    QString fileInfo(tr("路径: ") + this->currentImagePath +
-                     tr("\n大小: ") + QString::number(file.size()) + tr("B") +
-                     tr("\n像素: ") + QString::number(mat.cols) +tr(" * ") + QString::number(mat.rows));
+    QString fileInfo(QString::fromLocal8Bit("路径: ") + this->currentImagePath +
+                     QString::fromLocal8Bit("\n大小: ") + QString::number(file.size()) + tr("B") +
+                     QString::fromLocal8Bit("\n像素: ") + QString::number(mat.cols) +tr(" * ") + QString::number(mat.rows));
 
     this->ui->textEdit->setText(fileInfo);
     this->ui->textEdit->setReadOnly(true);

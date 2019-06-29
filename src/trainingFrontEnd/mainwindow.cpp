@@ -1,4 +1,4 @@
-// qt headers
+﻿// qt headers
 #include <QDebug>
 #include <QDialog>
 #include <QDir>
@@ -26,18 +26,20 @@ using cv::imread;
 #include "CharInfo.h"
 #include "PlateCategory_SVM.h"
 #include "PlateChar_SVM.h"
+#include "Utilities.h"
 using Doit::CV::PlateRecogn::PlateCategory_SVM;
 using Doit::CV::PlateRecogn::PlateCategory_t;
 using Doit::CV::PlateRecogn::PlateCategory_tToString;
 using Doit::CV::PlateRecogn::PlateChar_SVM;
 using Doit::CV::PlateRecogn::PlateChar_t;
 using Doit::CV::PlateRecogn::PlateChar_tToString;
+using Doit::CV::PlateRecogn::Utilities;
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-QString MainWindow::CharModelFileName = "tmpModel.yaml";
-QString MainWindow::CategoryModelFileName = "tmpModel.yaml";
+QString MainWindow::CharModelFileName = "CharModel.yaml";
+QString MainWindow::CategoryModelFileName = "CategoryModel.yaml";
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -110,14 +112,14 @@ void MainWindow::on_openCharFolder() {
     reset();
 
     QString trainingRoot = QFileDialog::getExistingDirectory(
-        this, tr("选择训练样本根目录"), "../../../bin/platecharsamples/chars");
+        this, QString::fromLocal8Bit("选择训练样本根目录"), "../../../bin/platecharsamples/chars");
     if (trainingRoot == "") {
         return;
     }
     QDir root = QDir(trainingRoot);
     for (auto it = begin(PlateChar_tToString); it < end(PlateChar_tToString);
          ++it) {
-        QString name = QString(*it);
+        QString name = QString::fromLocal8Bit(*it);
         QString charPathName = trainingRoot + DIRECTORY_DELIMITER + name;
         QDir charDir = QDir(charPathName);
         QStringList charImagePaths = charDir.entryList(QStringList() << "*.jpg"
@@ -128,11 +130,11 @@ void MainWindow::on_openCharFolder() {
 
         for (auto &file : charImagePaths) {
             QString filePath = charPathName + DIRECTORY_DELIMITER + file;
-            images.push_back(imread(filePath.toStdString()));
+            images.push_back(imread(filePath.toLocal8Bit().toStdString()));
             paths.push_back(filePath);
             tags.push_back(tag);
         }
-        qDebug() << *it << ", " << charPathName
+        qDebug() << QString::fromLocal8Bit(*it) << ", " << charPathName
                  << ", count:" << charImagePaths.size();
     }
 
@@ -149,14 +151,14 @@ void MainWindow::on_openCategoryFolder() {
 
 
     QString trainingRoot = QFileDialog::getExistingDirectory(
-        this, tr("选择训练样本根目录"), "../../../bin/platecharsamples/plates");
+        this, QString::fromLocal8Bit("选择训练样本根目录"), "../../../bin/platecharsamples/plates");
     if (trainingRoot == "") {
         return;
     }
     QDir root = QDir(trainingRoot);
     for (auto it = begin(PlateCategory_tToString);
          it < end(PlateCategory_tToString); ++it) {
-        QString name = QString(*it);
+        QString name = QString::fromLocal8Bit(*it);
         QString categoryPathName = trainingRoot + DIRECTORY_DELIMITER + name;
         QDir categoryDir = QDir(categoryPathName);
         QStringList categoryImagePaths =
@@ -168,11 +170,11 @@ void MainWindow::on_openCategoryFolder() {
 
         for (auto &file : categoryImagePaths) {
             QString filePath = categoryPathName + DIRECTORY_DELIMITER + file;
-            images.push_back(imread(filePath.toStdString()));
+            images.push_back(imread(filePath.toLocal8Bit().toStdString()));
             paths.push_back(filePath);
             tags.push_back(tag);
         }
-        qDebug() << *it << ", " << categoryPathName
+        qDebug() << QString::fromLocal8Bit(*it) << ", " << categoryPathName
                  << ", count:" << categoryImagePaths.size();
     }
 
@@ -229,8 +231,8 @@ void MainWindow::showAllImages() {
             QPixmap::fromImage(Mat2QImage(images[i], QImage::Format_RGB888)).scaled(iconSize));
         
         QString tagString = mode == PLATE_CHAR
-                                ? PlateChar_tToString[tags[i]]
-                                : PlateCategory_tToString[tags[i]];
+                                ? QString::fromLocal8Bit(PlateChar_tToString[tags[i]])
+                                : QString::fromLocal8Bit(PlateCategory_tToString[tags[i]]);
         QListWidgetItem *item = new QListWidgetItem(icon, tagString);
         ui->allFiles->addItem(item);
     }
@@ -240,8 +242,8 @@ void MainWindow::showTrainingImages() {
         QIcon icon = QIcon(
             QPixmap::fromImage(Mat2QImage(images[i], QImage::Format_RGB888)).scaled(iconSize));
         QString tagString = mode == PLATE_CHAR
-                                ? PlateChar_tToString[tags[i]]
-                                : PlateCategory_tToString[tags[i]];
+                                ? QString::fromLocal8Bit(PlateChar_tToString[tags[i]])
+                                : QString::fromLocal8Bit(PlateCategory_tToString[tags[i]]);
         QListWidgetItem *item = new QListWidgetItem(icon, tagString);
         ui->allFiles->addItem(item);
     }
@@ -251,8 +253,8 @@ void MainWindow::showValidationImages() {
         QIcon icon = QIcon(
             QPixmap::fromImage(Mat2QImage(images[i], QImage::Format_RGB888)).scaled(iconSize));
         QString tagString = mode == PLATE_CHAR
-                                ? PlateChar_tToString[tags[i]]
-                                : PlateCategory_tToString[tags[i]];
+                                ? QString::fromLocal8Bit(PlateChar_tToString[tags[i]])
+                                : QString::fromLocal8Bit(PlateCategory_tToString[tags[i]]);
         QListWidgetItem *item = new QListWidgetItem(icon, tagString);
         ui->allFiles->addItem(item);
     }
@@ -266,8 +268,8 @@ void MainWindow::showCorrectValidationImages() {
         QIcon icon = QIcon(QPixmap::fromImage(
             Mat2QImage(images[imageIndex], QImage::Format_RGB888)).scaled(iconSize));
         QString tagString = mode == PLATE_CHAR
-                                ? PlateChar_tToString[tags[imageIndex]]
-                                : PlateCategory_tToString[tags[imageIndex]];
+                                ? QString::fromLocal8Bit(PlateChar_tToString[tags[imageIndex]])
+                                : QString::fromLocal8Bit(PlateCategory_tToString[tags[imageIndex]]);
 
         QListWidgetItem *item = new QListWidgetItem(icon, tagString);
         ui->allFiles->addItem(item);
@@ -282,8 +284,8 @@ void MainWindow::showWrongValidationImages() {
         QIcon icon = QIcon(QPixmap::fromImage(
             Mat2QImage(images[imageIndex], QImage::Format_RGB888)).scaled(iconSize));
         QString tagString = mode == PLATE_CHAR
-                                ? PlateChar_tToString[tags[imageIndex]]
-                                : PlateCategory_tToString[tags[imageIndex]];
+                                ? QString::fromLocal8Bit(PlateChar_tToString[tags[imageIndex]])
+                                : QString::fromLocal8Bit(PlateCategory_tToString[tags[imageIndex]]);
 
         QListWidgetItem *item = new QListWidgetItem(icon, tagString);
         ui->allFiles->addItem(item);
@@ -308,8 +310,8 @@ QImage MainWindow::Mat2QImage(const cv::Mat &mat, QImage::Format format) {
 using cv::Point;
 using cv::Scalar;
 using cv::Size;
-Mat get_hogdescriptor_visu(const Mat &color_origImg,
-                           vector<float> &descriptorValues, const Size &size);
+// Mat get_hogdescriptor_visu(const Mat &color_origImg,
+//                            vector<float> &descriptorValues, const Size &size);
 void MainWindow::on_allFiles_currentItemChanged(QListWidgetItem *current,
                                                 QListWidgetItem *previous) {
     QModelIndex selection = ui->allFiles->currentIndex();
@@ -353,11 +355,11 @@ void MainWindow::showAllImagesDetail(int index) {
     else
         hog = PlateCategory_SVM::ComputeHogDescriptors(image);
 
-    Mat hogMat = get_hogdescriptor_visu(image, hog, HOGWinsize);
+    Mat hogMat = Utilities::get_hogdescriptor_visu(image, hog, HOGWinsize);
     ui->HOGImage->setPixmap(
         QPixmap::fromImage(Mat2QImage(hogMat, QImage::Format_RGB888))
             .scaled(detailSize));
-    QString tagString = mode == PLATE_CHAR ? PlateChar_tToString[tag] : PlateCategory_tToString[tag];
+    QString tagString = mode == PLATE_CHAR ? QString::fromLocal8Bit(PlateChar_tToString[tag]) : QString::fromLocal8Bit(PlateCategory_tToString[tag]);
     ui->imageLabel->setText(tagString);
     ui->predictedImageLabel->setText("");
     ui->predictedImageLabel->setEnabled(false);
@@ -378,11 +380,11 @@ void MainWindow::showTrainingImagesDetail(int index) {
     else
         hog = PlateCategory_SVM::ComputeHogDescriptors(image);
 
-    Mat hogMat = get_hogdescriptor_visu(image, hog, HOGWinsize);
+    Mat hogMat = Utilities::get_hogdescriptor_visu(image, hog, HOGWinsize);
     ui->HOGImage->setPixmap(
         QPixmap::fromImage(Mat2QImage(hogMat, QImage::Format_RGB888))
             .scaled(detailSize));
-    QString tagString = mode == PLATE_CHAR ? PlateChar_tToString[tag] : PlateCategory_tToString[tag];            
+    QString tagString = mode == PLATE_CHAR ? QString::fromLocal8Bit(PlateChar_tToString[tag]) : QString::fromLocal8Bit(PlateCategory_tToString[tag]);            
     ui->imageLabel->setText(tagString);
     ui->predictedImageLabel->setText("");
     ui->predictedImageLabel->setEnabled(false);
@@ -404,16 +406,16 @@ void MainWindow::showValidationImagesDetail(int index) {
     else
         hog = PlateCategory_SVM::ComputeHogDescriptors(image);
 
-    Mat hogMat = get_hogdescriptor_visu(image, hog, HOGWinsize);
+    Mat hogMat = Utilities::get_hogdescriptor_visu(image, hog, HOGWinsize);
     ui->HOGImage->setPixmap(
         QPixmap::fromImage(Mat2QImage(hogMat, QImage::Format_RGB888))
             .scaled(detailSize));
-    QString tagString = mode == PLATE_CHAR ? PlateChar_tToString[tag] : PlateCategory_tToString[tag];      
+    QString tagString = mode == PLATE_CHAR ? QString::fromLocal8Bit(PlateChar_tToString[tag]) : QString::fromLocal8Bit(PlateCategory_tToString[tag]);      
     QString predictedTagString;
     if(predictedTag == -1)
         predictedTagString = "";    
     else
-        predictedTagString = mode == PLATE_CHAR ? PlateChar_tToString[predictedTag] : PlateCategory_tToString[predictedTag];      
+        predictedTagString = mode == PLATE_CHAR ? QString::fromLocal8Bit(PlateChar_tToString[predictedTag]) : QString::fromLocal8Bit(PlateCategory_tToString[predictedTag]);      
     ui->imageLabel->setText(tagString);
     ui->predictedImageLabel->setText(predictedTagString);
     ui->predictedImageLabel->setEnabled(true);
@@ -435,12 +437,12 @@ void MainWindow::showCorrectValidationImagesDetail(int index) {
     else
         hog = PlateCategory_SVM::ComputeHogDescriptors(image);
 
-    Mat hogMat = get_hogdescriptor_visu(image, hog, HOGWinsize);
+    Mat hogMat = Utilities::get_hogdescriptor_visu(image, hog, HOGWinsize);
     ui->HOGImage->setPixmap(
         QPixmap::fromImage(Mat2QImage(hogMat, QImage::Format_RGB888))
             .scaled(detailSize));
-    QString tagString = mode == PLATE_CHAR ? PlateChar_tToString[tag] : PlateCategory_tToString[tag];            
-    QString predictedTagString = mode == PLATE_CHAR ? PlateChar_tToString[predictedTag] : PlateCategory_tToString[predictedTag];          
+    QString tagString = mode == PLATE_CHAR ? QString::fromLocal8Bit(PlateChar_tToString[tag]) : QString::fromLocal8Bit(PlateCategory_tToString[tag]);            
+    QString predictedTagString = mode == PLATE_CHAR ? QString::fromLocal8Bit(PlateChar_tToString[predictedTag]) : QString::fromLocal8Bit(PlateCategory_tToString[predictedTag]);          
     ui->imageLabel->setText(tagString);
     ui->predictedImageLabel->setText(predictedTagString);
     ui->predictedImageLabel->setEnabled(true);
@@ -462,195 +464,32 @@ void MainWindow::showWrongValidationImagesDetail(int index) {
     else
         hog = PlateCategory_SVM::ComputeHogDescriptors(image);
 
-    Mat hogMat = get_hogdescriptor_visu(image, hog, HOGWinsize);
+    Mat hogMat = Utilities::get_hogdescriptor_visu(image, hog, HOGWinsize);
     ui->HOGImage->setPixmap(
         QPixmap::fromImage(Mat2QImage(hogMat, QImage::Format_RGB888))
             .scaled(detailSize));
-    QString tagString = mode == PLATE_CHAR ? PlateChar_tToString[tag] : PlateCategory_tToString[tag];            
-    QString predictedTagString = mode == PLATE_CHAR ? PlateChar_tToString[predictedTag] : PlateCategory_tToString[predictedTag];          
+    QString tagString = mode == PLATE_CHAR ? QString::fromLocal8Bit(PlateChar_tToString[tag]) : QString::fromLocal8Bit(PlateCategory_tToString[tag]);            
+    QString predictedTagString = mode == PLATE_CHAR ? QString::fromLocal8Bit(PlateChar_tToString[predictedTag]) : QString::fromLocal8Bit(PlateCategory_tToString[predictedTag]);          
     ui->imageLabel->setText(tagString);
     ui->predictedImageLabel->setText(predictedTagString);
     ui->predictedImageLabel->setEnabled(true);
 }
 
-// following code is from
-// http://www.juergenbrauer.org/old_wiki/doku.php?id=public:hog_descriptor_computation_and_visualization
-Mat get_hogdescriptor_visu(const Mat &color_origImg,
-                           vector<float> &descriptorValues, const Size &size) {
-    const int DIMX = size.width;
-    const int DIMY = size.height;
-    float zoomFac = 3;
-    Mat visu;
-    resize(color_origImg, visu,
-           Size((int)(color_origImg.cols * zoomFac),
-                (int)(color_origImg.rows * zoomFac)));
-
-    int cellSize = 8;
-    int gradientBinSize = 9;
-    float radRangeForOneBin =
-        (float)(CV_PI /
-                (float)gradientBinSize); // dividing 180 into 9 bins, how large
-                                         // (in rad) is one bin?
-
-    // prepare data structure: 9 orientation / gradient strenghts for each cell
-    int cells_in_x_dir = DIMX / cellSize;
-    int cells_in_y_dir = DIMY / cellSize;
-    float ***gradientStrengths = new float **[cells_in_y_dir];
-    int **cellUpdateCounter = new int *[cells_in_y_dir];
-    for (int y = 0; y < cells_in_y_dir; y++) {
-        gradientStrengths[y] = new float *[cells_in_x_dir];
-        cellUpdateCounter[y] = new int[cells_in_x_dir];
-        for (int x = 0; x < cells_in_x_dir; x++) {
-            gradientStrengths[y][x] = new float[gradientBinSize];
-            cellUpdateCounter[y][x] = 0;
-
-            for (int bin = 0; bin < gradientBinSize; bin++)
-                gradientStrengths[y][x][bin] = 0.0;
-        }
-    }
-
-    // nr of blocks = nr of cells - 1
-    // since there is a new block on each cell (overlapping blocks!) but the
-    // last one
-    int blocks_in_x_dir = cells_in_x_dir - 1;
-    int blocks_in_y_dir = cells_in_y_dir - 1;
-
-    // compute gradient strengths per cell
-    int descriptorDataIdx = 0;
-    int cellx = 0;
-    int celly = 0;
-
-    for (int blockx = 0; blockx < blocks_in_x_dir; blockx++) {
-        for (int blocky = 0; blocky < blocks_in_y_dir; blocky++) {
-            // 4 cells per block ...
-            for (int cellNr = 0; cellNr < 4; cellNr++) {
-                // compute corresponding cell nr
-                cellx = blockx;
-                celly = blocky;
-                if (cellNr == 1)
-                    celly++;
-                if (cellNr == 2)
-                    cellx++;
-                if (cellNr == 3) {
-                    cellx++;
-                    celly++;
-                }
-
-                for (int bin = 0; bin < gradientBinSize; bin++) {
-                    float gradientStrength =
-                        descriptorValues[descriptorDataIdx];
-                    descriptorDataIdx++;
-
-                    gradientStrengths[celly][cellx][bin] += gradientStrength;
-
-                } // for (all bins)
-
-                // note: overlapping blocks lead to multiple updates of this
-                // sum! we therefore keep track how often a cell was updated, to
-                // compute average gradient strengths
-                cellUpdateCounter[celly][cellx]++;
-
-            } // for (all cells)
-
-        } // for (all block x pos)
-    }     // for (all block y pos)
-
-    // compute average gradient strengths
-    for (celly = 0; celly < cells_in_y_dir; celly++) {
-        for (cellx = 0; cellx < cells_in_x_dir; cellx++) {
-
-            float NrUpdatesForThisCell = (float)cellUpdateCounter[celly][cellx];
-
-            // compute average gradient strenghts for each gradient bin
-            // direction
-            for (int bin = 0; bin < gradientBinSize; bin++) {
-                gradientStrengths[celly][cellx][bin] /= NrUpdatesForThisCell;
-            }
-        }
-    }
-
-    // draw cells
-    for (celly = 0; celly < cells_in_y_dir; celly++) {
-        for (cellx = 0; cellx < cells_in_x_dir; cellx++) {
-            int drawX = cellx * cellSize;
-            int drawY = celly * cellSize;
-
-            int mx = drawX + cellSize / 2;
-            int my = drawY + cellSize / 2;
-
-            rectangle(visu,
-                      Point((int)(drawX * zoomFac), (int)(drawY * zoomFac)),
-                      Point((int)((drawX + cellSize) * zoomFac),
-                            (int)((drawY + cellSize) * zoomFac)),
-                      Scalar(100, 100, 100), 1);
-
-            // draw in each cell all 9 gradient strengths
-            for (int bin = 0; bin < gradientBinSize; bin++) {
-                float currentGradStrength =
-                    gradientStrengths[celly][cellx][bin];
-
-                // no line to draw?
-                if (currentGradStrength == 0)
-                    continue;
-
-                float currRad = bin * radRangeForOneBin + radRangeForOneBin / 2;
-
-                float dirVecX = cos(currRad);
-                float dirVecY = sin(currRad);
-                float maxVecLen = (float)(cellSize / 2.f);
-                float scale =
-                    2.5; // just a visualization scale, to see the lines better
-
-                // compute line coordinates
-                float x1 =
-                    mx - dirVecX * currentGradStrength * maxVecLen * scale;
-                float y1 =
-                    my - dirVecY * currentGradStrength * maxVecLen * scale;
-                float x2 =
-                    mx + dirVecX * currentGradStrength * maxVecLen * scale;
-                float y2 =
-                    my + dirVecY * currentGradStrength * maxVecLen * scale;
-
-                // draw gradient visualization
-                line(visu, Point((int)(x1 * zoomFac), (int)(y1 * zoomFac)),
-                     Point((int)(x2 * zoomFac), (int)(y2 * zoomFac)),
-                     Scalar(0, 255, 0), 1);
-
-            } // for (all bins)
-
-        } // for (cellx)
-    }     // for (celly)
-
-    // don't forget to free memory allocated by helper data structures!
-    for (int y = 0; y < cells_in_y_dir; y++) {
-        for (int x = 0; x < cells_in_x_dir; x++) {
-            delete[] gradientStrengths[y][x];
-        }
-        delete[] gradientStrengths[y];
-        delete[] cellUpdateCounter[y];
-    }
-    delete[] gradientStrengths;
-    delete[] cellUpdateCounter;
-
-    return visu;
-
-} // get_hogdescriptor_visu
-
 void MainWindow::on_startTrainButton_clicked() {
     ui->startTrainButton->setEnabled(false);
-    ui->startTrainButton->setText(tr("正在训练..."));
+    ui->startTrainButton->setText(QString::fromLocal8Bit("正在训练..."));
     trainingThread->start();
 }
 
 void MainWindow::after_trainingCompleting() {
-    ui->startTrainButton->setText(tr("开始训练"));
+    ui->startTrainButton->setText(QString::fromLocal8Bit("开始训练"));
     ui->startTrainButton->setEnabled(true);
     trainingThread->exit();
 }
 
 bool MainWindow::showOverwriteModel_messageBox() {
     QMessageBox *msgBox = new QMessageBox;
-    msgBox->setText(tr("模型文件已经存在，是否覆盖？"));
+    msgBox->setText(QString::fromLocal8Bit("模型文件已经存在，是否覆盖？"));
     msgBox->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
     int ret = msgBox->exec();
     return ret == QMessageBox::Cancel;
@@ -667,42 +506,6 @@ void MainWindow::on_kernel_comboBox_currentIndexChanged(int index) {
     }
 }
 
-// void MainWindow::on_allTestFiles_currentItemChanged(QListWidgetItem *current,
-//                                                     QListWidgetItem
-//                                                     *previous) {
-//     QModelIndex selection = ui->allTestFiles->currentIndex();
-//     int vectorIndex = selection.row();
-//     Mat image = images[validationIndices[vectorIndex]];
-//     QString path = paths[validationIndices[vectorIndex]];
-//     PlateChar_t tag = tags[validationIndices[vectorIndex]];
-//     int predictedTag = validationPrediction[vectorIndex];
-
-//     ui->testOriginalImage->setPixmap(
-//         QPixmap::fromImage(Mat2QImage(image, QImage::Format_RGB888))
-//             .scaled(50, 100));
-//     auto hog = PlateChar_SVM::ComputeHogDescriptors(image);
-//     Mat hogMat = get_hogdescriptor_visu(image, hog, Size{16, 32});
-//     ui->testHOGImage->setPixmap(
-//         QPixmap::fromImage(Mat2QImage(hogMat, QImage::Format_RGB888))
-//             .scaled(50, 100));
-//     ui->testImageLabel->setText(PlateChar_tToString[static_cast<size_t>(tag)]);
-//     ui->predictedTestLabel->setText(PlateChar_tToString[predictedTag]);
-// }
-
-// void MainWindow::showValidations() {
-//     ui->allTestFiles->clear();
-//     ui->allTestFiles->setViewMode(QListWidget::IconMode);
-//     for (size_t i = 0; i < validationIndices.size(); ++i) {
-//         QIcon icon = QIcon(QPixmap::fromImage(
-//             Mat2QImage(images[validationIndices[i]],
-//             QImage::Format_RGB888)));
-//         QListWidgetItem *item =
-//             new QListWidgetItem(icon,
-//             PlateChar_tToString[static_cast<size_t>(
-//                                           tags[validationIndices[i]])]);
-//         ui->allTestFiles->addItem(item);
-//     }
-// }
 
 void MainWindow::prediction_Completed() {
     // showValidations();
