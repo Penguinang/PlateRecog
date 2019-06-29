@@ -11,5 +11,7 @@
         <file>icon/gaodu.png</file>
         <file>icon/kuandu.png</file>
         <file>icon/head.png</file>
+        <file>icon/start.png</file>
+        <file>icon/plateUI03.png</file>
     </qresource>
 </RCC>
