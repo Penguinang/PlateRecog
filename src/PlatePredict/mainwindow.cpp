@@ -333,8 +333,8 @@ void MainWindow::generatePlateRegion(PlateInfo plateInfo,int index,int duration)
 
     this->generateCharRegion(plateInfo,index);
 
-    this->ui->textEdit->append(tr("识别成功！"));
-    this->ui->textEdit->append(tr("识别耗时: ")+QString::number(duration)+tr("ms."));
+    this->ui->textEdit->append(QString::fromLocal8Bit("识别成功！"));
+    this->ui->textEdit->append(QString::fromLocal8Bit("识别耗时: ")+QString::number(duration)+tr("ms."));
 }
 
 void MainWindow::selectDir()
