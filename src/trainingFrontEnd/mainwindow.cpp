@@ -1,4 +1,4 @@
-// qt headers
+﻿// qt headers
 #include <QDebug>
 #include <QDialog>
 #include <QDir>
@@ -36,8 +36,8 @@ using Doit::CV::PlateRecogn::PlateChar_tToString;
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-QString MainWindow::CharModelFileName = "tmpModel.yaml";
-QString MainWindow::CategoryModelFileName = "tmpModel.yaml";
+QString MainWindow::CharModelFileName = "CharModel.yaml";
+QString MainWindow::CategoryModelFileName = "CategoryModel.yaml";
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -110,14 +110,14 @@ void MainWindow::on_openCharFolder() {
     reset();
 
     QString trainingRoot = QFileDialog::getExistingDirectory(
-        this, tr("选择训练样本根目录"), "../../../bin/platecharsamples/chars");
+        this, QString::fromLocal8Bit("选择训练样本根目录"), "../../../bin/platecharsamples/chars");
     if (trainingRoot == "") {
         return;
     }
     QDir root = QDir(trainingRoot);
     for (auto it = begin(PlateChar_tToString); it < end(PlateChar_tToString);
          ++it) {
-        QString name = QString(*it);
+        QString name = QString::fromLocal8Bit(*it);
         QString charPathName = trainingRoot + DIRECTORY_DELIMITER + name;
         QDir charDir = QDir(charPathName);
         QStringList charImagePaths = charDir.entryList(QStringList() << "*.jpg"
@@ -128,11 +128,11 @@ void MainWindow::on_openCharFolder() {
 
         for (auto &file : charImagePaths) {
             QString filePath = charPathName + DIRECTORY_DELIMITER + file;
-            images.push_back(imread(filePath.toStdString()));
+            images.push_back(imread(filePath.toLocal8Bit().toStdString()));
             paths.push_back(filePath);
             tags.push_back(tag);
         }
-        qDebug() << *it << ", " << charPathName
+        qDebug() << QString::fromLocal8Bit(*it) << ", " << charPathName
                  << ", count:" << charImagePaths.size();
     }
 
@@ -149,14 +149,14 @@ void MainWindow::on_openCategoryFolder() {
 
 
     QString trainingRoot = QFileDialog::getExistingDirectory(
-        this, tr("选择训练样本根目录"), "../../../bin/platecharsamples/plates");
+        this, QString::fromLocal8Bit("选择训练样本根目录"), "../../../bin/platecharsamples/plates");
     if (trainingRoot == "") {
         return;
     }
     QDir root = QDir(trainingRoot);
     for (auto it = begin(PlateCategory_tToString);
          it < end(PlateCategory_tToString); ++it) {
-        QString name = QString(*it);
+        QString name = QString::fromLocal8Bit(*it);
         QString categoryPathName = trainingRoot + DIRECTORY_DELIMITER + name;
         QDir categoryDir = QDir(categoryPathName);
         QStringList categoryImagePaths =
@@ -168,11 +168,11 @@ void MainWindow::on_openCategoryFolder() {
 
         for (auto &file : categoryImagePaths) {
             QString filePath = categoryPathName + DIRECTORY_DELIMITER + file;
-            images.push_back(imread(filePath.toStdString()));
+            images.push_back(imread(filePath.toLocal8Bit().toStdString()));
             paths.push_back(filePath);
             tags.push_back(tag);
         }
-        qDebug() << *it << ", " << categoryPathName
+        qDebug() << QString::fromLocal8Bit(*it) << ", " << categoryPathName
                  << ", count:" << categoryImagePaths.size();
     }
 
@@ -229,8 +229,8 @@ void MainWindow::showAllImages() {
             QPixmap::fromImage(Mat2QImage(images[i], QImage::Format_RGB888)).scaled(iconSize));
         
         QString tagString = mode == PLATE_CHAR
-                                ? PlateChar_tToString[tags[i]]
-                                : PlateCategory_tToString[tags[i]];
+                                ? QString::fromLocal8Bit(PlateChar_tToString[tags[i]])
+                                : QString::fromLocal8Bit(PlateCategory_tToString[tags[i]]);
         QListWidgetItem *item = new QListWidgetItem(icon, tagString);
         ui->allFiles->addItem(item);
     }
@@ -240,8 +240,8 @@ void MainWindow::showTrainingImages() {
         QIcon icon = QIcon(
             QPixmap::fromImage(Mat2QImage(images[i], QImage::Format_RGB888)).scaled(iconSize));
         QString tagString = mode == PLATE_CHAR
-                                ? PlateChar_tToString[tags[i]]
-                                : PlateCategory_tToString[tags[i]];
+                                ? QString::fromLocal8Bit(PlateChar_tToString[tags[i]])
+                                : QString::fromLocal8Bit(PlateCategory_tToString[tags[i]]);
         QListWidgetItem *item = new QListWidgetItem(icon, tagString);
         ui->allFiles->addItem(item);
     }
@@ -251,8 +251,8 @@ void MainWindow::showValidationImages() {
         QIcon icon = QIcon(
             QPixmap::fromImage(Mat2QImage(images[i], QImage::Format_RGB888)).scaled(iconSize));
         QString tagString = mode == PLATE_CHAR
-                                ? PlateChar_tToString[tags[i]]
-                                : PlateCategory_tToString[tags[i]];
+                                ? QString::fromLocal8Bit(PlateChar_tToString[tags[i]])
+                                : QString::fromLocal8Bit(PlateCategory_tToString[tags[i]]);
         QListWidgetItem *item = new QListWidgetItem(icon, tagString);
         ui->allFiles->addItem(item);
     }
@@ -266,8 +266,8 @@ void MainWindow::showCorrectValidationImages() {
         QIcon icon = QIcon(QPixmap::fromImage(
             Mat2QImage(images[imageIndex], QImage::Format_RGB888)).scaled(iconSize));
         QString tagString = mode == PLATE_CHAR
-                                ? PlateChar_tToString[tags[imageIndex]]
-                                : PlateCategory_tToString[tags[imageIndex]];
+                                ? QString::fromLocal8Bit(PlateChar_tToString[tags[imageIndex]])
+                                : QString::fromLocal8Bit(PlateCategory_tToString[tags[imageIndex]]);
 
         QListWidgetItem *item = new QListWidgetItem(icon, tagString);
         ui->allFiles->addItem(item);
@@ -282,8 +282,8 @@ void MainWindow::showWrongValidationImages() {
         QIcon icon = QIcon(QPixmap::fromImage(
             Mat2QImage(images[imageIndex], QImage::Format_RGB888)).scaled(iconSize));
         QString tagString = mode == PLATE_CHAR
-                                ? PlateChar_tToString[tags[imageIndex]]
-                                : PlateCategory_tToString[tags[imageIndex]];
+                                ? QString::fromLocal8Bit(PlateChar_tToString[tags[imageIndex]])
+                                : QString::fromLocal8Bit(PlateCategory_tToString[tags[imageIndex]]);
 
         QListWidgetItem *item = new QListWidgetItem(icon, tagString);
         ui->allFiles->addItem(item);
@@ -357,7 +357,7 @@ void MainWindow::showAllImagesDetail(int index) {
     ui->HOGImage->setPixmap(
         QPixmap::fromImage(Mat2QImage(hogMat, QImage::Format_RGB888))
             .scaled(detailSize));
-    QString tagString = mode == PLATE_CHAR ? PlateChar_tToString[tag] : PlateCategory_tToString[tag];
+    QString tagString = mode == PLATE_CHAR ? QString::fromLocal8Bit(PlateChar_tToString[tag]) : QString::fromLocal8Bit(PlateCategory_tToString[tag]);
     ui->imageLabel->setText(tagString);
     ui->predictedImageLabel->setText("");
     ui->predictedImageLabel->setEnabled(false);
@@ -382,7 +382,7 @@ void MainWindow::showTrainingImagesDetail(int index) {
     ui->HOGImage->setPixmap(
         QPixmap::fromImage(Mat2QImage(hogMat, QImage::Format_RGB888))
             .scaled(detailSize));
-    QString tagString = mode == PLATE_CHAR ? PlateChar_tToString[tag] : PlateCategory_tToString[tag];            
+    QString tagString = mode == PLATE_CHAR ? QString::fromLocal8Bit(PlateChar_tToString[tag]) : QString::fromLocal8Bit(PlateCategory_tToString[tag]);            
     ui->imageLabel->setText(tagString);
     ui->predictedImageLabel->setText("");
     ui->predictedImageLabel->setEnabled(false);
@@ -408,12 +408,12 @@ void MainWindow::showValidationImagesDetail(int index) {
     ui->HOGImage->setPixmap(
         QPixmap::fromImage(Mat2QImage(hogMat, QImage::Format_RGB888))
             .scaled(detailSize));
-    QString tagString = mode == PLATE_CHAR ? PlateChar_tToString[tag] : PlateCategory_tToString[tag];      
+    QString tagString = mode == PLATE_CHAR ? QString::fromLocal8Bit(PlateChar_tToString[tag]) : QString::fromLocal8Bit(PlateCategory_tToString[tag]);      
     QString predictedTagString;
     if(predictedTag == -1)
         predictedTagString = "";    
     else
-        predictedTagString = mode == PLATE_CHAR ? PlateChar_tToString[predictedTag] : PlateCategory_tToString[predictedTag];      
+        predictedTagString = mode == PLATE_CHAR ? QString::fromLocal8Bit(PlateChar_tToString[predictedTag]) : QString::fromLocal8Bit(PlateCategory_tToString[predictedTag]);      
     ui->imageLabel->setText(tagString);
     ui->predictedImageLabel->setText(predictedTagString);
     ui->predictedImageLabel->setEnabled(true);
@@ -439,8 +439,8 @@ void MainWindow::showCorrectValidationImagesDetail(int index) {
     ui->HOGImage->setPixmap(
         QPixmap::fromImage(Mat2QImage(hogMat, QImage::Format_RGB888))
             .scaled(detailSize));
-    QString tagString = mode == PLATE_CHAR ? PlateChar_tToString[tag] : PlateCategory_tToString[tag];            
-    QString predictedTagString = mode == PLATE_CHAR ? PlateChar_tToString[predictedTag] : PlateCategory_tToString[predictedTag];          
+    QString tagString = mode == PLATE_CHAR ? QString::fromLocal8Bit(PlateChar_tToString[tag]) : QString::fromLocal8Bit(PlateCategory_tToString[tag]);            
+    QString predictedTagString = mode == PLATE_CHAR ? QString::fromLocal8Bit(PlateChar_tToString[predictedTag]) : QString::fromLocal8Bit(PlateCategory_tToString[predictedTag]);          
     ui->imageLabel->setText(tagString);
     ui->predictedImageLabel->setText(predictedTagString);
     ui->predictedImageLabel->setEnabled(true);
@@ -466,8 +466,8 @@ void MainWindow::showWrongValidationImagesDetail(int index) {
     ui->HOGImage->setPixmap(
         QPixmap::fromImage(Mat2QImage(hogMat, QImage::Format_RGB888))
             .scaled(detailSize));
-    QString tagString = mode == PLATE_CHAR ? PlateChar_tToString[tag] : PlateCategory_tToString[tag];            
-    QString predictedTagString = mode == PLATE_CHAR ? PlateChar_tToString[predictedTag] : PlateCategory_tToString[predictedTag];          
+    QString tagString = mode == PLATE_CHAR ? QString::fromLocal8Bit(PlateChar_tToString[tag]) : QString::fromLocal8Bit(PlateCategory_tToString[tag]);            
+    QString predictedTagString = mode == PLATE_CHAR ? QString::fromLocal8Bit(PlateChar_tToString[predictedTag]) : QString::fromLocal8Bit(PlateCategory_tToString[predictedTag]);          
     ui->imageLabel->setText(tagString);
     ui->predictedImageLabel->setText(predictedTagString);
     ui->predictedImageLabel->setEnabled(true);
@@ -638,19 +638,19 @@ Mat get_hogdescriptor_visu(const Mat &color_origImg,
 
 void MainWindow::on_startTrainButton_clicked() {
     ui->startTrainButton->setEnabled(false);
-    ui->startTrainButton->setText(tr("正在训练..."));
+    ui->startTrainButton->setText(QString::fromLocal8Bit("正在训练..."));
     trainingThread->start();
 }
 
 void MainWindow::after_trainingCompleting() {
-    ui->startTrainButton->setText(tr("开始训练"));
+    ui->startTrainButton->setText(QString::fromLocal8Bit("开始训练"));
     ui->startTrainButton->setEnabled(true);
     trainingThread->exit();
 }
 
 bool MainWindow::showOverwriteModel_messageBox() {
     QMessageBox *msgBox = new QMessageBox;
-    msgBox->setText(tr("模型文件已经存在，是否覆盖？"));
+    msgBox->setText(QString::fromLocal8Bit("模型文件已经存在，是否覆盖？"));
     msgBox->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
     int ret = msgBox->exec();
     return ret == QMessageBox::Cancel;
@@ -686,7 +686,7 @@ void MainWindow::on_kernel_comboBox_currentIndexChanged(int index) {
 //         QPixmap::fromImage(Mat2QImage(hogMat, QImage::Format_RGB888))
 //             .scaled(50, 100));
 //     ui->testImageLabel->setText(PlateChar_tToString[static_cast<size_t>(tag)]);
-//     ui->predictedTestLabel->setText(PlateChar_tToString[predictedTag]);
+//     ui->predictedTestLabel->setText(QString::fromLocal8Bit(PlateChar_tToString[predictedTag]));
 // }
 
 // void MainWindow::showValidations() {
