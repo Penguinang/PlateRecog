@@ -14,6 +14,7 @@
 #include <QTableWidget>
 #include <QHeaderView>
 #include <QTableWidgetItem>
+#include <QTime>
 
 #include "../classifier/PlateCategory_SVM.h"
 #include "../classifier/PlateChar_SVM.h"
@@ -33,8 +34,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->state = false;
     this->currentImagePath = tr("");
-    //this->plateModelPath = tr("");
-    //this->charModelPath = tr("");
+    this->plateModelPath = tr("");
+    this->charModelPath = tr("");
 
     QIcon selectDir(":/icon/icon/wenjian.png");
     QPushButton* buttonSelectDir = new QPushButton(selectDir,QString::fromLocal8Bit("选择测试图像"));
@@ -117,14 +118,16 @@ void MainWindow::recog()
                                  QMessageBox::Yes, QMessageBox::Yes);
         return;
     }
-    initSvm(this->plateModelPath,this->charModelPath);
+    clock_t start = clock();
     cv::Mat image = cv::imread(this->currentImagePath.toLocal8Bit().toStdString());
     auto plateInfos = PlateRecognition_V3::Recognite(image);
+    clock_t end = clock();
+    int duration = end - start;
     this->ui->plateWidget->clear();
     for(int i=1;i<=plateInfos.size();i++)
     {
         PlateInfo plateInfo = plateInfos[i-1];
-        this->generatePlateRegion(plateInfo,i);
+        this->generatePlateRegion(plateInfo,i,duration);
         generateProcessRegion(plateInfo,image);
     }
 }
@@ -219,14 +222,13 @@ void MainWindow::generateCharRegion(PlateInfo plateInfo,int index)
                               charMatClone.rows,
                               charMatClone.cols * charMatClone.channels(),
                               QImage::Format_RGB888);
-        qDebug()<<"image " << image.size();
         image = image.scaled(image.width()*2,image.height()*2,Qt::IgnoreAspectRatio);
         QPixmap pixmap = QPixmap::fromImage(image);
         QIcon charIcon(pixmap);
         tableCharInfo->setIconSize(QSize(image.width()*3/2,image.height()*3/2));
         tableCharInfo->setItem(i,0,new QTableWidgetItem(charIcon,tr("")));
 
-        tableCharInfo->setItem(i,1,new QTableWidgetItem(charInfo.ToString().c_str()));
+        tableCharInfo->setItem(i,1,new QTableWidgetItem(QString::fromLocal8Bit(charInfo.ToString().c_str())));
 
         tableCharInfo->setItem(i,2,new QTableWidgetItem(QString::number(charInfo.OriginalRect.width)));
         tableCharInfo->setItem(i,3,new QTableWidgetItem(QString::number(charInfo.OriginalRect.height)));
@@ -258,7 +260,7 @@ void MainWindow::generateCharRegion(PlateInfo plateInfo,int index)
     this->ui->charWidget->clear();
     this->ui->charWidget->addTab(tableCharInfo,QString::fromLocal8Bit("字符信息")+QString::number(index));
 }
-void MainWindow::generatePlateRegion(PlateInfo plateInfo,int index)
+void MainWindow::generatePlateRegion(PlateInfo plateInfo,int index,int duration)
 {
     this->ui->plateWidget->clear();
     QWidget* plateRegion = new QWidget(this);
@@ -276,13 +278,10 @@ void MainWindow::generatePlateRegion(PlateInfo plateInfo,int index)
                           QImage::Format_RGB888);
 
     image = image.scaled(image.width()*3/2,image.height()*3/2,Qt::IgnoreAspectRatio);
-    qDebug()<<image.size();
     QPixmap pixmap = QPixmap::fromImage(image);
-    qDebug()<<pixmap.size();
     labelPlateImage->setAlignment(Qt::AlignCenter);
     labelPlateImage->setPixmap(pixmap);
     labelPlateImage->resize(pixmap.size());
-    qDebug()<<labelPlateImage->size();
     QVBoxLayout* vLayout = new QVBoxLayout;
     vLayout->addWidget(labelPlateImage);
 
@@ -297,7 +296,7 @@ void MainWindow::generatePlateRegion(PlateInfo plateInfo,int index)
 
     QIcon recog(":/icon/icon/plate.png");
     tablePlateInfo->setItem(0,0,new QTableWidgetItem(recog,QString::fromLocal8Bit("车牌号")));
-    tablePlateInfo->setItem(0,1,new QTableWidgetItem(tr(plateInfo.ToString().c_str())));
+    tablePlateInfo->setItem(0,1,new QTableWidgetItem(QString::fromLocal8Bit(plateInfo.ToString().c_str())));
 
     QIcon cate(":/icon/icon/cate.png");
     tablePlateInfo->setItem(1,0,new QTableWidgetItem(cate,QString::fromLocal8Bit("车牌类别")));
@@ -334,12 +333,8 @@ void MainWindow::generatePlateRegion(PlateInfo plateInfo,int index)
 
     this->generateCharRegion(plateInfo,index);
 
-}
-
-void MainWindow::initSvm(QString plateModelPath,QString charModelPath)
-{
-    PlateCategory_SVM::Load(plateModelPath.toStdString());
-    PlateChar_SVM::Load(charModelPath.toStdString());
+    this->ui->textEdit->append(tr("识别成功！"));
+    this->ui->textEdit->append(tr("识别耗时: ")+QString::number(duration)+tr("ms."));
 }
 
 void MainWindow::selectDir()
@@ -365,9 +360,13 @@ void MainWindow::selectPlateModel()
     this->plateModelPath = QFileDialog::getOpenFileName(
                 this,
                 tr("Open model"),
-                this->plateModelPath.isEmpty()?tr("D:/download"):this->plateModelPath,
+                this->plateModelPath.isEmpty()?tr("../classifier"):this->plateModelPath,
                 "*.yaml");
     qDebug()<<this->plateModelPath;
+    if(this->plateModelPath != "")
+    {
+        PlateCategory_SVM::Load(this->plateModelPath.toLocal8Bit().toStdString());
+    }
 }
 
 void MainWindow::selectCharModel()
@@ -375,14 +374,19 @@ void MainWindow::selectCharModel()
     this->charModelPath = QFileDialog::getOpenFileName(
                 this,
                 tr("Open model"),
-                this->charModelPath.isEmpty()?tr("D:/download"):this->charModelPath,
+                this->charModelPath.isEmpty()?tr("../classifier"):this->charModelPath,
                 "*.yaml");
     qDebug()<<this->charModelPath;
+    if(this->charModelPath != "")
+    {
+        PlateChar_SVM::Load(this->charModelPath.toLocal8Bit().toStdString());
+    }
 }
 
 void MainWindow::imageArea(cv::Mat mat)
 {
     this->ui->tabWidget->clear();
+    this->ui->textEdit->clear();
 
     QWidget* tabOriginal = this->generateImageLabel(mat,QImage::Format_RGB888);
     this->ui->tabWidget->addTab(tabOriginal,QString::fromLocal8Bit("测试图像"));

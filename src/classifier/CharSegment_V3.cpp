@@ -1,4 +1,4 @@
-#include <string>
+﻿#include <string>
 using std::string;
 #include <utility>
 using std::tuple;
@@ -88,24 +88,24 @@ cv::Mat CharSegment_V3::ClearBorder(cv::Mat &threshold) {
 }
 
 cv::Mat CharSegment_V3::ClearMaodingAndBorder(cv::Mat &gray,
-                                              PlateColor_t &plateColor) {
+    PlateColor_t &plateColor) {
     cv::Mat threshold;
 
     switch (plateColor) {
     case PlateColor_t::BluePlate:
     case PlateColor_t::BlackPlate:
         cv::threshold(gray, threshold, 1, 255,
-                      cv::THRESH_OTSU | cv::THRESH_BINARY);
+            cv::THRESH_OTSU | cv::THRESH_BINARY);
         break;
     case PlateColor_t::YellowPlate:
     case PlateColor_t::WhitePlate:
     case PlateColor_t::GreenPlate:
         cv::threshold(gray, threshold, 1, 255,
-                      cv::THRESH_OTSU | cv::THRESH_BINARY);
+            cv::THRESH_OTSU | cv::THRESH_BINARY);
         break;
     case PlateColor_t::UnknownPlate:
         cv::threshold(gray, threshold, 1, 255,
-                      cv::THRESH_OTSU | cv::THRESH_BINARY);
+            cv::THRESH_OTSU | cv::THRESH_BINARY);
         break;
     }
 
@@ -116,7 +116,7 @@ cv::Mat CharSegment_V3::ClearMaodingAndBorder(cv::Mat &gray,
 }
 
 vector<CharInfo> CharSegment_V3::SpliteCharsInPlateMat(cv::Mat &plateMat,
-                                                       vector<Rect> &rects) {
+    vector<Rect> &rects) {
     if (PlateChar_SVM::IsReady == false) {
         throw logic_error("The character recognition library is not ready");
     }
@@ -153,39 +153,39 @@ CharSegment_V3::SplitePlateForAutoSample(cv::Mat &plateMat) {
         contours_Original_Blue, plateMat, plateMat, PlateColor_t::BluePlate);
     Mat binaryMat_Original_Blue = plateMat.clone() = 0;
     cv::drawContours(binaryMat_Original_Blue, contours_Original_Blue, -1,
-                     {255, 255, 255}, cv::FILLED);
+    { 255, 255, 255 }, cv::FILLED);
     Mat rectedMat_Original_Blue = plateMat.clone();
     reserveBoundingRects(rectedMat_Original_Blue, contours_Original_Blue, -1,
-                     {0, 0, 255});
+    { 0, 0, 255 });
 
     vector<CharInfo> charInfos_IndexTransform_Blue =
         SplitePlateByIndexTransform(contours_IndexTransform_Blue, plateMat,
-                                    PlateColor_t::BluePlate);
+            PlateColor_t::BluePlate);
     Mat binaryMat_IndexTransform_Blue = plateMat.clone() = 0;
     cv::drawContours(binaryMat_IndexTransform_Blue,
-                     contours_IndexTransform_Blue, -1, {255, 255, 255}, cv::FILLED);
+        contours_IndexTransform_Blue, -1, { 255, 255, 255 }, cv::FILLED);
     Mat rectedMat_IndexTransform_Blue = plateMat.clone();
     reserveBoundingRects(rectedMat_IndexTransform_Blue, contours_IndexTransform_Blue, -1,
-                     {0, 0, 255});
+    { 0, 0, 255 });
 
     vector<CharInfo> charInfos_GammaTransform_Blue =
         SplitePlateByGammaTransform(contours_GammaTransform_Blue, plateMat,
-                                    PlateColor_t::BluePlate);
+            PlateColor_t::BluePlate);
     Mat binaryMat_GammaTransform_Blue = plateMat.clone() = 0;
     cv::drawContours(binaryMat_GammaTransform_Blue,
-                     contours_GammaTransform_Blue, -1, {255, 255, 255}, cv::FILLED);
+        contours_GammaTransform_Blue, -1, { 255, 255, 255 }, cv::FILLED);
     Mat rectedMat_GammaTransform_Blue = plateMat.clone();
     reserveBoundingRects(rectedMat_GammaTransform_Blue, contours_GammaTransform_Blue, -1,
-                     {0, 0, 255});
+    { 0, 0, 255 });
 
     vector<CharInfo> charInfos_LogTransform_Blue = SplitePlateByLogTransform(
         contours_LogTransform_Blue, plateMat, PlateColor_t::BluePlate);
     Mat binaryMat_LogTransform_Blue = plateMat.clone() = 0;
     cv::drawContours(binaryMat_LogTransform_Blue, contours_LogTransform_Blue,
-                     -1, {255, 255, 255}, cv::FILLED);
+        -1, { 255, 255, 255 }, cv::FILLED);
     Mat rectedMat_LogTransform_Blue = plateMat.clone();
     reserveBoundingRects(rectedMat_LogTransform_Blue, contours_LogTransform_Blue, -1,
-                     {0, 0, 255});
+    { 0, 0, 255 });
 
     int isCharCount_Blue = 0;
 
@@ -221,42 +221,42 @@ CharSegment_V3::SplitePlateForAutoSample(cv::Mat &plateMat) {
     std::vector<std::vector<cv::Point>> contours_LogTransform_Yellow;
     vector<CharInfo> charInfos_Original_Yellow =
         SplitePlateByOriginal(contours_Original_Yellow, plateMat, plateMat,
-                              PlateColor_t::YellowPlate);
+            PlateColor_t::YellowPlate);
     Mat binaryMat_Original_Yellow = plateMat.clone() = 0;
     cv::drawContours(binaryMat_Original_Yellow, contours_Original_Yellow, -1,
-                     {255, 255, 255}, cv::FILLED);
+    { 255, 255, 255 }, cv::FILLED);
     Mat rectedMat_Original_Yellow = plateMat.clone();
     reserveBoundingRects(rectedMat_Original_Yellow, contours_Original_Yellow, -1,
-                     {0, 0, 255});
+    { 0, 0, 255 });
 
     vector<CharInfo> charInfos_IndexTransform_Yellow =
         SplitePlateByIndexTransform(contours_IndexTransform_Yellow, plateMat,
-                                    PlateColor_t::YellowPlate);
+            PlateColor_t::YellowPlate);
     Mat binaryMat_IndexTransform_Yellow = plateMat.clone() = 0;
     cv::drawContours(binaryMat_IndexTransform_Yellow,
-                     contours_IndexTransform_Yellow, -1, {255, 255, 255}, cv::FILLED);
+        contours_IndexTransform_Yellow, -1, { 255, 255, 255 }, cv::FILLED);
     Mat rectedMat_IndexTransform_Yellow = plateMat.clone();
     reserveBoundingRects(rectedMat_IndexTransform_Yellow, contours_IndexTransform_Yellow, -1,
-                     {0, 0, 255});
+    { 0, 0, 255 });
 
     vector<CharInfo> charInfos_GammaTransform_Yellow =
         SplitePlateByGammaTransform(contours_GammaTransform_Yellow, plateMat,
-                                    PlateColor_t::YellowPlate);
+            PlateColor_t::YellowPlate);
     Mat binaryMat_GammaTransform_Yellow = plateMat.clone() = 0;
     cv::drawContours(binaryMat_GammaTransform_Yellow,
-                     contours_GammaTransform_Yellow, -1, {255, 255, 255}, cv::FILLED);
+        contours_GammaTransform_Yellow, -1, { 255, 255, 255 }, cv::FILLED);
     Mat rectedMat_GammaTransform_Yellow = plateMat.clone();
     reserveBoundingRects(rectedMat_GammaTransform_Yellow, contours_GammaTransform_Yellow, -1,
-                     {0, 0, 255});
+    { 0, 0, 255 });
 
     vector<CharInfo> charInfos_LogTransform_Yellow = SplitePlateByLogTransform(
         contours_LogTransform_Yellow, plateMat, PlateColor_t::YellowPlate);
     Mat binaryMat_LogTransform_Yellow = plateMat.clone() = 0;
     cv::drawContours(binaryMat_LogTransform_Yellow, contours_LogTransform_Yellow,
-                     -1, {255, 255, 255}, cv::FILLED);
+        -1, { 255, 255, 255 }, cv::FILLED);
     Mat rectedMat_LogTransform_Yellow = plateMat.clone();
     reserveBoundingRects(rectedMat_LogTransform_Yellow, contours_LogTransform_Yellow, -1,
-                     {0, 0, 255});
+    { 0, 0, 255 });
 
 
     int isCharCount_Yellow = 0;
@@ -287,15 +287,16 @@ CharSegment_V3::SplitePlateForAutoSample(cv::Mat &plateMat) {
     }
 
     if (isCharCount_Blue > isCharCount_Yellow) {
-        return {{charInfos_Original_Blue, binaryMat_Original_Blue, rectedMat_Original_Blue},
+        return{ {charInfos_Original_Blue, binaryMat_Original_Blue, rectedMat_Original_Blue},
                 {charInfos_IndexTransform_Blue, binaryMat_IndexTransform_Blue, rectedMat_IndexTransform_Blue},
                 {charInfos_GammaTransform_Blue, binaryMat_GammaTransform_Blue, rectedMat_GammaTransform_Blue},
-                {charInfos_LogTransform_Blue, binaryMat_LogTransform_Blue, rectedMat_LogTransform_Blue}};
-    } else {
-        return {{charInfos_Original_Yellow, binaryMat_Original_Yellow, rectedMat_Original_Yellow},
+                {charInfos_LogTransform_Blue, binaryMat_LogTransform_Blue, rectedMat_LogTransform_Blue} };
+    }
+    else {
+        return{ {charInfos_Original_Yellow, binaryMat_Original_Yellow, rectedMat_Original_Yellow},
                 {charInfos_IndexTransform_Yellow, binaryMat_IndexTransform_Yellow, rectedMat_IndexTransform_Yellow},
                 {charInfos_GammaTransform_Yellow, binaryMat_GammaTransform_Yellow, rectedMat_GammaTransform_Yellow},
-                {charInfos_LogTransform_Yellow, binaryMat_LogTransform_Yellow, rectedMat_LogTransform_Yellow}};
+                {charInfos_LogTransform_Yellow, binaryMat_LogTransform_Yellow, rectedMat_LogTransform_Yellow} };
     }
 }
 
@@ -307,10 +308,10 @@ vector<CharInfo> CharSegment_V3::SplitePlateByIndexTransform(
 
     cv::Mat plateMat = Utilities::IndexTransform(originalMat);
     return SplitePlateByOriginal(contours, originalMat, plateMat, plateColor,
-                                 CharSplitMethod_t::Exponential, leftLimit,
-                                 rightLimit, topLimit, bottomLimit, minWidth,
-                                 maxWidth, minHeight, maxHeight, minRatio,
-                                 maxRatio);
+        CharSplitMethod_t::Exponential, leftLimit,
+        rightLimit, topLimit, bottomLimit, minWidth,
+        maxWidth, minHeight, maxHeight, minRatio,
+        maxRatio);
 }
 
 vector<CharInfo> CharSegment_V3::SplitePlateByLogTransform(
@@ -320,9 +321,9 @@ vector<CharInfo> CharSegment_V3::SplitePlateByLogTransform(
     float minRatio, float maxRatio) {
     cv::Mat plateMat = Utilities::LogTransform(originalMat);
     return SplitePlateByOriginal(contours, originalMat, plateMat, plateColor,
-                                 CharSplitMethod_t::Log, leftLimit, rightLimit,
-                                 topLimit, bottomLimit, minWidth, maxWidth,
-                                 minHeight, maxHeight, minRatio, maxRatio);
+        CharSplitMethod_t::Log, leftLimit, rightLimit,
+        topLimit, bottomLimit, minWidth, maxWidth,
+        minHeight, maxHeight, minRatio, maxRatio);
 }
 
 vector<CharInfo> CharSegment_V3::SplitePlateByGammaTransform(
@@ -362,7 +363,7 @@ vector<CharInfo> CharSegment_V3::SplitePlateByOriginal(
     // std::vector<std::vector<cv::Point>> contours;
     std::vector<cv::Vec4i> hierarchy;
     cv::findContours(matOfClearMaodingAndBorder, contours, hierarchy,
-                     cv::RETR_EXTERNAL, cv::CHAIN_APPROX_NONE);
+        cv::RETR_EXTERNAL, cv::CHAIN_APPROX_NONE);
 
     // DEBUG
     Mat contimage = matOfClearMaodingAndBorder.clone();
@@ -370,20 +371,20 @@ vector<CharInfo> CharSegment_V3::SplitePlateByOriginal(
     cv::drawContours(contimage, contours, -1, Scalar(0, 0, 255), 1);
     DebugVisualize(
         (string("contimage ") +
-         CharSplitMethod_tToString[static_cast<size_t>(charSplitMethod)])
-            .c_str(),
+            CharSplitMethod_tToString[static_cast<size_t>(charSplitMethod)])
+        .c_str(),
         contimage);
 
     Mat rectedMat = matOfClearMaodingAndBorder.clone();
     cv::cvtColor(rectedMat, rectedMat, cv::COLOR_GRAY2BGR);
     for (auto &contour : contours) {
         Rect rect = cv::boundingRect(contour);
-        cv::rectangle(rectedMat, rect, {0, 0, 255});
+        cv::rectangle(rectedMat, rect, { 0, 0, 255 });
     }
     DebugVisualize(
         (string("contRect ") +
-         CharSplitMethod_tToString[static_cast<size_t>(charSplitMethod)])
-            .c_str(),
+            CharSplitMethod_tToString[static_cast<size_t>(charSplitMethod)])
+        .c_str(),
         rectedMat);
 
     vector<Rect> rects;
@@ -393,13 +394,13 @@ vector<CharInfo> CharSegment_V3::SplitePlateByOriginal(
         // DEBUG
         Mat pos = matOfClearMaodingAndBorder.clone();
         cv::cvtColor(pos, pos, cv::COLOR_GRAY2BGR);
-        cv::rectangle(pos, rect, {0, 0, 255});
+        cv::rectangle(pos, rect, { 0, 0, 255 });
         // DebugVisualizeNotWait("rects", pos);
 
         if (NotOnBorder(rect, cv::Size(plateMat.cols, plateMat.rows), leftLimit,
-                        rightLimit, topLimit, bottomLimit) &&
+            rightLimit, topLimit, bottomLimit) &&
             VerifyRect(rect, minWidth, maxWidth, minHeight, maxHeight, minRatio,
-                       maxRatio)) {
+                maxRatio)) {
             rects.push_back(rect);
             // DebugVisualize("rects after judgement",
             // matOfClearMaodingAndBorder(rect));
@@ -413,48 +414,13 @@ vector<CharInfo> CharSegment_V3::SplitePlateByOriginal(
     Mat rejectedRect = matOfClearMaodingAndBorder.clone();
     cv::cvtColor(rejectedRect, rejectedRect, cv::COLOR_GRAY2BGR);
     for (auto &rect : rects) {
-        cv::rectangle(rejectedRect, rect, {0, 0, 255});
+        cv::rectangle(rejectedRect, rect, { 0, 0, 255 });
     }
     DebugVisualize("AfterClipBorder ", rejectedRect);
     if (rects.size() == 0)
         return result;
-
-    /*vector<Rect> candidateRects;
-    for (size_t index = 0; index < rects.size(); index++)
-    {
-        Mat matTest;
-        originalMat(rects[index]).convertTo(matTest, cv::ImreadModes::IMREAD_GRAYSCALE);
-        if (PlateChar_SVM::Test(matTest) != PlateChar_t::NonChar)
-        {
-            candidateRects.push_back(rects[index]);
-        }
-    }*/
-    /*int midHeight = CharSegment_V3::GetRectsMaxHeight(rects);
-    int midWidth = CharSegment_V3::GetRectsMidWidth(rects);*/
     for (size_t index = 0; index < rects.size(); index++) {
-        //printf("midWidth %d\n", midWidth);
-        //printf("rectWidth %d\n", rects[index].width);
-        // broaden thin characters
         Rect rect = rects[index];
-       /* midWidth = rect.width * 3 / 2;
-        if (rect.height >= midHeight * 2 / 3 && rect.height <= midHeight * 4 / 3 &&
-            rect.width <= midWidth * 2 / 3)
-        {
-            int updateX = rect.x + rect.width/2 - midWidth/2;
-            int updateWidth = midWidth;
-            if (updateX >0 && updateX + updateWidth >= originalMat.cols)
-            {
-                updateWidth = originalMat.cols - rect.x - rect.width / 2;
-                updateX = rect.x + rect.width / 2 - updateWidth / 2;
-                rect.x = updateX;
-                rect.width = updateWidth;
-            }
-            else if (updateX + updateWidth < originalMat.cols && updateX >0)
-            {
-                rect.x = updateX;
-                rect.width = updateWidth;
-            }
-        }*/
         Rect &rectROI = rects[index];
         rectROI = Utilities::GetSafeRect(rects[index], originalMat);
         CharInfo plateCharInfo;
@@ -470,8 +436,8 @@ vector<CharInfo> CharSegment_V3::SplitePlateByOriginal(
 }
 
 bool CharSegment_V3::VerifyRect(Rect &rect, int minWidth, int maxWidth,
-                                int minHeight, int maxHeight, float minRatio,
-                                float maxRatio) {
+    int minHeight, int maxHeight, float minRatio,
+    float maxRatio) {
     int width = rect.width;
     int height = rect.height;
 
@@ -482,13 +448,13 @@ bool CharSegment_V3::VerifyRect(Rect &rect, int minWidth, int maxWidth,
     // float area = width * height;
 
     return ((width > minWidth && width < maxWidth) &&
-            (height > minHeight && height < maxHeight) &&
-            (ratio > minRatio && ratio < maxRatio));
+        (height > minHeight && height < maxHeight) &&
+        (ratio > minRatio && ratio < maxRatio));
 }
 
 bool CharSegment_V3::NotOnBorder(Rect &rectToJudge, cv::Size borderSize,
-                                 int leftLimit, int rightLimit, int topLimit,
-                                 int bottomLimit) {
+    int leftLimit, int rightLimit, int topLimit,
+    int bottomLimit) {
     float leftPercent = leftLimit / 100.0;
     float rightPercent = rightLimit / 100.0;
     float topPercent = topLimit / 100.0;
@@ -507,12 +473,12 @@ bool CharSegment_V3::NotOnBorder(Rect &rectToJudge, cv::Size borderSize,
     rectLimit.height = heightLimit;
 
     return rectLimit.contains(cv::Point(rectToJudge.x, rectToJudge.y)) &&
-           rectLimit.contains(
-               cv::Point(rectToJudge.x, rectToJudge.y + rectToJudge.height-1)) &&
-           rectLimit.contains(
-               cv::Point(rectToJudge.x + rectToJudge.width-1, rectToJudge.y)) &&
-           rectLimit.contains(cv::Point(rectToJudge.x + rectToJudge.width-1,
-                                        rectToJudge.y + rectToJudge.height-1));
+        rectLimit.contains(
+            cv::Point(rectToJudge.x, rectToJudge.y + rectToJudge.height - 1)) &&
+        rectLimit.contains(
+            cv::Point(rectToJudge.x + rectToJudge.width - 1, rectToJudge.y)) &&
+        rectLimit.contains(cv::Point(rectToJudge.x + rectToJudge.width - 1,
+            rectToJudge.y + rectToJudge.height - 1));
 }
 
 Rect CharSegment_V3::MergeRect(Rect &A, Rect &B) {
@@ -607,10 +573,10 @@ vector<Rect> CharSegment_V3::RejectInnerRectFromRects(vector<Rect> &rects) {
         for (size_t i = 0; i < rects.size(); i++) {
             const Rect &rectTemp = rects[i];
             if ((rect.x + rect.width <= rectTemp.x + rectTemp.width &&
-                 rect.y + rect.height <= rectTemp.y + rectTemp.height &&
-                 rect.x >= rectTemp.x && rect.y >= rectTemp.y) &&
+                rect.y + rect.height <= rectTemp.y + rectTemp.height &&
+                rect.x >= rectTemp.x && rect.y >= rectTemp.y) &&
                 (rect.width < rectTemp.width ||
-                 rect.height < rectTemp.height)) {
+                    rect.height < rectTemp.height)) {
                 rects.erase(rects.begin() + i);
                 break;
             }
@@ -657,12 +623,10 @@ int CharSegment_V3::GetRectsMaxWidth(vector<Rect>& rects)
     if (rects.size() == 0)
         return maxWidth;
     for (Rect rect : rects) {
-        for (Rect rect : rects) {
-            if (maxWidth < rect.width)
-                maxWidth = rect.width;
-        }
-        return maxWidth;
+        if (maxWidth < rect.width)
+            maxWidth = rect.width;
     }
+    return maxWidth;
 }
 
 int CharSegment_V3::GetRectsMaxHeight(vector<Rect> &rects) {
@@ -708,6 +672,6 @@ bool CharSegment_V3::RectLeftComparer(const Rect &x, const Rect &y) {
     return x.x < y.x;
 }
 bool CharSegment_V3::CharInfoLeftComparer(const CharInfo &x,
-                                          const CharInfo &y) {
+    const CharInfo &y) {
     return x.OriginalRect.x < y.OriginalRect.x;
 }
