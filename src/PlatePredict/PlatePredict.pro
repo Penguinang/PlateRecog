@@ -25,7 +25,9 @@ DEFINES -= UNICODE
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-CONFIG += c++11
+INCLUDEPATH += D:/Applications/Tools/opencv4.1/opencv/build/include
+INCLUDEPATH += ../classifier/
+CONFIG += c++17
 
 SOURCES += \
         ../classifier/CharInfo.cpp \
@@ -57,15 +59,13 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-INCLUDEPATH += D:\download\OpenCV-MinGW-Build-OpenCV-4.1.0-x64\OpenCV-MinGW-Build-OpenCV-4.1.0-x64\include
-
-LIBS += D:\download\OpenCV-MinGW-Build-OpenCV-4.1.0-x64\OpenCV-MinGW-Build-OpenCV-4.1.0-x64\x64\mingw\bin\libopencv_core410.dll
-LIBS += D:\download\OpenCV-MinGW-Build-OpenCV-4.1.0-x64\OpenCV-MinGW-Build-OpenCV-4.1.0-x64\x64\mingw\bin\libopencv_highgui410.dll
-LIBS += D:\download\OpenCV-MinGW-Build-OpenCV-4.1.0-x64\OpenCV-MinGW-Build-OpenCV-4.1.0-x64\x64\mingw\bin\libopencv_imgproc410.dll
-LIBS += D:\download\OpenCV-MinGW-Build-OpenCV-4.1.0-x64\OpenCV-MinGW-Build-OpenCV-4.1.0-x64\x64\mingw\bin\libopencv_imgcodecs410.dll
-LIBS += D:\download\OpenCV-MinGW-Build-OpenCV-4.1.0-x64\OpenCV-MinGW-Build-OpenCV-4.1.0-x64\x64\mingw\bin\libopencv_ml410.dll
-LIBS += D:\download\OpenCV-MinGW-Build-OpenCV-4.1.0-x64\OpenCV-MinGW-Build-OpenCV-4.1.0-x64\x64\mingw\bin\libopencv_objdetect410.dll
-
 RESOURCES += \
     icon.qrc
 
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../../Tools/opencv4.1/opencv/build/x64/vc15/lib/ -lopencv_world410
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../../Tools/opencv4.1/opencv/build/x64/vc15/lib/ -lopencv_world410d
+else:unix: LIBS += -L$$PWD/../../../../../Tools/opencv4.1/opencv/build/x64/vc15/lib/ -lopencv_world410
+
+INCLUDEPATH += $$PWD/../../../../../Tools/opencv4.1/opencv/build/x64/vc15
+DEPENDPATH += $$PWD/../../../../../Tools/opencv4.1/opencv/build/x64/vc15
+#msvc:QMAKE_CXXFLAGS_RELEASE += /source-charset:utf-8

@@ -1,4 +1,4 @@
-#ifndef CHAR_INFO_H
+﻿#ifndef CHAR_INFO_H
 #define CHAR_INFO_H
 
 #include <opencv2/core.hpp>
