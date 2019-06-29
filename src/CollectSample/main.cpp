@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     MainWindow w;
     //trainingFrontEnd tfe;
 
-    QPixmap pixmap("start.jpg");
+    QPixmap pixmap("../icons/start01.png");
     QSplashScreen splash(pixmap);
     splash.show();
 
