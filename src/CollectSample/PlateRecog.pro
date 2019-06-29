@@ -16,6 +16,7 @@ TEMPLATE = app
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
+DEFINES -= UNICODE
 
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -33,7 +34,8 @@ SOURCES += \
     ../classifier/Utilities.cpp \
     ../classifier/PlateLocator_V3.cpp \
     ../classifier/PlateRecognition_V3.cpp \
-    manualclassifywindow.cpp
+    manualclassifywindow.cpp \
+    trainingfrontend.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -45,11 +47,13 @@ HEADERS += \
     ../classifier/PlateChar_SVM.h \
     ../classifier/Utilities.h \
     ../classifier/PlateRecognition_V3.h \
-    manualclassifywindow.h
+    manualclassifywindow.h \
+    trainingfrontend.h
 
 FORMS += \
         mainwindow.ui \
-    manualClassifyWindow.ui
+    manualClassifyWindow.ui \
+    trainingFrontEnd.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
