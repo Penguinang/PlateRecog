@@ -72,3 +72,6 @@ LIBS += D:/MySoftware/OPENCV/OpenCV-MinGW-Build-OpenCV-4.1.0-x64/x64/mingw/bin/l
 LIBS += D:/MySoftware/OPENCV/OpenCV-MinGW-Build-OpenCV-4.1.0-x64/x64/mingw/bin/libopencv_ml410.dll
 LIBS += D:/MySoftware/OPENCV/OpenCV-MinGW-Build-OpenCV-4.1.0-x64/x64/mingw/bin/libopencv_objdetect410.dll
 
+RESOURCES += \
+    resource.qrc
+

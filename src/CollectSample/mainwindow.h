@@ -14,6 +14,8 @@
 #include <QTabWidget>
 #include <QWidget>
 #include <QTime>
+#include <QMessageBox>
+#include <QCloseEvent>
 
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
@@ -64,6 +66,7 @@ private:
     void saveAllPlateCharSplited();
     void showMatForAutoSample(Mat mat);
     void showAllPicturesGotten(QListWidgetItem *item);
+    void closeEvent(QCloseEvent *event);
 
 private slots:
     void selectDir();
@@ -80,6 +83,7 @@ private slots:
     void on_checkSample_triggered();
     void on_actionTrain_triggered();
     void on_pushButton_clicked();
+    void on_exit_triggered();
 };
 
 #endif // MAINWINDOW_H

@@ -366,6 +366,13 @@
      <property name="title">
       <string>打开训练文件夹</string>
      </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>resourceFiles/dakai.png</normaloff>resourceFiles/dakai.png</iconset>
+     </property>
+     <property name="toolTipsVisible">
+      <bool>false</bool>
+     </property>
      <addaction name="openPlateChar"/>
      <addaction name="openPlateCategory"/>
     </widget>
@@ -384,23 +391,37 @@
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="closeFolder">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/resourceFiles/closeFloder.png</normaloff>:/icons/resourceFiles/closeFloder.png</iconset>
+   </property>
    <property name="text">
     <string>关闭文件夹</string>
    </property>
   </action>
   <action name="openPlateChar">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/resourceFiles/dakai.png</normaloff>:/icons/resourceFiles/dakai.png</iconset>
+   </property>
    <property name="text">
     <string>训练车牌字符</string>
    </property>
   </action>
   <action name="openPlateCategory">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/resourceFiles/dakai.png</normaloff>:/icons/resourceFiles/dakai.png</iconset>
+   </property>
    <property name="text">
     <string>训练车牌类型</string>
    </property>
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="resource.qrc"/>
+ </resources>
  <connections/>
  <slots>
   <slot>on_openFolder()</slot>

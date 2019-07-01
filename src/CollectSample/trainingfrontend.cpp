@@ -45,6 +45,9 @@ trainingFrontEnd::trainingFrontEnd(QWidget *parent):
     QMainWindow(parent),
     ui(new Ui::trainingFrontEnd)
 {
+    //主窗口关闭时，本窗口也关闭
+    this->setAttribute(Qt::WA_QuitOnClose,false);
+
     ui->setupUi(this);
     for (auto &kernelString : kernelStrings) {
             ui->kernel_comboBox->addItem(kernelString);
@@ -631,4 +634,20 @@ void TrainWorker::train(trainingFrontEnd *trainingFE) {
         PlateCategory_SVM::Save(trainingFrontEnd::CategoryModelFileName.toStdString());
     trainingFE->validationPrediction = validationPrediction;
     emit prediction_Completed();
+}
+
+void trainingFrontEnd::closeEvent(QCloseEvent *event)
+{
+    switch (QMessageBox::information(this,tr("warning!"),
+                                     tr("Do you really want to close the training Window?"),
+            tr("Yes"),tr("No"),0,1)) {
+    case 0:
+        event->accept();
+        break;
+    case 1:
+    default:
+        event->ignore();
+        break;
+
+    }
 }
