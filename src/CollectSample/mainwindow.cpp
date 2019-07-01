@@ -9,18 +9,12 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    //QAction* actionSelectDir = new QAction(tr("选择路径"),this);
-
-    //this->connect(actionSelectDir,SIGNAL(triggered()),this,SLOT(selectDir()));
-
-    //this->ui->mainToolBar->addAction(actionSelectDir);
-
-    //this->setWindowState(Qt::WindowState::WindowMaximized);
-
+    //加载默认的模型
     PlateCategory_SVM::Load("CategorySVM.yaml");
     PlateChar_SVM::Load("CharSVM.yaml");
+
     //设置收集样本界面的icon
-    this->setWindowIcon(QIcon("../icons/plateUI03.png"));
+    this->setWindowIcon(QIcon("../../resource/icons/plateUI03.png"));
 }
 
 MainWindow::~MainWindow()
