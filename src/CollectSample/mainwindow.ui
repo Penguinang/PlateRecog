@@ -663,6 +663,7 @@
      <string>文件(&amp;F)</string>
     </property>
     <addaction name="openFile"/>
+    <addaction name="exit"/>
    </widget>
    <widget class="QMenu" name="menu_B">
     <property name="title">
@@ -697,27 +698,65 @@
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="openFile">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/resourceFiles/dakai.png</normaloff>:/icons/resourceFiles/dakai.png</iconset>
+   </property>
    <property name="text">
-    <string>选择文件夹</string>
+    <string>选择文件夹(&amp;O)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
    </property>
   </action>
   <action name="autoCreateSample">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/resourceFiles/create.png</normaloff>:/icons/resourceFiles/create.png</iconset>
+   </property>
    <property name="text">
     <string>自动生成样本</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
+   </property>
   </action>
   <action name="checkSample">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/resourceFiles/check.png</normaloff>:/icons/resourceFiles/check.png</iconset>
+   </property>
    <property name="text">
     <string>检查样本</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
   </action>
   <action name="actionTrain">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/resourceFiles/train.png</normaloff>:/icons/resourceFiles/train.png</iconset>
+   </property>
    <property name="text">
     <string>训练</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
+   </property>
+  </action>
+  <action name="exit">
+   <property name="text">
+    <string>退出(&amp;X)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
    </property>
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="resource.qrc"/>
+ </resources>
  <connections/>
 </ui>
