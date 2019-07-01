@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "manualclassifywindow.h"
 #include "trainingfrontend.h"
@@ -31,7 +31,7 @@ MainWindow::~MainWindow()
 void MainWindow::selectDir()
 {
     this->pathSelected = QFileDialog::getExistingDirectory(this,
-                                                           tr("选择图片所在文件夹"),
+                                                           QString::fromLocal8Bit("选择图片所在文件夹"),
                                                            this->pathSelected.isEmpty()?tr("D:/pictures"):this->pathSelected);
     if(this->pathSelected.isEmpty()) return;
 
@@ -54,7 +54,7 @@ void MainWindow::showMatForAutoSample(Mat mat)
     QImage image = Mat2QImage(mat,QImage::Format_RGB888);
     //构建Tab页面
     QWidget* tabOriginal = this->generateImageLabel(mat,QImage::Format_RGB888);
-    this->ui->tabWidget->addTab(tabOriginal,tr("原图"));
+    this->ui->tabWidget->addTab(tabOriginal,QString::fromLocal8Bit("原图"));
 }
 
 void MainWindow::showMat(cv::Mat mat,vector<tuple<vector<PlateInfo>, Mat, Mat, vector<vector<Point>>, Mat>> plates)
@@ -84,7 +84,7 @@ void MainWindow::showMat(cv::Mat mat,vector<tuple<vector<PlateInfo>, Mat, Mat, v
         }
     */
     QWidget* tabOriginal = this->generateImageLabel(mat,QImage::Format_RGB888);
-    this->ui->tabWidget->addTab(tabOriginal,tr("原图"));
+    this->ui->tabWidget->addTab(tabOriginal,QString::fromLocal8Bit("原图"));
 
 
     Mat thremat = get<1>(plates[0]);
@@ -97,7 +97,7 @@ void MainWindow::showMat(cv::Mat mat,vector<tuple<vector<PlateInfo>, Mat, Mat, v
         cv::resize(thremat,thremat,cv::Size(1000,height));
     }
     QWidget* tabthreshold = this->generateImageLabel(thremat,QImage::Format_Grayscale8);
-    this->ui->tabWidget->addTab(tabthreshold,tr("二值化"));
+    this->ui->tabWidget->addTab(tabthreshold,QString::fromLocal8Bit("二值化"));
 
 
     Mat erode = get<2>(plates[0]);
@@ -110,7 +110,7 @@ void MainWindow::showMat(cv::Mat mat,vector<tuple<vector<PlateInfo>, Mat, Mat, v
         cv::resize(erode,erode,cv::Size(1000,height));
     }
     QWidget* taberod = this->generateImageLabel(erode,QImage::Format_Grayscale8);
-    this->ui->tabWidget->addTab(taberod,tr("形态学操作"));
+    this->ui->tabWidget->addTab(taberod,QString::fromLocal8Bit("形态学操作"));
 
 
     Mat rected = get<4>(plates[0]);
@@ -123,7 +123,7 @@ void MainWindow::showMat(cv::Mat mat,vector<tuple<vector<PlateInfo>, Mat, Mat, v
         cv::resize(rected,rected,cv::Size(1000,height));
     }
     QWidget* tabrect = this->generateImageLabel(rected,QImage::Format_RGB888);
-    this->ui->tabWidget->addTab(tabrect,tr("Rects"));
+    this->ui->tabWidget->addTab(tabrect,QString::fromLocal8Bit("Rects"));
 
 
 }
@@ -139,7 +139,7 @@ void MainWindow::showPlateSplit(cv::Mat mat, vector<PlateInfo> plateInfos)
     if(mat.empty()) return;
     for (int index = 0; index < plateInfos.size(); index++)
     {
-        QString category = PlateCategory_tToString[(int)plateInfos[index].PlateCategory];
+        QString category = QString::fromLocal8Bit(PlateCategory_tToString[(int)plateInfos[index].PlateCategory]);
         cv::Mat roi = mat(plateInfos[index].OriginalRect);
 
         QPixmap pixmap = QPixmap::fromImage(Mat2QImage(roi,QImage::Format_RGB888));
@@ -171,7 +171,7 @@ void MainWindow::showPlateCharSplit(cv::Mat plateMat, vector<CharInfo> charInfos
     for (int index = 0; index < charInfos.size(); index++)
     {
         //qDebug()<<charInfos[index].ToString();
-        QString category = PlateChar_tToString[(int)(charInfos[index].PlateChar)];
+        QString category = QString::fromLocal8Bit(PlateChar_tToString[(int)(charInfos[index].PlateChar)]);
 
         cv::Mat roi = plateMat(charInfos[index].OriginalRect);
         QPixmap pixmap = QPixmap::fromImage(Mat2QImage(roi,QImage::Format_RGB888));
@@ -352,12 +352,14 @@ void MainWindow::on_plateList_itemClicked(QListWidgetItem *item)
     Mat mat;
     platePix = item->icon().pixmap(item->icon().availableSizes().last());
     mat = QPixmapToMat(platePix);
-    QString qsir = "../../../bin/车牌-字符样本/plates/";
+    QString path=this->ui->textEdit->toPlainText();
+    QString qsir = path+QString::fromLocal8Bit("/车牌-字符样本/plates/");
     QString localsir = item->text();
     QString fdir = qsir + localsir + "/";
 
-    string dir = fdir.toLocal8Bit().toStdString();
+//    string dir = fdir.toLocal8Bit().toStdString();
 
+    string dir = fdir.toStdString();
     saveMatPic(mat, dir);
 
 }
@@ -371,9 +373,9 @@ void MainWindow::saveMatPic(Mat mat,string dir)
     cv::String imgName = dir + stime.append( ".png");
     try {
 
-            cv::imwrite(imgName,mat);
-            //qDebug() << " save success";
-            //qDebug() << QString::fromStdString(imgName);
+            bool ret = cv::imwrite(imgName,mat);
+            qDebug() << " save success";
+            qDebug() << QString::fromStdString(imgName);
 
     } catch (std::runtime_error & exception)
     {
@@ -403,12 +405,12 @@ void MainWindow::on_charList_itemClicked(QListWidgetItem *item)
     Mat mat;
     charPix = item->icon().pixmap(item->icon().availableSizes().last());
     mat = QPixmapToMat(charPix);
-
-    QString qsir = "../../../bin/车牌-字符样本/chars/";
+    QString path=this->ui->textEdit->toPlainText();
+    QString qsir = path+QString::fromLocal8Bit("/车牌-字符样本/chars/");
     QString localsir = item->text();
     QString fdir = qsir + localsir + "/";
 
-    string dir = fdir.toLocal8Bit().toStdString();
+    string dir = fdir.toStdString();
 
     saveMatPic(mat, dir);
 }
@@ -427,8 +429,8 @@ void MainWindow::saveAllPlateLocated()
         item = ui->plateList->item(i);
         platePix = item->icon().pixmap(item->icon().availableSizes().last());
         mat = QPixmapToMat(platePix);
-
-        QString qsir = "../../../bin/车牌-字符样本/plates/";
+        QString path=this->ui->textEdit->toPlainText();
+        QString qsir = path+QString::fromLocal8Bit("/车牌-字符样本/plates/");
         QString localsir = item->text();
         QString fdir = qsir + localsir + "/";
 
@@ -450,7 +452,9 @@ void MainWindow::saveAllPlateCharSplited()
         charPix = item->icon().pixmap(item->icon().availableSizes().last());
         mat = QPixmapToMat(charPix);
 
-        QString qsir = "../../../bin/车牌-字符样本/chars/";
+        QString path=this->ui->textEdit->toPlainText();
+        QString qsir = path+QString::fromLocal8Bit("/车牌-字符样本/chars/");
+
         QString localsir = item->text();
         QString fdir = qsir + localsir + "/";
 
@@ -523,4 +527,12 @@ void MainWindow::on_actionTrain_triggered()
 {
     trainingFrontEnd *tfe = new trainingFrontEnd();
     tfe->show();
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    QString pathSelected = QFileDialog::getExistingDirectory(this,
+                                                            QString::fromLocal8Bit("选择图片存放路径"),
+                                                          QString::fromLocal8Bit("../../bin/"));
+    this->ui->textEdit->setText(pathSelected);
 }

@@ -1,4 +1,4 @@
-#ifndef MAINWINDOW_H
+﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
@@ -79,6 +79,7 @@ private slots:
     void on_refresh_clicked();
     void on_checkSample_triggered();
     void on_actionTrain_triggered();
+    void on_pushButton_clicked();
 };
 
 #endif // MAINWINDOW_H

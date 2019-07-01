@@ -559,6 +559,23 @@
       <widget class="QWidget" name="layoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
+         <widget class="QPushButton" name="pushButton">
+          <property name="text">
+           <string>选择路径</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTextEdit" name="textEdit">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>30</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QListWidget" name="plateList">
           <property name="minimumSize">
            <size>
