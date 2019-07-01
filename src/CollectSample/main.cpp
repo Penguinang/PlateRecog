@@ -1,4 +1,4 @@
-﻿#include "mainwindow.h"
+#include "mainwindow.h"
 #include "manualclassifywindow.h"
 #include "trainingfrontend.h"
 #include <QApplication>
