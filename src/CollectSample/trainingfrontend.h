@@ -3,6 +3,8 @@
 
 #include <QListWidgetItem>
 #include <QMainWindow>
+#include <QMessageBox>
+#include <QCloseEvent>
 
 #include <memory>
 #include <vector>
@@ -50,6 +52,8 @@ private slots:
 
 private:
   Ui::trainingFrontEnd *ui;
+   void closeEvent(QCloseEvent *event);
+
 
   // images data
 private:
@@ -88,6 +92,7 @@ private:
   void showValidationImagesDetail(int index);
   void showCorrectValidationImagesDetail(int index);
   void showWrongValidationImagesDetail(int index);
+
 
   // SVM parameters
 private:

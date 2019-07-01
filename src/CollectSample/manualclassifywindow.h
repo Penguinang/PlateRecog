@@ -7,7 +7,8 @@
 #include <QListWidget>
 #include <QListWidgetItem>
 #include <QButtonGroup>
-
+#include <QMessageBox>
+#include <QCloseEvent>
 #include <QDebug>
 #include <QDir>
 #include <QFileDialog>
@@ -52,6 +53,8 @@ private slots:
     void on_comboBox_chineseChar_currentTextChanged(const QString &arg1);
 
     void on_charListWidget_itemDoubleClicked(QListWidgetItem *item);
+
+    void closeEvent(QCloseEvent *event);
 
 private:
     Ui::ManualClassifyWindow *ui;

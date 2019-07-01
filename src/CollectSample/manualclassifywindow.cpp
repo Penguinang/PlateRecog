@@ -13,6 +13,9 @@ ManualClassifyWindow::ManualClassifyWindow(QWidget *parent):
     this->plateSamplePath=this->basePath+"/plates/";
     this->charSamplepath=this->basePath+"/chars/";
 
+    //主窗口关闭时，本窗口也关闭
+    this->setAttribute(Qt::WA_QuitOnClose,false);
+
     ui->setupUi(this);
 }
 
@@ -844,4 +847,20 @@ void ManualClassifyWindow::on_charListWidget_itemDoubleClicked(QListWidgetItem *
     }
 
     this->updateCharWindow();
+}
+
+void ManualClassifyWindow::closeEvent(QCloseEvent *event)
+{
+    switch (QMessageBox::information(this,tr("warning!"),
+                                     tr("Do you really want to close the checking Window?"),
+            tr("Yes"),tr("No"),0,1)) {
+    case 0:
+        event->accept();
+        break;
+    case 1:
+    default:
+        event->ignore();
+        break;
+
+    }
 }

@@ -13,8 +13,11 @@ MainWindow::MainWindow(QWidget *parent) :
     PlateCategory_SVM::Load("CategorySVM.yaml");
     PlateChar_SVM::Load("CharSVM.yaml");
 
+    //本窗口关闭时，其他窗口均关闭
+    this->setAttribute(Qt::WA_QuitOnClose,true);
+
     //设置收集样本界面的icon
-    this->setWindowIcon(QIcon("../../resource/icons/plateUI03.png"));
+    this->setWindowIcon(QIcon(":/icons/resourceFiles/plateUI03.png"));
 }
 
 MainWindow::~MainWindow()
@@ -529,4 +532,26 @@ void MainWindow::on_pushButton_clicked()
                                                             QString::fromLocal8Bit("选择图片存放路径"),
                                                           QString::fromLocal8Bit("../../bin/"));
     this->ui->textEdit->setText(pathSelected);
+}
+
+//关闭窗口时弹出询问框
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    switch (QMessageBox::information(this,tr("warning!"),
+                                     tr("Do you really want to log out this procedure?"),
+            tr("Yes"),tr("No"),0,1)) {
+    case 0:
+        event->accept();
+        break;
+    case 1:
+    default:
+        event->ignore();
+        break;
+
+    }
+}
+
+void MainWindow::on_exit_triggered()
+{
+    this->close();
 }

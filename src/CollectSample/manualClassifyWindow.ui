@@ -1218,12 +1218,18 @@
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionopenFolder">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/resourceFiles/dakai.png</normaloff>:/icons/resourceFiles/dakai.png</iconset>
+   </property>
    <property name="text">
     <string>openFolder</string>
    </property>
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="resource.qrc"/>
+ </resources>
  <connections/>
 </ui>
