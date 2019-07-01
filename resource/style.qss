@@ -1,0 +1,11 @@
+//QPushButton#refresh
+//{                                        
+//	border: 0px;
+//	color: rgb(95, 158, 160);
+//}
+
+//QPushButton#refresh:hover
+//{
+//background: #FF3030; 
+//}
+
