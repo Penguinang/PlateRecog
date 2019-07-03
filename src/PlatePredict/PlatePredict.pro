@@ -62,6 +62,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += \
     icon.qrc
 
+RC_ICONS = start.ico
+
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../../Tools/opencv4.1/opencv/build/x64/vc15/lib/ -lopencv_world410
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../../Tools/opencv4.1/opencv/build/x64/vc15/lib/ -lopencv_world410d
 else:unix: LIBS += -L$$PWD/../../../../../Tools/opencv4.1/opencv/build/x64/vc15/lib/ -lopencv_world410
