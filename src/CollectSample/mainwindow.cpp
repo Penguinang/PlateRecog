@@ -354,9 +354,9 @@ void MainWindow::on_plateList_itemClicked(QListWidgetItem *item)
     QString localsir = item->text();
     QString fdir = qsir + localsir + "/";
 
-//    string dir = fdir.toLocal8Bit().toStdString();
+    string dir = fdir.toLocal8Bit().toStdString();
+    //string dir = fdir.toStdString();
 
-    string dir = fdir.toStdString();
     saveMatPic(mat, dir);
 
 }
@@ -407,7 +407,7 @@ void MainWindow::on_charList_itemClicked(QListWidgetItem *item)
     QString localsir = item->text();
     QString fdir = qsir + localsir + "/";
 
-    string dir = fdir.toStdString();
+    string dir = fdir.toLocal8Bit().toStdString();
 
     saveMatPic(mat, dir);
 }

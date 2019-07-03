@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "manualclassifywindow.h"
 #include "trainingfrontend.h"
 #include <QApplication>
@@ -14,10 +14,12 @@ int main(int argc, char *argv[])
 
     a.connect(&a, SIGNAL(lastWindowClosed()),&a, SLOT(quit()));
 
+    /*
     QFile file(":/qss/resourceFiles/style.qss");
     file.open(QFile::ReadOnly);
     QString qss=file.readAll();
     a.setStyleSheet(qss);//界面风格
+    */
 
     //w.setStyleSheet(qss);//试试
 
