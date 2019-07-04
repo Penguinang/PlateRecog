@@ -11,7 +11,13 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>样本检查纠错</string>
+   <string>Check</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QMainWindow
+{
+	background:rgb(247, 255, 247)
+}</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -1219,7 +1225,7 @@
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionopenFolder">
    <property name="icon">
-    <iconset resource="resource.qrc">
+    <iconset resource="res.qrc">
      <normaloff>:/icons/resourceFiles/dakai.png</normaloff>:/icons/resourceFiles/dakai.png</iconset>
    </property>
    <property name="text">
@@ -1229,7 +1235,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="resource.qrc"/>
+  <include location="res.qrc"/>
  </resources>
  <connections/>
 </ui>
