@@ -11,7 +11,13 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>trainingFrontEnd</string>
+   <string>Train</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QMainWindow
+{
+	background:rgb(247, 255, 247)
+}</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QGroupBox" name="SVMParameters">
@@ -211,6 +217,28 @@
      <layout class="QVBoxLayout" name="verticalLayout_6">
       <item>
        <widget class="QPushButton" name="startTrainButton">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton
+{
+	border: 2px solid rgb(85, 170, 255);  
+	background:rgb(255, 255, 255); 
+	color:rgb(85, 170, 255); 
+	
+	border-radius: 8px;
+}
+QPushButton:hover
+{
+	background:rgb(85, 170, 255);
+	color:rgb(255, 255, 255);
+}
+</string>
+        </property>
         <property name="text">
          <string>开始训练</string>
         </property>
@@ -392,7 +420,7 @@
   <widget class="QStatusBar" name="statusBar"/>
   <action name="closeFolder">
    <property name="icon">
-    <iconset resource="resource.qrc">
+    <iconset resource="res.qrc">
      <normaloff>:/icons/resourceFiles/closeFloder.png</normaloff>:/icons/resourceFiles/closeFloder.png</iconset>
    </property>
    <property name="text">
@@ -401,7 +429,7 @@
   </action>
   <action name="openPlateChar">
    <property name="icon">
-    <iconset resource="resource.qrc">
+    <iconset resource="res.qrc">
      <normaloff>:/icons/resourceFiles/dakai.png</normaloff>:/icons/resourceFiles/dakai.png</iconset>
    </property>
    <property name="text">
@@ -410,7 +438,7 @@
   </action>
   <action name="openPlateCategory">
    <property name="icon">
-    <iconset resource="resource.qrc">
+    <iconset resource="res.qrc">
      <normaloff>:/icons/resourceFiles/dakai.png</normaloff>:/icons/resourceFiles/dakai.png</iconset>
    </property>
    <property name="text">
@@ -420,7 +448,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="resource.qrc"/>
+  <include location="res.qrc"/>
  </resources>
  <connections/>
  <slots>

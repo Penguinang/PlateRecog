@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>resourceFiles/start.png</file>
+        <file>resourceFiles/plateUI03.png</file>
+        <file>resourceFiles/check.png</file>
+        <file>resourceFiles/closeFloder.png</file>
+        <file>resourceFiles/create.png</file>
+        <file>resourceFiles/dakai.png</file>
+        <file>resourceFiles/train.png</file>
+    </qresource>
+</RCC>
