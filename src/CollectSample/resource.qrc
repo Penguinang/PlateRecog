@@ -9,8 +9,4 @@
         <file>resourceFiles/train.png</file>
         <file>resourceFiles/closeFloder.png</file>
     </qresource>
-    <qresource prefix="/qss">
-        <file>resourceFiles/style.qss</file>
-        <file>resourceFiles/style1.qss</file>
-    </qresource>
 </RCC>
