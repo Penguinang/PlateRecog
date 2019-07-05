@@ -16,7 +16,7 @@
   <property name="styleSheet">
    <string notr="true">QMainWindow
 {
-	background:rgb(247, 255, 247)
+	background:rgb(250, 250, 250);
 }</string>
   </property>
   <widget class="QWidget" name="centralWidget">

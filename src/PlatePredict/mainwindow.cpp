@@ -74,6 +74,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->ui->verticalLayout->setStretchFactor(this->ui->plateWidget,2);
     this->ui->verticalLayout->setStretchFactor(this->ui->charWidget,3);
 
+    buttonRecog->setShortcut(QKeySequence(QLatin1String("Space")));
+
     this->setWindowState(Qt::WindowState::WindowMaximized);
 }
 
@@ -309,7 +311,7 @@ void MainWindow::generatePlateRegion(PlateInfo plateInfo,int index,int duration)
     tablePlateInfo->setItem(2,1,new QTableWidgetItem(QString::number(plateInfo.OriginalRect.width)));
 
     QIcon iconHeight(":/icon/icon/gaodu.png");
-    tablePlateInfo->setItem(3,0,new QTableWidgetItem(iconHeight,QString::fromLocal8Bit("宽度")));
+    tablePlateInfo->setItem(3,0,new QTableWidgetItem(iconHeight,QString::fromLocal8Bit("高度")));
     tablePlateInfo->setItem(3,1,new QTableWidgetItem(QString::number(plateInfo.OriginalRect.height)));
 
     QIcon originalRect(":/icon/icon/rect.png");
